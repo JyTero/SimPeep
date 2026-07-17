@@ -7,7 +7,7 @@ using UnityEngine.InputSystem.Utilities;
 public class Needs_UIPanel : UIPanel
 {
 
-    [SerializeField]
+    //[SerializeField]
     private List<NeedMeter> needMeters = new();
 
     private Dictionary<Need, NeedMeter> needMetersByNeed = new();
@@ -17,7 +17,15 @@ public class Needs_UIPanel : UIPanel
     protected void Start()
     {
         base.Start();
-        selectedCharacter = FindAnyObjectByType<Character>();
+
+        foreach (Transform child in transform)
+        {
+            NeedMeter needMeter = child.gameObject.GetComponent<NeedMeter>();
+            if (needMeter)
+                needMeters.Add(needMeter);
+        }
+
+            selectedCharacter = FindAnyObjectByType<Character>();
         //AssignNeedMeters();
         
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-
+    [SerializeField]
     protected string itemName;
     public string ItemName { get { return itemName; } set { itemName = value; } }
 

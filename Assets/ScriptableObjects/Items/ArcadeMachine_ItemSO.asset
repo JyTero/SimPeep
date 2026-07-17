@@ -15,4 +15,5 @@ MonoBehaviour:
   itemName: Pixel Plasting
   itemDescription: The hottest aracade action, available now
   itemPrice: 400
-  allInteractions: []
+  allInteractions:
+  - {fileID: 11400000, guid: 6dd101be2d4fbf144ba16430be35f8fc, type: 2}

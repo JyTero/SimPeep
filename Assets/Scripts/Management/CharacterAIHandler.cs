@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.InputSystem.Utilities;
 
 public class CharacterAIHandler : ManagementCore
 {
@@ -76,16 +79,40 @@ public class CharacterAIHandler : ManagementCore
             }
             //Validity
             //Score
-            foreach(ActiveInteraction interaction in interactions)
+            foreach (ActiveInteraction interaction in interactions)
             {
-                int score = interactionBaseScore;
+                float score = 0;
+                float needBonus = 0;
+                Character thisCharacter = interaction.ThisCharacter;
+                //NeedScoring
+                foreach (NeedType needTypeToWeight in interaction.NeedsToWeight)
+                {
+                    float needPercentage = (float)thisCharacter.Needs[needTypeToWeight].NeedValue / 100f;
+                    float needBasedMultiplier = thisCharacter.Needs[needTypeToWeight].NeedWeightOnInteractionScoring.Evaluate(needPercentage);
+                    needBonus += interactionBaseScore * needBasedMultiplier;
 
-                //interaction.
+                }
+                score = needBonus;
+                //Trait scoring
+                float traitBonus = 0;
+                foreach (InteractionScoringModifier modifier in interaction.ScoringModifiers)
+                {
+                    if (characterAI.chara.Traits.Contains(modifier.TraitSO))
+                    {
+                        traitBonus += modifier.TraitBonus;
+                    }
+                }
+                score += traitBonus;
 
+                interaction.interactionScore = score;
             }
+            if (IsDebug)
+                PrintInteractionScoring(interactions);
+
             //Pick best (/Random)
-            int r = Random.Range(0, interactions.Count);
-            StartInteraction(interactions[r], characterAI);
+            //interactions = SortScoredInteractions(interactions);
+            interactions.Sort((a, b) => b.interactionScore.CompareTo(a.interactionScore));
+            StartInteraction(interactions[i], characterAI);
         }
     }
 
@@ -95,6 +122,21 @@ public class CharacterAIHandler : ManagementCore
         interactionEngine.StartNewInteraction(interaction);
         tasklessCharacters.Remove(charaAI);
         activeCharacters.Add(charaAI.chara, charaAI);
+    }
+
+    private void PrintInteractionScoring(List<ActiveInteraction> interactions)
+    {
+        string s = $"{interactions[0].ThisCharacter.ItemName}'s Scoring Result:\n";
+        foreach (ActiveInteraction interaction in interactions)
+        {
+            s += $"Interaction '{interaction.InteractionName}' (Item: {interaction.InteractionSource.ItemName} scored: {interaction.interactionScore})\n";
+        }
+        Debug.Log(s);
+    }
+    private List<ActiveInteraction> SortScoredInteractions(List<ActiveInteraction> interactions)
+    {
+        List<ActiveInteraction> sortedInteractions = interactions.OrderBy(i => i.interactionScore).ToList();
+        return sortedInteractions;
     }
     public void OnInteractionEnd(Character character)
     {

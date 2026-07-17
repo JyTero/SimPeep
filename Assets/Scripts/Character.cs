@@ -11,10 +11,14 @@ public class Character : Interactable
     //Debug
     public int characterSpeed = 2;
 
+    private NeedsEngine needsEngine;
+
     private Dictionary<NeedType, Need> needs = new();
     public Dictionary<NeedType, Need> Needs { get { return needs; } }
 
-    private NeedsEngine needsEngine;
+    [SerializeField]
+    private List<TraitSO> traits = new();
+    public List<TraitSO> Traits { get { return traits; } }
 
     //DEBUG
     [SerializeField]

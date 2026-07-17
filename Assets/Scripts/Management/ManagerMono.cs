@@ -8,6 +8,9 @@ public class ManagerMono : MonoBehaviour
     protected NeedsEngine needsEngine;
     protected LotManager lotManager;
 
+    [SerializeField]
+    protected bool IsDebug;
+
     protected virtual void Start()
     {
         characterAIHandler = FindAnyObjectByType<CharacterAIHandler>();

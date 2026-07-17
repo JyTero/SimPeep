@@ -1,9 +1,11 @@
+using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ActiveInteraction
 {
-    [SerializeField]
+
     private InteractionSO interactionTuningSO;
     public InteractionSO InteractionTuningSO { get { return interactionTuningSO; } }
 
@@ -18,6 +20,13 @@ public class ActiveInteraction
 
     private float interactionLength;
     public float InteractionLength { get { return interactionLength; } }
+
+
+    private List<NeedType> needsToWeight = new();
+    public List<NeedType> NeedsToWeight { get { return needsToWeight; } }
+
+    private List<InteractionScoringModifier> scoringModifiers = new();
+    public List<InteractionScoringModifier> ScoringModifiers { get { return scoringModifiers; } }
 
     //RuntimeData
     public float interactionLenghtAccumulation;
@@ -35,6 +44,14 @@ public class ActiveInteraction
         interactionLenghtAccumulation = 0;
         interactionState = InteractionState.Default;
         interactionScore = 0;
+
+        scoringModifiers = itSO.ScoringModifiers;
+
+        foreach(Need_InstructionSO needInstructionSO in itSO.Need_InteractionInstructions)
+        {
+            needsToWeight.Add(needInstructionSO.NeedToAdjust);
+        }
+
     }
 
     

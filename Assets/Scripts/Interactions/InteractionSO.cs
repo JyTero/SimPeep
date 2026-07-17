@@ -22,4 +22,9 @@ public class InteractionSO : ScriptableObject
     private List<Need_InstructionSO> need_InteractionInstructions = new();
     public List<Need_InstructionSO> Need_InteractionInstructions { get { return need_InteractionInstructions; } }
 
+    [SerializeField]
+    private List<InteractionScoringModifier> scoringModifiers = new();
+    public List<InteractionScoringModifier> ScoringModifiers { get { return scoringModifiers; } }
+
+
 }

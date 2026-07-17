@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Need 
+public class Need
 {
     [SerializeField]
     private NeedType needType;
@@ -19,11 +19,14 @@ public class Need
     private int needDecay;
     public int NeedDecay { get { return needDecay; } set { needDecay = value; } }
 
+    [SerializeField]
+    private AnimationCurve needWeightOnInteractionScoring;
+    public AnimationCurve NeedWeightOnInteractionScoring { get { return needWeightOnInteractionScoring; } }
 
     //Runtime Data
     public Character Owner;
 
-    private List<INeedAlertable> alertables = new ();
+    private List<INeedAlertable> alertables = new();
     public List<INeedAlertable> Alertables { get { return alertables; } }
 
     public Need(NeedSO needSO, Character _owner)
@@ -33,13 +36,15 @@ public class Need
         needMaxValue = needSO.NeedMaxValue;
         needDecay = -needSO.NeedDecay;
         Owner = _owner;
+        needWeightOnInteractionScoring = needSO.NeedWeightOnInteractionScoring;
     }
 
     public void AddAlertable(INeedAlertable alertable)
     {
         alertables.Add(alertable);
     }
-    public void RemoveAlertable(INeedAlertable alertable) {
+    public void RemoveAlertable(INeedAlertable alertable)
+    {
         alertables.Remove(alertable);
-}
+    }
 }

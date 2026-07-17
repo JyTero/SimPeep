@@ -10,9 +10,6 @@ public class InteractionEngine : ManagementCore
 
     private Debuglandia debuglandia;
 
-    [SerializeField]
-    private bool IsDebug;
-
     protected void Start()
     {
         base.Start();

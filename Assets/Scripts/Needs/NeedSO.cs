@@ -21,7 +21,6 @@ public class NeedSO : ScriptableObject
 
     [SerializeField]
     private AnimationCurve needWeightOnInteractionScoring;
-
     public AnimationCurve NeedWeightOnInteractionScoring { get { return needWeightOnInteractionScoring; } }
 
 
