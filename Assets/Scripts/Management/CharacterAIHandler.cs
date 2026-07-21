@@ -18,6 +18,8 @@ public class CharacterAIHandler : ManagementCore
     private Dictionary<Character, CharacterAI> activeCharacters = new();
     private Dictionary<Character, CharacterAI> occupiedCharacters = new();
 
+    private Dictionary<Character, CharacterAI> charactersAIsByCharacter= new();
+
     private List<Character> charactersToRemove = new();
 
     private Debuglandia debuglandia;
@@ -31,7 +33,9 @@ public class CharacterAIHandler : ManagementCore
 
     public void AddNewCharacter(Character character)
     {
-        idleCharacters.Add(new CharacterAI(character));
+        CharacterAI cai = new CharacterAI(character);
+        idleCharacters.Add(cai);
+        charactersAIsByCharacter.Add(character, cai);
 
     }
 
@@ -54,11 +58,21 @@ public class CharacterAIHandler : ManagementCore
         //Idle
         for (int i = idleCharacters.Count - 1; i >= 0; i--)
         {
-            idleCharacters[i].hasBeenIdleForTimer += deltaTime + updateInterval;
-            if (idleCharacters[i].hasBeenIdleForTimer > characterAIIdleTimer)
+            CharacterAI idleCharacter = idleCharacters[i];
+            //HasQueued Interactions
+            if (idleCharacter.InteractionQueue.Count > 0)
             {
-                idleCharacters[i].hasBeenIdleForTimer -= characterAIIdleTimer;
-                tasklessCharacters.Add(idleCharacters[i]);
+                idleCharacters.RemoveAt(i);
+                StartInteraction(idleCharacter.InteractionQueue[0], idleCharacter);
+                idleCharacter.InteractionQueue.RemoveAt(0);
+                continue;
+            }
+
+            idleCharacter.hasBeenIdleForTimer += deltaTime + updateInterval;
+            if (idleCharacter.hasBeenIdleForTimer > characterAIIdleTimer)
+            {
+                idleCharacter.hasBeenIdleForTimer -= characterAIIdleTimer;
+                tasklessCharacters.Add(idleCharacter);
                 idleCharacters.RemoveAt(i);
             }
         }
@@ -68,11 +82,11 @@ public class CharacterAIHandler : ManagementCore
         {
             //Gather
             CharacterAI characterAI = tasklessCharacters[i];
-            List<StoredInteraction> interactionSOs = lotManager.GetAllInteractionsOnLot(characterAI.chara.ThisLot);
+            List<StoredInteraction> storedInteractions = lotManager.GetAllInteractionsOnLot(characterAI.chara.ThisLot);
 
             //Convert
             List<ActiveInteraction> interactions = new();
-            foreach (StoredInteraction storedInteraction in interactionSOs)
+            foreach (StoredInteraction storedInteraction in storedInteractions)
             {
                 //TODO: Make "StoredInteraction" that holds interactionSO and item and is given here, instead of passing SOs.
                 interactions.Add(new ActiveInteraction(tasklessCharacters[i].chara, storedInteraction.InteractionTuningSO, storedInteraction.InteractionSource));
@@ -112,15 +126,20 @@ public class CharacterAIHandler : ManagementCore
             //Pick best (/Random)
             //interactions = SortScoredInteractions(interactions);
             interactions.Sort((a, b) => b.interactionScore.CompareTo(a.interactionScore));
+
+            tasklessCharacters.Remove(characterAI);
             StartInteraction(interactions[i], characterAI);
         }
     }
 
+    public void QueueInteraction(ActiveInteraction interaction)
+    {
+        charactersAIsByCharacter[interaction.ThisCharacter].QueueNewInteraction(interaction);
+    }
 
     private void StartInteraction(ActiveInteraction interaction, CharacterAI charaAI)
     {
         interactionEngine.StartNewInteraction(interaction);
-        tasklessCharacters.Remove(charaAI);
         activeCharacters.Add(charaAI.chara, charaAI);
     }
 
@@ -164,6 +183,12 @@ public class CharacterAIHandler : ManagementCore
 
         public float hasBeenIdleForTimer = 0;
 
+        private List<ActiveInteraction> interactionQueue = new();
+        public List<ActiveInteraction> InteractionQueue { get { return interactionQueue; } }
+        public void QueueNewInteraction(ActiveInteraction interaction)
+        {
+            interactionQueue.Add(interaction);
+        }
         public CharacterAI(Character c)
         {
             chara = c;

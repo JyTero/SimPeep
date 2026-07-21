@@ -49,7 +49,6 @@ public class Character : Interactable
         }
     }
 
-
     private void OnDestroy()
     {
         needsEngine.DeRegisterFromNeedsEngine(this);

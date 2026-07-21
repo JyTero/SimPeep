@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 8826535518518911749}
   - component: {fileID: 3624566694689882462}
   - component: {fileID: 8537978086826131476}
+  - component: {fileID: 8799867617383054739}
+  - component: {fileID: 8776367404934502784}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -50,6 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8bea319482d43746b412b335905ae4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NeedsEngine
+  IsDebug: 0
   updateInterval: 1
 --- !u!114 &5536759088225812990
 MonoBehaviour:
@@ -75,8 +78,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 049b76768963b314fb2dbef95f490e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterAIHandler
+  IsDebug: 1
   updateInterval: 0.2
   characterAIIdleTimer: 3
+  interactionBaseScore: 10
 --- !u!114 &6493427627136099017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,6 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70927add9b2117346846dad6c61b6aba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterRouting
+  IsDebug: 0
   updateInterval: 0
   routingMargin: 0.2
 --- !u!114 &8826535518518911749
@@ -103,8 +109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9c6bf194dd6f784697b30c84b743302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractionEngine
-  updateInterval: 0.25
   IsDebug: 1
+  updateInterval: 0.25
 --- !u!114 &3624566694689882462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,3 +135,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40918e3d0c90091418253ab54d36e952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LotManagement
+  IsDebug: 0
+  updateInterval: 0
+--- !u!114 &8799867617383054739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068664814951767870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724f9c3ab0db4ca41a067d8a88164062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClickHandler
+  IsDebug: 0
+  updateInterval: 0
+--- !u!114 &8776367404934502784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068664814951767870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0f80b0593a817648b9e32e4f6a7baf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIController
+  IsDebug: 0
+  updateInterval: 0

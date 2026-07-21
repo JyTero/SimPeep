@@ -24,6 +24,7 @@ public class ItemBase : Interactable
         itemDescription  = itemData.ItemDescription;
         itemType = itemData.ItemType;
         itemPrice = itemData.ItemPrice;
+        interactionSOs = itemData.AllInteractions;
        // allInteractions = itemData.AllInteractions;
     }
 }

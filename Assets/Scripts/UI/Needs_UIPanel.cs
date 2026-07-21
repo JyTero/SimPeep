@@ -12,7 +12,12 @@ public class Needs_UIPanel : UIPanel
 
     private Dictionary<Need, NeedMeter> needMetersByNeed = new();
     
-    private Character selectedCharacter;
+
+    public void OnChangeSelectedCharacter()
+    {
+        //selectedCharacter = newChara;
+        UpdatePanel();
+    }
 
     protected void Start()
     {
@@ -25,18 +30,17 @@ public class Needs_UIPanel : UIPanel
                 needMeters.Add(needMeter);
         }
 
-            selectedCharacter = FindAnyObjectByType<Character>();
         //AssignNeedMeters();
         
     }
     public void Debuglandia()
     {
-        AssignNeedMeters();
+        //AssignNeedMeters();
     }
     private void AssignNeedMeters()
     {
         int i = 0;
-        foreach(Need need in selectedCharacter.Needs.Values.ToList<Need>())
+        foreach(Need need in uiController.SelectedCharacter.Needs.Values.ToList<Need>())
         {
             needMetersByNeed.Add(need, needMeters[i]);
             needMeters[i].Initialise(need, this);
@@ -47,7 +51,8 @@ public class Needs_UIPanel : UIPanel
 
     public void UpdatePanel()
     {
-
+        needMetersByNeed.Clear();
+        AssignNeedMeters();
     }
 
     public void RegisterToNeedAlert(INeedAlertable alertable, Need need)

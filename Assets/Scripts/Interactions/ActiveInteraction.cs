@@ -37,24 +37,38 @@ public class ActiveInteraction
     public ActiveInteraction(Character chara, InteractionSO itSO, Interactable interactable)
     {
         interactionTuningSO = itSO;
-        interactionName = itSO.InteractionName;
         interactionSource = interactable;
         thisCharacter = chara;
-        interactionLength = itSO.InteractionLenght;
+
+        CommonConstruct();
+    }
+    public ActiveInteraction(Character chara, StoredInteraction storedInteraction)
+    {
+        interactionTuningSO = storedInteraction.InteractionTuningSO;
+        interactionSource = storedInteraction.InteractionSource;
+        thisCharacter = chara;
+
+        CommonConstruct();
+    }
+
+    private void CommonConstruct()
+    {
+        interactionName = interactionTuningSO.InteractionName;
+        interactionLength = interactionTuningSO.InteractionLenght;
         interactionLenghtAccumulation = 0;
         interactionState = InteractionState.Default;
         interactionScore = 0;
 
-        scoringModifiers = itSO.ScoringModifiers;
+        scoringModifiers = interactionTuningSO.ScoringModifiers;
 
-        foreach(Need_InstructionSO needInstructionSO in itSO.Need_InteractionInstructions)
+        foreach (Need_InstructionSO needInstructionSO in interactionTuningSO.Need_InteractionInstructions)
         {
             needsToWeight.Add(needInstructionSO.NeedToAdjust);
         }
-
     }
 
-    
+
+
 }
 
 public class StoredInteraction

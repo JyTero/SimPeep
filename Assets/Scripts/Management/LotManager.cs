@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Runtime.CompilerServices;
 
 public class LotManager : ManagementCore                    
 {
@@ -24,17 +24,21 @@ public class LotManager : ManagementCore
         List<StoredInteraction> interactions = new();
         foreach (ItemBase item in lot.ItemsOnLot)
         {
-            foreach (InteractionSO interactonSO in item.AllInteractions)
-            {
-                interactions.Add(new StoredInteraction(interactonSO, item));
-            }
+            foreach(StoredInteraction storedInteraction in item.AllInteractions)
+                interactions.Add(storedInteraction);
+            //foreach (InteractionSO interactonSO in item.AllInteractions)
+            //{
+            //    interactions.Add(new StoredInteraction(interactonSO, item));
+            //}
         }
         foreach (Character chara in lot.CharactersOnLot)
         {
-            foreach (InteractionSO interactonSO in chara.AllInteractions)
-            {
-                interactions.Add(new StoredInteraction(interactonSO, chara));
-            }
+            foreach (StoredInteraction storedInteraction in chara.AllInteractions)
+                interactions.Add(storedInteraction);
+            //foreach (InteractionSO interactonSO in chara.AllInteractions)
+            //{
+            //    interactions.Add(new StoredInteraction(interactonSO, chara));
+            //}
         }
         return interactions;
     }

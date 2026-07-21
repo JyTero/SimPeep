@@ -24,8 +24,16 @@ public class Interactable : MonoBehaviour
     {
         thisLot = FindAnyObjectByType<WorldLot>();
     }
+    [SerializeField]
+    protected List<InteractionSO> interactionSOs = new();
+    public List<InteractionSO> InteractionSOs { get { return interactionSOs; } }
 
     [SerializeField]
-    private List<InteractionSO> allInteractions = new();
-    public List<InteractionSO> AllInteractions { get { return allInteractions; } }
+    protected List<StoredInteraction> allInteractions = new();
+    public List<StoredInteraction> AllInteractions { get { return allInteractions; } }
+
+    public void NewStoredInteraction(StoredInteraction sInteraction)
+    {
+        allInteractions.Add(sInteraction);
+    }
 }

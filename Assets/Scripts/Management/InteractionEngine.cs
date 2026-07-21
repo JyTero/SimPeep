@@ -16,17 +16,21 @@ public class InteractionEngine : ManagementCore
         debuglandia = FindAnyObjectByType<Debuglandia>();
     }
 
+    public void LoadingScreen()
+    {
+
+    }
+
     public void deebug(Character chara)
     {
         //Gather
         ItemBase item = FindAnyObjectByType<ItemBase>();
-        List<InteractionSO> interactionSOs = item.AllInteractions;
+        List<StoredInteraction> storedInteractions = item.AllInteractions;
         //Convert
         List<ActiveInteraction> interactions = new();
-        foreach (InteractionSO actionSO in interactionSOs)
+        foreach (StoredInteraction storedInteraction in storedInteractions)
         {
-            //TODO: Make "StoredInteraction" that holds interactionSO and item and is given here, instead of passing SOs.
-            interactions.Add(new ActiveInteraction(chara, actionSO, item));
+            interactions.Add(new ActiveInteraction(chara, storedInteraction.InteractionTuningSO, item));
         }
         //Validity
         //Score
