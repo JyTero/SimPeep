@@ -21,6 +21,9 @@ public class ActiveInteraction
     private float interactionLength;
     public float InteractionLength { get { return interactionLength; } }
 
+    private bool isReaction;
+    public bool IsReaction { get { return isReaction; } }
+
 
     private List<NeedType> needsToWeight = new();
     public List<NeedType> NeedsToWeight { get { return needsToWeight; } }
@@ -58,6 +61,7 @@ public class ActiveInteraction
         interactionLenghtAccumulation = 0;
         interactionState = InteractionState.Default;
         interactionScore = 0;
+        isReaction = interactionTuningSO.Reaction;
 
         scoringModifiers = interactionTuningSO.ScoringModifiers;
 
@@ -66,8 +70,6 @@ public class ActiveInteraction
             needsToWeight.Add(needInstructionSO.NeedToAdjust);
         }
     }
-
-
 
 }
 
@@ -92,6 +94,7 @@ public enum InteractionState
     Starting,
     Moving,
     AtDestination,
+    Waiting,
     Running,
     Ending,
 }

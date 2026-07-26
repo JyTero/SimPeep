@@ -47,7 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3692c20186c3c9b438ad6981a0fff78d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character
-  allInteractions: []
+  itemName: Char1
+  interactionSOs:
+  - {fileID: 11400000, guid: f933ca8994d7d88499eebc2d62a6f64d, type: 2}
   characterSpeed: 2
   traits:
   - {fileID: 11400000, guid: 76a5f66927af64d4c9d21d5523dba07e, type: 2}

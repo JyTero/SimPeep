@@ -17,3 +17,8 @@ MonoBehaviour:
   interactionLenght: 10
   need_InteractionInstructions:
   - {fileID: 11400000, guid: ab793b87daafd664b8999fb3c2fa298f, type: 2}
+  relationshipChangeInstructions: []
+  Reaction: 0
+  scoringModifiers: []
+  IsSocial: 0
+  socialResponceInteractions: []

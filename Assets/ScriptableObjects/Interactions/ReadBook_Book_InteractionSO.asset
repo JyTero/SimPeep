@@ -17,6 +17,10 @@ MonoBehaviour:
   interactionLenght: 8
   need_InteractionInstructions:
   - {fileID: 11400000, guid: e66cd6ff0d4ea66439f0d8287166cca1, type: 2}
+  relationshipChangeInstructions: []
+  Reaction: 0
   scoringModifiers:
   - traitSO: {fileID: 11400000, guid: 76a5f66927af64d4c9d21d5523dba07e, type: 2}
     traitBonus: 10
+  IsSocial: 0
+  socialResponceInteractions: []

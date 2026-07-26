@@ -7,6 +7,8 @@ public class Debuglandia : MonoBehaviour
     protected InteractionEngine interactionEngine;
     protected NeedsEngine needsEngine;
     protected LotManager lotManager;
+    protected UIController UIController;
+    protected CharacterRelationshipsManager relationshipsManager;
 
     protected virtual void Start()
     {
@@ -15,6 +17,8 @@ public class Debuglandia : MonoBehaviour
         interactionEngine = FindAnyObjectByType<InteractionEngine>();
         needsEngine = FindAnyObjectByType<NeedsEngine>();
         lotManager = FindAnyObjectByType<LotManager>();
+        UIController = GetComponent<UIController>();
+        relationshipsManager = GetComponent<CharacterRelationshipsManager>();
     }
 
     //Do things that a need to be done after everything is ready but before play
@@ -30,12 +34,10 @@ public class Debuglandia : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            LateStart();
+            relationshipsManager.PrintRelations();
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
-            characterAIHandler.AddNewCharacter(FindAnyObjectByType<Character>());
-            //interactionEngine.deebug(FindAnyObjectByType<Character>());
         }
     }
 }

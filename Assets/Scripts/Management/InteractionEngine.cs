@@ -10,6 +10,8 @@ public class InteractionEngine : ManagementCore
 
     private Debuglandia debuglandia;
 
+    private Dictionary<Character, ActiveInteraction> waitingInteractionsByWaitee = new();
+
     protected void Start()
     {
         base.Start();
@@ -21,22 +23,6 @@ public class InteractionEngine : ManagementCore
 
     }
 
-    public void deebug(Character chara)
-    {
-        //Gather
-        ItemBase item = FindAnyObjectByType<ItemBase>();
-        List<StoredInteraction> storedInteractions = item.AllInteractions;
-        //Convert
-        List<ActiveInteraction> interactions = new();
-        foreach (StoredInteraction storedInteraction in storedInteractions)
-        {
-            interactions.Add(new ActiveInteraction(chara, storedInteraction.InteractionTuningSO, item));
-        }
-        //Validity
-        //Score
-        //Pick best
-        StartNewInteraction(interactions[0]);
-    }
     public void StartNewInteraction(ActiveInteraction interaction)
     {
         interaction.interactionState = InteractionState.Starting;
@@ -45,17 +31,65 @@ public class InteractionEngine : ManagementCore
             Debug.Log($"{interaction.ThisCharacter.ItemName} started interaction {interaction.InteractionName} (of {interaction.InteractionSource.ItemName})");
         activeInteractions.Add(interaction);
 
-        //Route
-        interaction.interactionState = InteractionState.Moving;
-        characterRouting.StartRouting(interaction);
+        //TODO: Check that intraction is ready to start (other character available, item has free slot (BONUS: When to wait wait vs fail)
+        //if(IsTargetAvailable())
+        //  Start
+
+        if (interaction.InteractionSource is Character)
+        {
+            //Cue "ResponceInteraction to given SocialInteraction" (Via AIHandler)
+            //On the other one, if this is reaction, alert system to continue
+            if (interaction.IsReaction)
+            {
+                RouteToInteraction(interaction);
+            }
+            else
+            {
+                ActiveInteraction responce = new ActiveInteraction(interaction.InteractionSource as Character, new StoredInteraction(interaction.InteractionTuningSO.SocialResponceInteractions[0], interaction.ThisCharacter));
+                characterAIHandler.QueueInteraction(responce);
+                RouteToInteraction(interaction);
+            }
+
+        }
+        else
+            //Route
+            RouteToInteraction(interaction);
 
     }
+
+    private void RouteToInteraction(ActiveInteraction interaction)
+    {
+        interaction.interactionState = InteractionState.Moving;
+        characterRouting.StartRouting(interaction);
+    }
+
     public void OnInteractionDestinationArrival(ActiveInteraction interaction)
     {
         //Later, make more complicated for multi step interactions (They shall be a "container of interactions"
-        interaction.interactionState = InteractionState.Running;
-        SendInteractionInstructions(interaction);
+
+        //Queue Social Interactions to wait, router initialises on arrival
+        if (interaction.InteractionSource is Character)
+        {
+            if (interaction.IsReaction)
+                interaction.interactionState = InteractionState.Waiting;
+            else
+            {
+                //Run interaction on both parties from the same orderr
+                interaction.interactionState = InteractionState.Running;
+                SendInteractionInstructions(interaction);
+
+                waitingInteractionsByWaitee[interaction.InteractionSource as Character].interactionState = InteractionState.Running;
+                SendInteractionInstructions(waitingInteractionsByWaitee[interaction.InteractionSource as Character]);
+            }
+
+        }
+        else
+        {
+            interaction.interactionState = InteractionState.Running;
+            SendInteractionInstructions(interaction);
+        }
     }
+
     private void SendInteractionInstructions(ActiveInteraction interaction)
     {
         //DEBUG
@@ -65,9 +99,35 @@ public class InteractionEngine : ManagementCore
             Need_Instruction ni = new(niso, interaction.ThisCharacter, interaction.InteractionLength);
             needInstructions.Add(ni);
         }
-        FindAnyObjectByType<NeedsEngine>().NewInstructions(needInstructions);
+        needsEngine.NewInstructions(needInstructions);
+        foreach (Relationship_InstructionSO relso in interaction.InteractionTuningSO.RelationshipChangeInstructions)
+        {
+            Character thisCharacter = interaction.ThisCharacter;
+            Character targetCharacter = interaction.InteractionSource as Character;
+            if (relationshipsManager.HasExistingRelationship(thisCharacter, targetCharacter))
+            {
+                relationshipsManager.AdjustRelationship(thisCharacter, targetCharacter, relso.RelationshipScoreChange);
+            }
+            else
+            {
+                relationshipsManager.NewRelationship(thisCharacter, targetCharacter);
+                relationshipsManager.AdjustRelationship(thisCharacter, targetCharacter, relso.RelationshipScoreChange);
+            }
+
+
+            if (IsDebug)
+                Debug.Log($"Relations!({interaction.ThisCharacter.ItemName} towards {interaction.InteractionSource.ItemName})");
+        }
+
     }
 
+    private void RegisterToWait(ActiveInteraction interaction)
+    {
+        if (waitingInteractionsByWaitee.ContainsKey(interaction.ThisCharacter))
+            return;
+
+        waitingInteractionsByWaitee.Add(interaction.ThisCharacter, interaction);
+    }
 
     protected override void TimedUpdate(float dt)
     {
@@ -94,6 +154,9 @@ public class InteractionEngine : ManagementCore
                     break;
                 case InteractionState.AtDestination:
                     OnInteractionDestinationArrival(interaction);
+                    break;
+                case InteractionState.Waiting:
+                    RegisterToWait(interaction);
                     break;
                 case InteractionState.Running:
                     break;

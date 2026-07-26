@@ -1255,11 +1255,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3715783593040135689, guid: 8f000d0a7b49f2f45918b5c8df2c8302, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.35356
+      value: -6.52
       objectReference: {fileID: 0}
     - target: {fileID: 3715783593040135689, guid: 8f000d0a7b49f2f45918b5c8df2c8302, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.24749
+      value: -1.63
       objectReference: {fileID: 0}
     - target: {fileID: 3715783593040135689, guid: 8f000d0a7b49f2f45918b5c8df2c8302, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1835,6 +1835,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VendingMachine
       objectReference: {fileID: 0}
+    - target: {fileID: 1637070763544676122, guid: 55863b300787971468d12837d91857a9, type: 3}
+      propertyPath: interactionSOs.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3704335781130690329, guid: 55863b300787971468d12837d91857a9, type: 3}
       propertyPath: m_LocalScale.y
       value: 2
@@ -1931,10 +1935,6 @@ PrefabInstance:
     - target: {fileID: 3715783593040135689, guid: 8f000d0a7b49f2f45918b5c8df2c8302, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4354359111728614167, guid: 8f000d0a7b49f2f45918b5c8df2c8302, type: 3}
-      propertyPath: itemName
-      value: Char1
       objectReference: {fileID: 0}
     - target: {fileID: 6735306564307001849, guid: 8f000d0a7b49f2f45918b5c8df2c8302, type: 3}
       propertyPath: m_Name

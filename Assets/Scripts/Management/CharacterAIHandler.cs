@@ -128,7 +128,8 @@ public class CharacterAIHandler : ManagementCore
             interactions.Sort((a, b) => b.interactionScore.CompareTo(a.interactionScore));
 
             tasklessCharacters.Remove(characterAI);
-            StartInteraction(interactions[i], characterAI);
+            QueueInteraction(interactions[i]);
+            //StartInteraction(interactions[i], characterAI);
         }
     }
 

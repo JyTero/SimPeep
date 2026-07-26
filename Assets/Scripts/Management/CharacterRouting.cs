@@ -11,7 +11,7 @@ public class CharacterRouting : ManagementCore
     private Debuglandia debuglandia;
     private Dictionary<Character, Transform> charactersRouting = new();
     private Dictionary<ActiveInteraction, Transform> interactionsRouting = new();
-    private List<Character> charactersAtDestination = new();
+    // private List<Character> charactersAtDestination = new();
 
 
     private void Start()
@@ -25,7 +25,10 @@ public class CharacterRouting : ManagementCore
     }
     public void StartRouting(ActiveInteraction interaction)
     {
-        interactionsRouting.Add(interaction, interaction.InteractionSource.transform);
+        if (interaction.IsReaction)
+            interactionsRouting.Add(interaction, interaction.ThisCharacter.transform);
+        else
+            interactionsRouting.Add(interaction, interaction.InteractionSource.transform);
     }
 
     protected override void TimedUpdate(float dt)
@@ -35,6 +38,7 @@ public class CharacterRouting : ManagementCore
         InteractionRoutingUpdate(dt);
     }
 
+    //"other"(?) moving (When moving without tied interaction)
     private void CharacterRoutingUpdate()
     {
         List<Character> charactersAtDest = new();
@@ -57,6 +61,7 @@ public class CharacterRouting : ManagementCore
 
         }
     }
+    //In interaction (moving for interaction purposes)
     private void InteractionRoutingUpdate(float dt)
     {
         List<ActiveInteraction> charactersAtDest = new();
@@ -84,7 +89,7 @@ public class CharacterRouting : ManagementCore
     }
     private void CharacerAtDestination(Character chara)
     {
-        charactersAtDestination.Add(chara);
+        //charactersAtDestination.Add(chara);
     }
 }
 

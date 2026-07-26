@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,10 +22,25 @@ public class InteractionSO : ScriptableObject
     [SerializeField]
     private List<Need_InstructionSO> need_InteractionInstructions = new();
     public List<Need_InstructionSO> Need_InteractionInstructions { get { return need_InteractionInstructions; } }
-
+    
     [SerializeField]
+    private List<Relationship_InstructionSO> relationshipChangeInstructions = new();
+    public List<Relationship_InstructionSO> RelationshipChangeInstructions { get { return relationshipChangeInstructions; } }
+   
+    public bool Reaction;
+
+    [SerializeField, HideIf("Reaction")]
     private List<InteractionScoringModifier> scoringModifiers = new();
     public List<InteractionScoringModifier> ScoringModifiers { get { return scoringModifiers; } }
 
+    [HideIf("Reaction")]
+    public bool IsSocial;
 
+    //List to make "choose one based on traits possible"?
+    [SerializeField, ShowIf("IsSocial")]
+    private List<InteractionSO> socialResponceInteractions = new();
+    public List<InteractionSO> SocialResponceInteractions { get { return socialResponceInteractions; } }
+  
+
+    
 }

@@ -11,6 +11,8 @@ public class LoadingScreen : MonoBehaviour
     protected InteractionEngine interactionEngine;
     protected NeedsEngine needsEngine;
     protected LotManager lotManager;
+    protected UIController UIController;
+    protected CharacterRelationshipsManager relationshipsManager;
 
     protected virtual void Start()
     {
@@ -19,6 +21,8 @@ public class LoadingScreen : MonoBehaviour
         interactionEngine = FindAnyObjectByType<InteractionEngine>();
         needsEngine = FindAnyObjectByType<NeedsEngine>();
         lotManager = FindAnyObjectByType<LotManager>();
+        UIController = GetComponent<UIController>();
+        relationshipsManager = GetComponent<CharacterRelationshipsManager>();
     }
 
     // Update is called once per frame
@@ -31,12 +35,8 @@ public class LoadingScreen : MonoBehaviour
             Character[] characters = FindObjectsByType<Character>();
             foreach (Character chara in characters)
             {
-                characterAIHandler.AddNewCharacter(chara);
-                foreach (InteractionSO iso in chara.InteractionSOs)
-                {
-                    chara.NewStoredInteraction(new StoredInteraction(iso, chara));
-
-                }
+                NewCharacter(chara);
+              
             }
 
             FindAnyObjectByType<Simulation>().SetSimulationTimeScale(1);
@@ -55,5 +55,20 @@ public class LoadingScreen : MonoBehaviour
             }
 
         }
+    }
+
+    private void NewCharacter(Character chara)
+    {
+        //CharacterAI / Interactions
+        characterAIHandler.AddNewCharacter(chara);
+        foreach (InteractionSO iso in chara.InteractionSOs)
+        {
+            chara.NewStoredInteraction(new StoredInteraction(iso, chara));
+
+        }
+
+        //Relations
+        relationshipsManager.NewCharacter(chara);
+
     }
 }

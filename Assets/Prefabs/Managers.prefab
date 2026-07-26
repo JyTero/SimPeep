@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: 8537978086826131476}
   - component: {fileID: 8799867617383054739}
   - component: {fileID: 8776367404934502784}
+  - component: {fileID: 5841369935084522219}
+  - component: {fileID: 1466843029237231860}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -80,7 +82,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterAIHandler
   IsDebug: 1
   updateInterval: 0.2
-  characterAIIdleTimer: 3
+  characterAIIdleTimer: 30
   interactionBaseScore: 10
 --- !u!114 &6493427627136099017
 MonoBehaviour:
@@ -163,5 +165,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0f80b0593a817648b9e32e4f6a7baf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIController
+  IsDebug: 1
+  updateInterval: 0
+  selectCharacterName: {fileID: 0}
+  SelectionParent: {fileID: 0}
+  buttonPrefab: {fileID: 1725717408152966520, guid: f247c5d315176fd4db5721542e123407, type: 3}
+--- !u!114 &5841369935084522219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068664814951767870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4639fc10398722849b1c4c0ee3cdf37e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoadingScreen
+--- !u!114 &1466843029237231860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1068664814951767870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536124f984adc50418f877a14394ff59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterRelationshipsManager
   IsDebug: 0
   updateInterval: 0

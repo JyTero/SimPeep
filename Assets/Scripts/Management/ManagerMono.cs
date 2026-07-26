@@ -8,6 +8,7 @@ public class ManagerMono : MonoBehaviour
     protected NeedsEngine needsEngine;
     protected LotManager lotManager;
     protected UIController UIController;
+    protected CharacterRelationshipsManager relationshipsManager;
 
     [SerializeField]
     protected bool IsDebug;
@@ -20,6 +21,7 @@ public class ManagerMono : MonoBehaviour
         needsEngine = FindAnyObjectByType<NeedsEngine>();
         lotManager = FindAnyObjectByType<LotManager>();
         UIController = GetComponent<UIController>();
+        relationshipsManager = GetComponent<CharacterRelationshipsManager>();
     }
 
     // Update is called once per frame
