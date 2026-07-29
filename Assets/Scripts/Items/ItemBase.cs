@@ -24,7 +24,11 @@ public class ItemBase : Interactable
         itemDescription  = itemData.ItemDescription;
         itemType = itemData.ItemType;
         itemPrice = itemData.ItemPrice;
-        interactionSOs = itemData.AllInteractions;
+        foreach(InteractionSO iso in itemData.AllInteractions)
+        {
+            interactionSOs.Add(iso);
+        }
+
        // allInteractions = itemData.AllInteractions;
     }
 }

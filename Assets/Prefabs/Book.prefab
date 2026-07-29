@@ -47,9 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de3c0e49226a81341aebc33b33aeef0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
-  itemName: 'Book: Second Science-Fiction XIV: Region Renewed'
-  allInteractions:
-  - {fileID: 11400000, guid: b61b9e8f64c77234082c39b6620d07ba, type: 2}
+  itemName: 'Book: Second-To-Last Science-Fiction XIV: Region Renewed'
   itemData: {fileID: 11400000, guid: 6cc50175b61685e4ba1cb3c200b50679, type: 2}
 --- !u!33 &2590852899996563741
 MeshFilter:

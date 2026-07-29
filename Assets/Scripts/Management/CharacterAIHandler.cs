@@ -63,7 +63,7 @@ public class CharacterAIHandler : ManagementCore
             if (idleCharacter.InteractionQueue.Count > 0)
             {
                 idleCharacters.RemoveAt(i);
-                StartInteraction(idleCharacter.InteractionQueue[0], idleCharacter);
+                StartInteraction(idleCharacter.InteractionQueue[0].interaction, idleCharacter);
                 idleCharacter.InteractionQueue.RemoveAt(0);
                 continue;
             }
@@ -71,6 +71,8 @@ public class CharacterAIHandler : ManagementCore
             idleCharacter.hasBeenIdleForTimer += deltaTime + updateInterval;
             if (idleCharacter.hasBeenIdleForTimer > characterAIIdleTimer)
             {
+                //Add check/logic to not find another interaction if queue exists
+
                 idleCharacter.hasBeenIdleForTimer -= characterAIIdleTimer;
                 tasklessCharacters.Add(idleCharacter);
                 idleCharacters.RemoveAt(i);
@@ -127,15 +129,16 @@ public class CharacterAIHandler : ManagementCore
             //interactions = SortScoredInteractions(interactions);
             interactions.Sort((a, b) => b.interactionScore.CompareTo(a.interactionScore));
 
+            QueueInteraction(interactions[i], InteractionQueueSource.NormalAISelect);
             tasklessCharacters.Remove(characterAI);
-            QueueInteraction(interactions[i]);
+            idleCharacters.Add(characterAI);
             //StartInteraction(interactions[i], characterAI);
         }
     }
 
-    public void QueueInteraction(ActiveInteraction interaction)
+    public void QueueInteraction(ActiveInteraction interaction, InteractionQueueSource queueSource)
     {
-        charactersAIsByCharacter[interaction.ThisCharacter].QueueNewInteraction(interaction);
+        charactersAIsByCharacter[interaction.ThisCharacter].QueueNewInteraction(interaction, queueSource);
     }
 
     private void StartInteraction(ActiveInteraction interaction, CharacterAI charaAI)
@@ -177,6 +180,14 @@ public class CharacterAIHandler : ManagementCore
         Active,
         occupied,
     }
+    public enum InteractionQueueSource
+    {
+        Default,
+        NormalAISelect,
+        UserSelect,
+        UserSelectNPCReaction,
+        UrgentReaction,
+    }
     private class CharacterAI
     {
         public Character chara;
@@ -184,11 +195,13 @@ public class CharacterAIHandler : ManagementCore
 
         public float hasBeenIdleForTimer = 0;
 
-        private List<ActiveInteraction> interactionQueue = new();
-        public List<ActiveInteraction> InteractionQueue { get { return interactionQueue; } }
-        public void QueueNewInteraction(ActiveInteraction interaction)
+        private List<QueuedInteraction> interactionQueue = new();
+        public List<QueuedInteraction> InteractionQueue { get { return interactionQueue; } }
+
+        public void QueueNewInteraction(ActiveInteraction interaction, InteractionQueueSource queueSource)
         {
-            interactionQueue.Add(interaction);
+            //TODO: Handle queueSource to prioritise interactions
+            interactionQueue.Add(new QueuedInteraction(interaction, queueSource));
         }
         public CharacterAI(Character c)
         {
@@ -196,5 +209,20 @@ public class CharacterAIHandler : ManagementCore
             aiState = CharacterAIState.Idle;
         }
 
+    }
+    //InteractionInScoring (Lighter than ActiveInteraction, to be used during scoring (Lot of items generated, should probs be lighter))
+    private class QueuedInteraction
+    {
+        public ActiveInteraction interaction;
+
+        private InteractionQueueSource queueSource;
+        public InteractionQueueSource QueueSource { get { return queueSource; } }
+
+
+        public QueuedInteraction(ActiveInteraction interaction, InteractionQueueSource queueSource)
+        {
+            this.interaction = interaction;
+            this.queueSource = queueSource;
+        }
     }
 }

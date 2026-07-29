@@ -24,11 +24,12 @@ public class Interactable : MonoBehaviour
     {
         thisLot = FindAnyObjectByType<WorldLot>();
     }
+
     [SerializeField]
     protected List<InteractionSO> interactionSOs = new();
     public List<InteractionSO> InteractionSOs { get { return interactionSOs; } }
 
-    [SerializeField]
+
     protected List<StoredInteraction> allInteractions = new();
     public List<StoredInteraction> AllInteractions { get { return allInteractions; } }
 

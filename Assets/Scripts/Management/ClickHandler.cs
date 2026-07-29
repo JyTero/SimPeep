@@ -58,7 +58,7 @@ public class ClickHandler : ManagementCore
                     if (IsDebug)
                         Debug.Log("On Character");
 
-                    UIController.ChantgeUICharacterInfo(chara);
+                    UIController.ChangeSelectCharacter(chara);
                     return;
                 }
             }

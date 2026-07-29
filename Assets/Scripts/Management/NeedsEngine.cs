@@ -52,7 +52,7 @@ public class NeedsEngine : ManagementCore
     {
         foreach (INeedAlertable alertable in need.Alertables)
         {
-            alertable.UpdateData(need);
+            alertable.UpdateAndRefreshData(need);
         }
     }
     //Instructions

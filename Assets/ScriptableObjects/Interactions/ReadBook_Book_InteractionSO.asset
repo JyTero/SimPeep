@@ -14,13 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
   interactionName: Read
   Description: Read Book
+  interactionLenghtType: 1
   interactionLenght: 8
+  targetNeed: {fileID: 0}
+  targetNeedValue: 0
   need_InteractionInstructions:
   - {fileID: 11400000, guid: e66cd6ff0d4ea66439f0d8287166cca1, type: 2}
   relationshipChangeInstructions: []
+  socialResponceInteractions: []
   Reaction: 0
   scoringModifiers:
   - traitSO: {fileID: 11400000, guid: 76a5f66927af64d4c9d21d5523dba07e, type: 2}
     traitBonus: 10
   IsSocial: 0
-  socialResponceInteractions: []

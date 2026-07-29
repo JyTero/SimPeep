@@ -11,14 +11,17 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
   m_Name: Sleep_Bed_InteractionSO
-  m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
   interactionName: Sleep
   Description: 
-  interactionLenght: 10
+  interactionLenghtType: 2
+  interactionLenght: 0
+  targetNeed: {fileID: 11400000, guid: 782d4b64f8cc28b49ad2e2c96547b9ac, type: 2}
+  targetNeedValue: 95
   need_InteractionInstructions:
   - {fileID: 11400000, guid: ab793b87daafd664b8999fb3c2fa298f, type: 2}
   relationshipChangeInstructions: []
+  socialResponceInteractions: []
   Reaction: 0
   scoringModifiers: []
   IsSocial: 0
-  socialResponceInteractions: []

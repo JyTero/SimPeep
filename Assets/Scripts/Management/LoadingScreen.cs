@@ -4,6 +4,9 @@ using UnityEngine.Rendering.Universal;
 
 public class LoadingScreen : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject loadingScreenCover;
+
     private bool runStartup = false;
 
     protected CharacterAIHandler characterAIHandler;
@@ -30,19 +33,13 @@ public class LoadingScreen : MonoBehaviour
     {
         if (!runStartup)
         {
-            FindAnyObjectByType<Needs_UIPanel>().Debuglandia();
-
             Character[] characters = FindObjectsByType<Character>();
             foreach (Character chara in characters)
             {
                 NewCharacter(chara);
-              
+
             }
-
-            FindAnyObjectByType<Simulation>().SetSimulationTimeScale(1);
-            gameObject.GetComponent<LoadingScreen>().enabled = false;
-
-
+            //Lots & Items
             foreach (WorldLot lot in lotManager.AllLots)
             {
                 foreach (ItemBase item in lot.ItemsOnLot)
@@ -54,8 +51,16 @@ public class LoadingScreen : MonoBehaviour
                 }
             }
 
+            //UI
+
+
+            FindAnyObjectByType<Simulation>().SetSimulationTimeScale(1);
+            loadingScreenCover.gameObject.SetActive(false);
+
+            gameObject.GetComponent<LoadingScreen>().enabled = false;
         }
     }
+
 
     private void NewCharacter(Character chara)
     {
@@ -66,9 +71,10 @@ public class LoadingScreen : MonoBehaviour
             chara.NewStoredInteraction(new StoredInteraction(iso, chara));
 
         }
+        
 
-        //Relations
-        relationshipsManager.NewCharacter(chara);
+            //Relations
+            relationshipsManager.NewCharacter(chara);
 
     }
 }

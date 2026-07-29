@@ -21,14 +21,6 @@ public class Debuglandia : MonoBehaviour
         relationshipsManager = GetComponent<CharacterRelationshipsManager>();
     }
 
-    //Do things that a need to be done after everything is ready but before play
-    private void LateStart()
-    {
-        FindAnyObjectByType<Needs_UIPanel>().Debuglandia();
-        
-    }
-
-
     // Update is called once per frame
     void Update()
     {

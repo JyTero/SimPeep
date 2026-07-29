@@ -14,11 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
   interactionName: Use Toilet
   Description: 
+  interactionLenghtType: 1
   interactionLenght: 4
+  targetNeed: {fileID: 0}
+  targetNeedValue: 0
   need_InteractionInstructions:
   - {fileID: 11400000, guid: db3790b297fd71744bece2948df9c369, type: 2}
   relationshipChangeInstructions: []
+  socialResponceInteractions: []
   Reaction: 0
   scoringModifiers: []
   IsSocial: 0
-  socialResponceInteractions: []

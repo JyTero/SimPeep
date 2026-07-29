@@ -47,8 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de3c0e49226a81341aebc33b33aeef0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
-  allInteractions:
-  - {fileID: 11400000, guid: e61f06675279e254c9f77ea22184bef7, type: 2}
+  itemName: Seat of Relief
   itemData: {fileID: 11400000, guid: cb2e42bad1ca9194e929f34d0f7220e8, type: 2}
 --- !u!33 &1191512325784902825
 MeshFilter:

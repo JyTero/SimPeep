@@ -20,8 +20,8 @@ public class ManagerMono : MonoBehaviour
         interactionEngine = FindAnyObjectByType<InteractionEngine>();
         needsEngine = FindAnyObjectByType<NeedsEngine>();
         lotManager = FindAnyObjectByType<LotManager>();
-        UIController = GetComponent<UIController>();
-        relationshipsManager = GetComponent<CharacterRelationshipsManager>();
+        UIController = FindAnyObjectByType<UIController>();
+        relationshipsManager = FindAnyObjectByType<CharacterRelationshipsManager>();
     }
 
     // Update is called once per frame

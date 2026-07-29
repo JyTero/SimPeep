@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 3624566694689882462}
   - component: {fileID: 8537978086826131476}
   - component: {fileID: 8799867617383054739}
-  - component: {fileID: 8776367404934502784}
   - component: {fileID: 5841369935084522219}
   - component: {fileID: 1466843029237231860}
   m_Layer: 0
@@ -151,25 +150,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 724f9c3ab0db4ca41a067d8a88164062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClickHandler
-  IsDebug: 0
-  updateInterval: 0
---- !u!114 &8776367404934502784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0f80b0593a817648b9e32e4f6a7baf9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIController
   IsDebug: 1
   updateInterval: 0
-  selectCharacterName: {fileID: 0}
-  SelectionParent: {fileID: 0}
-  buttonPrefab: {fileID: 1725717408152966520, guid: f247c5d315176fd4db5721542e123407, type: 3}
 --- !u!114 &5841369935084522219
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,11 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
   interactionName: Play Arcade Machine Game 2000
   Description: Play on "Pixel Plasting" arcade machine
+  interactionLenghtType: 1
   interactionLenght: 8
+  targetNeed: {fileID: 0}
+  targetNeedValue: 0
   need_InteractionInstructions:
   - {fileID: 11400000, guid: d07fb72740cc32249a1443c40b6e6bd8, type: 2}
   relationshipChangeInstructions: []
+  socialResponceInteractions: []
   Reaction: 0
   scoringModifiers: []
   IsSocial: 0
-  socialResponceInteractions: []

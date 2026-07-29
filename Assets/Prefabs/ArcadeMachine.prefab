@@ -47,8 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de3c0e49226a81341aebc33b33aeef0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
-  allInteractions:
-  - {fileID: 11400000, guid: 6dd101be2d4fbf144ba16430be35f8fc, type: 2}
+  itemName: Mega Game System 3000
   itemData: {fileID: 11400000, guid: 3b0396fd7fafd8040b0a3165ccbbecbc, type: 2}
 --- !u!33 &1441673062280529080
 MeshFilter:

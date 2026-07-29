@@ -47,8 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de3c0e49226a81341aebc33b33aeef0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
-  allInteractions:
-  - {fileID: 11400000, guid: f2b52d6b4ebe5e048bedae9aa88be67f, type: 2}
+  itemName: Treat Generator
   itemData: {fileID: 11400000, guid: 8844945ea4733324cb9a0f65399c4e3f, type: 2}
 --- !u!33 &7301639187953209603
 MeshFilter:

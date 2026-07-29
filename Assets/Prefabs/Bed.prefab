@@ -47,8 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de3c0e49226a81341aebc33b33aeef0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
-  allInteractions:
-  - {fileID: 11400000, guid: 1fb9c46f77fbfa34a93e7ea4c8456175, type: 2}
+  itemName: Sleep-i-nator
   itemData: {fileID: 11400000, guid: e9d074de3feed354daf1bc2ed71b8521, type: 2}
 --- !u!33 &2702368975192098849
 MeshFilter:

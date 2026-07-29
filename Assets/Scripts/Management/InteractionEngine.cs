@@ -46,7 +46,7 @@ public class InteractionEngine : ManagementCore
             else
             {
                 ActiveInteraction responce = new ActiveInteraction(interaction.InteractionSource as Character, new StoredInteraction(interaction.InteractionTuningSO.SocialResponceInteractions[0], interaction.ThisCharacter));
-                characterAIHandler.QueueInteraction(responce);
+                characterAIHandler.QueueInteraction(responce, CharacterAIHandler.InteractionQueueSource.UserSelectNPCReaction);
                 RouteToInteraction(interaction);
             }
 
@@ -90,6 +90,10 @@ public class InteractionEngine : ManagementCore
         }
     }
 
+
+    //TODO: Instead of sending entire insturction at once ("improve Hunger by 2 for 4 seconds")
+    //  On every Intervall (set by Instruction) send instruction to Improve by hour
+    // Makes Cancel Easier
     private void SendInteractionInstructions(ActiveInteraction interaction)
     {
         //DEBUG

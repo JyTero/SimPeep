@@ -17,3 +17,4 @@ MonoBehaviour:
   itemPrice: 690
   allInteractions:
   - {fileID: 11400000, guid: 1fb9c46f77fbfa34a93e7ea4c8456175, type: 2}
+  - {fileID: 11400000, guid: eb5ad963e6a8dc14394cd49957251c37, type: 2}

@@ -33,11 +33,21 @@ public class NeedMeter : MonoBehaviour, INeedAlertable
     public void Initialise(Need need, Needs_UIPanel nuip)
     {
         this.needsUIPanel = nuip;
-        UpdateData(need);
+        UpdateAndRefreshData(need);
+        DeRegisterFromNeedAlert();
         RegisterToNeedAlert();
     }
 
     public void UpdateData(Need need)
+    {
+        thisNeed = need;
+        needName = need.NeedType.ToString();
+        needValue = thisNeed.NeedValue;
+        needMaxValue = thisNeed.NeedMaxValue;
+
+    }
+
+    public void UpdateAndRefreshData(Need need)
     {
         thisNeed = need;
         needName = need.NeedType.ToString();
@@ -51,14 +61,14 @@ public class NeedMeter : MonoBehaviour, INeedAlertable
         needNameField.text = needName;
         needValueField.text = $"{needValue} / {needMaxValue}";
     }
+
     public void RegisterToNeedAlert()
     {
         needsUIPanel.RegisterToNeedAlert(this, thisNeed);
     }
 
-
     public void DeRegisterFromNeedAlert()
     {
-        needsUIPanel.RegisterToNeedAlert(this, thisNeed);
+        needsUIPanel.DeRegisterFromNeedAlert(this, thisNeed);
     }
 }
