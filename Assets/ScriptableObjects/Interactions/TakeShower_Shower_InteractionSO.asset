@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
   interactionName: Take a Shower
   Description: 
-  interactionLenghtType: 1
+  interactionEndingType: 1
   interactionLenght: 6
-  targetNeed: {fileID: 0}
+  targetNeedType: 0
   targetNeedValue: 0
   need_InteractionInstructions:
   - {fileID: 11400000, guid: 92ef51eb8dcd47c47a680f05adffa07e, type: 2}

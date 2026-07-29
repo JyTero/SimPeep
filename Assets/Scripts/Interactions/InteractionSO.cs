@@ -15,7 +15,8 @@ public class InteractionSO : ScriptableObject
 
     //Interaction Lenght Data    
     [SerializeField]
-    private InteractionLengthType interactionLenghtType;
+    private InteractionEndingType interactionEndingType;
+    public InteractionEndingType InteractionEndingType { get { return interactionEndingType; } }
 
     private bool setTime = false;
     private bool untillNeedAtValue = false;
@@ -25,8 +26,8 @@ public class InteractionSO : ScriptableObject
     public int InteractionLenght { get { return interactionLenght; } }
 
     [SerializeField, ShowIf("untillNeedAtValue")]
-    private NeedSO targetNeed;
-    public NeedSO TargetNeed { get { return targetNeed; } }
+    private NeedType targetNeedType;
+    public NeedType TargetNeedType { get { return targetNeedType; } }
     [SerializeField, ShowIf("untillNeedAtValue")]
     private int targetNeedValue;
     public int TargetNeedValue { get { return targetNeedValue; } }
@@ -57,27 +58,24 @@ public class InteractionSO : ScriptableObject
 
     private void OnValidate()
     {
-        switch (interactionLenghtType)
+        switch (interactionEndingType)
         {
-            case InteractionLengthType.Default:
+            case InteractionEndingType.Default:
+                setTime = false;
+                untillNeedAtValue = false;
                 return;
-            case InteractionLengthType.SetTime:
+            case InteractionEndingType.SetTime:
                 setTime = true;
                 untillNeedAtValue = false;
                 break;
-            case InteractionLengthType.UntillNeedAtValue:
+            case InteractionEndingType.UntillNeedAtValue:
                 untillNeedAtValue = true;
                 setTime = false;
                 break;
         }
     }
 
-    public enum InteractionLengthType
-    {
-        Default,
-        SetTime,
-        UntillNeedAtValue,
-    }
+   
 }
 
 

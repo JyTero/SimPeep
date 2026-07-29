@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
   interactionName: Get Snacks
   Description: Get Snacks Vending Machine (Should be begining burst need instruction)
-  interactionLenghtType: 1
+  interactionEndingType: 1
   interactionLenght: 4
-  targetNeed: {fileID: 0}
+  targetNeedType: 0
   targetNeedValue: 0
   need_InteractionInstructions:
   - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}

@@ -19,6 +19,8 @@ public class Need
     private int needDecay;
     public int NeedDecay { get { return needDecay; } set { needDecay = value; } }
 
+    public float TimeSinceLastNeedDecay;
+
     [SerializeField]
     private AnimationCurve needWeightOnInteractionScoring;
     public AnimationCurve NeedWeightOnInteractionScoring { get { return needWeightOnInteractionScoring; } }
@@ -37,6 +39,7 @@ public class Need
         needDecay = -needSO.NeedDecay;
         Owner = _owner;
         needWeightOnInteractionScoring = needSO.NeedWeightOnInteractionScoring;
+        TimeSinceLastNeedDecay = 0;
     }
 
     public void AddAlertable(INeedAlertable alertable)

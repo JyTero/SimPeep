@@ -18,8 +18,16 @@ public class ActiveInteraction
     private Character thisCharacter;
     public Character ThisCharacter { get { return thisCharacter; } }
 
+    private InteractionEndingType interactionEndingType;
+    public InteractionEndingType InteractionEndingType { get { return interactionEndingType; } }
+
     private float interactionLength;
     public float InteractionLength { get { return interactionLength; } }
+
+    private NeedType interactionEndingTargetNeedType;
+    public NeedType InteractionEndingTargetNeedType { get { return interactionEndingTargetNeedType; } }
+    private int interactionEndingTargetNeedValue;
+    public int InteractionEndingTargetNeedValue { get { return interactionEndingTargetNeedValue; } }
 
     private bool isReaction;
     public bool IsReaction { get { return isReaction; } }
@@ -35,6 +43,7 @@ public class ActiveInteraction
     public float interactionLenghtAccumulation;
     public InteractionState interactionState;
 
+    public float TimeSinceLastInstructionsSent;
     public float interactionScore;
 
     public ActiveInteraction(Character chara, InteractionSO itSO, Interactable interactable)
@@ -57,7 +66,7 @@ public class ActiveInteraction
     private void CommonConstruct()
     {
         interactionName = interactionTuningSO.InteractionName;
-        interactionLength = interactionTuningSO.InteractionLenght;
+        BuildInteractionEnding();
         interactionLenghtAccumulation = 0;
         interactionState = InteractionState.Default;
         interactionScore = 0;
@@ -69,8 +78,25 @@ public class ActiveInteraction
         {
             needsToWeight.Add(needInstructionSO.NeedToAdjust);
         }
+        TimeSinceLastInstructionsSent = 0;
     }
 
+    private void BuildInteractionEnding()
+    {
+        interactionEndingType = interactionTuningSO.InteractionEndingType;
+        switch (InteractionTuningSO.InteractionEndingType)
+        {
+            case InteractionEndingType.Default:
+                return;
+            case InteractionEndingType.SetTime:
+                interactionLength = InteractionTuningSO.InteractionLenght;
+                return;
+            case InteractionEndingType.UntillNeedAtValue:
+                interactionEndingTargetNeedType = InteractionTuningSO.TargetNeedType;
+                interactionEndingTargetNeedValue = InteractionTuningSO.TargetNeedValue;
+                return;
+        }
+    }
 }
 
 public class StoredInteraction
@@ -81,7 +107,7 @@ public class StoredInteraction
     private Interactable interactionSource;
     public Interactable InteractionSource { get { return interactionSource; } }
 
-    public StoredInteraction (InteractionSO interactionTuningSO, Interactable interactionSource)
+    public StoredInteraction(InteractionSO interactionTuningSO, Interactable interactionSource)
     {
         this.interactionTuningSO = interactionTuningSO;
         this.interactionSource = interactionSource;

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
   interactionName: Sleep
   Description: 
-  interactionLenghtType: 2
+  interactionEndingType: 2
   interactionLenght: 0
-  targetNeed: {fileID: 11400000, guid: 782d4b64f8cc28b49ad2e2c96547b9ac, type: 2}
+  targetNeedType: 1
   targetNeedValue: 95
   need_InteractionInstructions:
   - {fileID: 11400000, guid: ab793b87daafd664b8999fb3c2fa298f, type: 2}

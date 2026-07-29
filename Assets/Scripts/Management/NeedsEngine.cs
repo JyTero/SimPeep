@@ -20,9 +20,9 @@ public class NeedsEngine : ManagementCore
         if (TooEarlyForNextTick(updateInterval))
             return;
 
-        NeedsUpdate();
+        NeedsUpdate(dt);
         InstructionsUpdate(deltaTime);
-        
+
         //Alerting changes
         foreach (Need need in changedNeeds)
         {
@@ -32,16 +32,22 @@ public class NeedsEngine : ManagementCore
     }
 
     //Decay
-    private void NeedsUpdate()
+    private void NeedsUpdate(float dt)
     {
         //Decay
         foreach (List<Need> needs in needsByCharacter.Values)
         {
             foreach (Need need in needs)
             {
-                DecayNeed(need);
+                need.TimeSinceLastNeedDecay += (dt + updateInterval);
+                if (need.TimeSinceLastNeedDecay > OneUnitOfTime)
+                {
+                    need.TimeSinceLastNeedDecay -= OneUnitOfTime;
+                    DecayNeed(need);
+                }
+
             }
-        }        
+        }
     }
 
     private void DecayNeed(Need need)
@@ -60,6 +66,8 @@ public class NeedsEngine : ManagementCore
     {
         foreach (Need_Instruction needInstruction in needInstructions)
         {
+            if (activeNeedInstructions.Contains(needInstruction))
+                continue;
             activeNeedInstructions.Add(needInstruction);
         }
     }
@@ -82,13 +90,29 @@ public class NeedsEngine : ManagementCore
     {
         for (int i = activeNeedInstructions.Count - 1; i >= 0; i--)
         {
+            float dt = deltaTime + updateInterval;
             Need_Instruction instruction = activeNeedInstructions[i];
-            RunInstruction(instruction);
-
-            if (instruction.InstructionLifetime >= instruction.InteractionLength)
+            if (instruction.TimeSinceLastUse > OneUnitOfTime)
+            {
+                instruction.TimeSinceLastUse -= OneUnitOfTime;
+                RunInstruction(instruction);
+                //For Now, all interactions are fire once
                 activeNeedInstructions.Remove(instruction);
+            }
             else
-                instruction.InstructionLifetime += deltaTime + updateInterval;
+                instruction.TimeSinceLastUse += dt;
+
+
+
+            //if (instruction.InstructionLenght > 0)
+            //{
+            //    if (instruction.InstructionLifetime >= instruction.InstructionLenght)
+            //        activeNeedInstructions.Remove(instruction);
+            //    else
+            //        instruction.InstructionLifetime += dt;
+            //}
+            //else
+            //    activeNeedInstructions.Remove(instruction);
         }
     }
 

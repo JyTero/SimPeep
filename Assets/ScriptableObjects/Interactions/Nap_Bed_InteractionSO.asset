@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
   interactionName: Nap
   Description: 
-  interactionLenghtType: 1
+  interactionEndingType: 1
   interactionLenght: 4
-  targetNeed: {fileID: 0}
+  targetNeedType: 0
   targetNeedValue: 0
   need_InteractionInstructions:
   - {fileID: 11400000, guid: 002e01bc5f8da5f49bba32766da25f1f, type: 2}

@@ -10,10 +10,11 @@ public abstract class Instruction
     //protected float instructionTriggerTime;
     //public float InstructionTriggerTime { get { return instructionTriggerTime; } }
 
-    [HideInInspector]
+    
     public float InstructionLifetime;
-    [HideInInspector]
-    public float InteractionLength;
+    public float InstructionLenght;
+    public float TimeSinceLastUse;
+    
 
 }
 [Serializable]
@@ -42,13 +43,14 @@ public class Need_Instruction : Instruction
 
 
 
-    public Need_Instruction(Need_InstructionSO niso, Character chara, float interactionLength)
+    public Need_Instruction(Need_InstructionSO niso, Character chara)
     {
         needToAdjust = niso.NeedToAdjust;
         needAdjustValuePerTic = niso.NeedAdjustValuePerTic;
         needOwner = chara;
-        InteractionLength = interactionLength;
 
         InstructionLifetime = 0;
+        InstructionLenght = 0; //Might get used later for something
+        TimeSinceLastUse = 0;
     }
 }

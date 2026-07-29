@@ -76,53 +76,24 @@ public class InteractionEngine : ManagementCore
             {
                 //Run interaction on both parties from the same orderr
                 interaction.interactionState = InteractionState.Running;
-                SendInteractionInstructions(interaction);
+                SendOnInteractionBeginInstructions(interaction);
 
+                //Social Responce interaction handling
                 waitingInteractionsByWaitee[interaction.InteractionSource as Character].interactionState = InteractionState.Running;
-                SendInteractionInstructions(waitingInteractionsByWaitee[interaction.InteractionSource as Character]);
+                SendOnInteractionBeginInstructions(waitingInteractionsByWaitee[interaction.InteractionSource as Character]);
             }
 
         }
         else
         {
             interaction.interactionState = InteractionState.Running;
-            SendInteractionInstructions(interaction);
+            SendOnInteractionBeginInstructions(interaction);
         }
     }
 
-
-    //TODO: Instead of sending entire insturction at once ("improve Hunger by 2 for 4 seconds")
-    //  On every Intervall (set by Instruction) send instruction to Improve by hour
-    // Makes Cancel Easier
-    private void SendInteractionInstructions(ActiveInteraction interaction)
+    private void SendOnInteractionBeginInstructions(ActiveInteraction interaction)
     {
-        //DEBUG
-        List<Need_Instruction> needInstructions = new();
-        foreach (Need_InstructionSO niso in interaction.InteractionTuningSO.Need_InteractionInstructions)
-        {
-            Need_Instruction ni = new(niso, interaction.ThisCharacter, interaction.InteractionLength);
-            needInstructions.Add(ni);
-        }
-        needsEngine.NewInstructions(needInstructions);
-        foreach (Relationship_InstructionSO relso in interaction.InteractionTuningSO.RelationshipChangeInstructions)
-        {
-            Character thisCharacter = interaction.ThisCharacter;
-            Character targetCharacter = interaction.InteractionSource as Character;
-            if (relationshipsManager.HasExistingRelationship(thisCharacter, targetCharacter))
-            {
-                relationshipsManager.AdjustRelationship(thisCharacter, targetCharacter, relso.RelationshipScoreChange);
-            }
-            else
-            {
-                relationshipsManager.NewRelationship(thisCharacter, targetCharacter);
-                relationshipsManager.AdjustRelationship(thisCharacter, targetCharacter, relso.RelationshipScoreChange);
-            }
-
-
-            if (IsDebug)
-                Debug.Log($"Relations!({interaction.ThisCharacter.ItemName} towards {interaction.InteractionSource.ItemName})");
-        }
-
+        //TBD
     }
 
     private void RegisterToWait(ActiveInteraction interaction)
@@ -163,6 +134,7 @@ public class InteractionEngine : ManagementCore
                     RegisterToWait(interaction);
                     break;
                 case InteractionState.Running:
+                    InteractionOnTick(interaction, deltaTime);
                     break;
                 case InteractionState.Ending:
                     EndInteraction(interaction);
@@ -171,23 +143,89 @@ public class InteractionEngine : ManagementCore
                     break;
             }
 
-            interaction.interactionLenghtAccumulation += deltaTime + updateInterval;
-            if (interaction.interactionLenghtAccumulation > interaction.InteractionLength)
+            if (InteractionShouldEnd(interaction))
             {
                 interaction.interactionState = InteractionState.Ending;
+
             }
+
         }
+    }
+
+    private void InteractionOnTick(ActiveInteraction interaction, float dt)
+    {
+        //OnTick Instructions
+        if (interaction.TimeSinceLastInstructionsSent > OneUnitOfTime)
+        {
+
+            interaction.TimeSinceLastInstructionsSent -= OneUnitOfTime;
+            List<Need_Instruction> needInstructions = new();
+            foreach (Need_InstructionSO niso in interaction.InteractionTuningSO.Need_InteractionInstructions)
+            {
+                Need_Instruction ni = new(niso, interaction.ThisCharacter);
+                needInstructions.Add(ni);
+            }
+            needsEngine.NewInstructions(needInstructions);
+        }
+        else
+            interaction.TimeSinceLastInstructionsSent += dt;
+    }
+    private bool InteractionShouldEnd(ActiveInteraction interaction)
+    {
+        switch (interaction.InteractionEndingType)
+
+        {
+            case InteractionEndingType.Default:
+                return true;
+            case InteractionEndingType.SetTime:
+                interaction.interactionLenghtAccumulation += deltaTime + updateInterval;
+                if (interaction.interactionLenghtAccumulation > interaction.InteractionLength)
+                {
+                    return true;
+                }
+                else
+                    return false;
+            case InteractionEndingType.UntillNeedAtValue:
+                if (interaction.ThisCharacter.Needs[interaction.InteractionEndingTargetNeedType].NeedValue >= interaction.InteractionEndingTargetNeedValue)
+                    return true;
+                else
+                    return false;
+        }
+        return true;
     }
 
     private void EndInteraction(ActiveInteraction interaction)
     {
+        SendOnInteractionEndInstructions(interaction);
+
         activeInteractions.Remove(interaction);
         if (IsDebug)
             Debug.Log($"{interaction.ThisCharacter.ItemName} finished interaction {interaction.InteractionName} (of {interaction.InteractionSource.ItemName})");
 
         characterAIHandler.OnInteractionEnd(interaction.ThisCharacter);
     }
+    private void SendOnInteractionEndInstructions(ActiveInteraction interaction)
+    {
+        //Relationships
+        foreach (Relationship_InstructionSO relso in interaction.InteractionTuningSO.RelationshipChangeInstructions)
+        {
+            Character thisCharacter = interaction.ThisCharacter;
+            Character targetCharacter = interaction.InteractionSource as Character;
+            if (relationshipsManager.HasExistingRelationship(thisCharacter, targetCharacter))
+            {
+                relationshipsManager.AdjustRelationship(thisCharacter, targetCharacter, relso.RelationshipScoreChange);
+            }
+            else
+            {
+                relationshipsManager.NewRelationship(thisCharacter, targetCharacter);
+                relationshipsManager.AdjustRelationship(thisCharacter, targetCharacter, relso.RelationshipScoreChange);
+            }
 
+
+            if (IsDebug)
+                Debug.Log($"Relations!({interaction.ThisCharacter.ItemName} towards {interaction.InteractionSource.ItemName})");
+        }
+    }
 }
 
 //Route

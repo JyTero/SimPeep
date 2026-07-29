@@ -9,6 +9,9 @@ public class ManagerMono : MonoBehaviour
     protected LotManager lotManager;
     protected UIController UIController;
     protected CharacterRelationshipsManager relationshipsManager;
+    private int oneUnitOfTime = 1;
+    protected int OneUnitOfTime { get { return oneUnitOfTime; } }
+
 
     [SerializeField]
     protected bool IsDebug;
@@ -22,11 +25,5 @@ public class ManagerMono : MonoBehaviour
         lotManager = FindAnyObjectByType<LotManager>();
         UIController = FindAnyObjectByType<UIController>();
         relationshipsManager = FindAnyObjectByType<CharacterRelationshipsManager>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -1864,7 +1864,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2433389165369054653, guid: 2de326961fde4bc4992aba5e16007ca0, type: 3}
       propertyPath: characterAIIdleTimer
-      value: 30
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 3497791637233864374, guid: 2de326961fde4bc4992aba5e16007ca0, type: 3}
+      propertyPath: updateInterval
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5841369935084522219, guid: 2de326961fde4bc4992aba5e16007ca0, type: 3}
       propertyPath: loadingScreenCover
@@ -1872,6 +1876,10 @@ PrefabInstance:
       objectReference: {fileID: 146136287}
     - target: {fileID: 8799867617383054739, guid: 2de326961fde4bc4992aba5e16007ca0, type: 3}
       propertyPath: IsDebug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8826535518518911749, guid: 2de326961fde4bc4992aba5e16007ca0, type: 3}
+      propertyPath: updateInterval
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -2774,10 +2782,10 @@ SceneRoots:
   m_Roots:
   - {fileID: 961739753}
   - {fileID: 5543521948561965852}
+  - {fileID: 452940157}
   - {fileID: 203844589}
   - {fileID: 3432251054928647101}
   - {fileID: 1027916801}
   - {fileID: 7311647508108867454}
   - {fileID: 930946146}
-  - {fileID: 452940157}
   - {fileID: 6802520152405129029}

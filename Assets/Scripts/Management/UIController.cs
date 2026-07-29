@@ -59,7 +59,7 @@ public class UIController : ManagementCore
             activeButtons.RemoveAt(j);
         }
         //Confirm pool
-        if (!(buttonPool.Count >= storedInteractions.Count))
+        if (buttonPool.Count < storedInteractions.Count)
             MakeButtonObjects(storedInteractions.Count - buttonPool.Count);
 
         //Populate
@@ -67,11 +67,13 @@ public class UIController : ManagementCore
         foreach (StoredInteraction storedInteraction in storedInteractions)
         {
             GameObject buttonGO = buttonPool[i];
-            activeButtons.Add(buttonGO);
+
             buttonGO.GetComponentInChildren<TextMeshProUGUI>().text = storedInteraction.InteractionTuningSO.InteractionName;
             buttonGO.SetActive(true);
             buttonGO.GetComponent<Button>().onClick.AddListener(delegate { InteractionSelectButtonPress(storedInteraction); });
-            i++;
+            buttonPool.Remove(buttonGO);
+            activeButtons.Add(buttonGO);
+            //i++;
         }
     }
 

@@ -7,7 +7,8 @@ public class Need_InstructionSO : InstructionSO
     private NeedType needToAdjust;
     public NeedType NeedToAdjust { get { return needToAdjust; } }
 
-    //These to separate subclass, make all three subclass of needInstructin 
+    //These to separate using dropdown and hideif/showif
+
     //[SerializeField, Tooltip("Positive increases, negative decreases need.")]
     //private int needAdjustValueInitialBurst;
     //public int NeedAdjustValueInitialBurst { get { return needAdjustValueInitialBurst; } }

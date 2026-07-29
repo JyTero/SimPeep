@@ -20,11 +20,13 @@ public class UIPanel : ManagerMono
     {
         if (!isPanelActive)
             return;
+        OCSS();
 
     }
 
     protected virtual void OCSS()
     {
+        //PUT NOTHING HERE, USE OnSelectCharacterChange() for common functionality at this step
     }
 
     public virtual void ActivatePanel()
