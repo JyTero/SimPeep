@@ -39,6 +39,9 @@ public class ActiveInteraction
     private List<InteractionScoringModifier> scoringModifiers = new();
     public List<InteractionScoringModifier> ScoringModifiers { get { return scoringModifiers; } }
 
+    private InteractionSO followupInteractionSO;
+    public InteractionSO FollowupInteractionSO { get { return followupInteractionSO; } }
+
     //RuntimeData
     public float interactionLenghtAccumulation;
     public InteractionState interactionState;
@@ -79,6 +82,8 @@ public class ActiveInteraction
             needsToWeight.Add(needInstructionSO.NeedToAdjust);
         }
         TimeSinceLastInstructionsSent = 0;
+        followupInteractionSO = InteractionTuningSO.FollowupInteractionSO;
+
     }
 
     private void BuildInteractionEnding()

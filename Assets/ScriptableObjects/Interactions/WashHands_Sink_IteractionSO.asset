@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
-  m_Name: UseToilet_Toilet_InteractionSO
-  m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
-  interactionName: Use Toilet
+  m_Name: WashHands_Sink_IteractionSO
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
+  interactionName: Wash Hands
   Description: 
   Reaction: 0
   IsSocial: 0
-  interactionEndingType: 2
-  interactionLenght: 4
-  targetNeedType: 3
-  targetNeedValue: 95
+  interactionEndingType: 1
+  interactionLenght: 2
+  targetNeedType: 0
+  targetNeedValue: 0
   need_InteractionInstructions:
-  - {fileID: 11400000, guid: db3790b297fd71744bece2948df9c369, type: 2}
+  - {fileID: 11400000, guid: 92ef51eb8dcd47c47a680f05adffa07e, type: 2}
   relationshipChangeInstructions: []
   socialResponceInteractions: []
   scoringModifiers: []
-  hasFollowup: 1
-  followupInteractionSO: {fileID: 11400000, guid: a046f9d1ac79ded4290c54a777df6d46, type: 2}
+  hasFollowup: 0
+  followupInteractionSO: {fileID: 0}

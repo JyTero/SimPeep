@@ -93,7 +93,7 @@ public class UIController : ManagementCore
         if (SelectedCharacter)
         {
             //Debug.Log($"Chose interaction " + storedInteraction.InteractionTuningSO.InteractionName);
-            characterAIHandler.QueueInteraction(new ActiveInteraction(SelectedCharacter, storedInteraction), CharacterAIHandler.InteractionQueueSource.UserSelect);
+            characterAIHandler.QueueInteraction(new ActiveInteraction(SelectedCharacter, storedInteraction), CharacterAIHandler.InteractionQueuePriority.UserSelect);
 
         }
     }

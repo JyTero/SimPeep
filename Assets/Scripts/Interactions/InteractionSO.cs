@@ -13,7 +13,12 @@ public class InteractionSO : ScriptableObject
     [SerializeField, Tooltip("Use this to leave notes about the interaction, such as what are its planned owner items")]
     private string Description;
 
-    //Interaction Lenght Data    
+    public bool Reaction;
+    [HideIf("Reaction")]
+    public bool IsSocial;
+
+
+    //Interaction Ending Data    
     [SerializeField]
     private InteractionEndingType interactionEndingType;
     public InteractionEndingType InteractionEndingType { get { return interactionEndingType; } }
@@ -47,14 +52,21 @@ public class InteractionSO : ScriptableObject
     private List<InteractionSO> socialResponceInteractions = new();
     public List<InteractionSO> SocialResponceInteractions { get { return socialResponceInteractions; } }
 
-    public bool Reaction;
 
     [SerializeField, HideIf("Reaction")]
     private List<InteractionScoringModifier> scoringModifiers = new();
     public List<InteractionScoringModifier> ScoringModifiers { get { return scoringModifiers; } }
 
-    [HideIf("Reaction")]
-    public bool IsSocial;
+    //Suggested Follow-Up Interaction
+    [SerializeField, Tooltip("Wheter this interactions is designed to be followed by another. Example: Make Dinner -> Cook Dinner -> Eat Dinner")]
+    private bool hasFollowup = false;
+    public bool HasFollowup { get { return hasFollowup; } }
+
+    [SerializeField, ShowIf("hasFollowup")]
+    private InteractionSO followupInteractionSO;
+    public InteractionSO FollowupInteractionSO {  get { return followupInteractionSO; } }
+
+
 
     private void OnValidate()
     {

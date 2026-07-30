@@ -36,6 +36,11 @@ public class Debuglandia : MonoBehaviour
         {
         }
 
+
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            simulation.SetSimulationTimeScale(0);
+        }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             simulation.SetSimulationTimeScale(1);

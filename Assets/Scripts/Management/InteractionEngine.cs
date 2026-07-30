@@ -46,8 +46,8 @@ public class InteractionEngine : ManagementCore
             else
             {
                 ActiveInteraction responce = new ActiveInteraction(interaction.InteractionSource as Character, new StoredInteraction(interaction.InteractionTuningSO.SocialResponceInteractions[0], interaction.ThisCharacter));
-                characterAIHandler.QueueInteraction(responce, CharacterAIHandler.InteractionQueueSource.UserSelectNPCReaction);
-                RouteToInteraction(interaction);
+                characterAIHandler.QueueInteraction(responce, CharacterAIHandler.InteractionQueuePriority.UserSelectNPCReaction);
+              //  RouteToInteraction(interaction);
             }
 
         }
@@ -208,7 +208,7 @@ public class InteractionEngine : ManagementCore
         if (IsDebug)
             Debug.Log($"{interaction.ThisCharacter.ItemName} finished interaction {interaction.InteractionName} (of {interaction.InteractionSource.ItemName})");
 
-        characterAIHandler.OnInteractionEnd(interaction.ThisCharacter);
+        characterAIHandler.OnInteractionEnd(interaction.ThisCharacter, interaction);
     }
     private void SendOnInteractionEndInstructions(ActiveInteraction interaction)
     {

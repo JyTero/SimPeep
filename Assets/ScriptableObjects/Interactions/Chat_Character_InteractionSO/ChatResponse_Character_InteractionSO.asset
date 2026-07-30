@@ -14,11 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
   interactionName: Be Chatted With
   Description: 
+  Reaction: 1
+  IsSocial: 0
+  interactionEndingType: 1
   interactionLenght: 7
+  targetNeedType: 0
+  targetNeedValue: 0
   need_InteractionInstructions: []
   relationshipChangeInstructions:
   - {fileID: 11400000, guid: 7b4974f8d293c534ab7543ca11734b08, type: 2}
-  Reaction: 1
-  scoringModifiers: []
-  IsSocial: 0
   socialResponceInteractions: []
+  scoringModifiers: []
+  hasFollowup: 0
+  followupInteractionSO: {fileID: 0}

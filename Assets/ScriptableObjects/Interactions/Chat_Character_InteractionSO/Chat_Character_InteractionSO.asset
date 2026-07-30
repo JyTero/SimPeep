@@ -15,12 +15,17 @@ MonoBehaviour:
   interactionName: Chat
   Description: Chat to other character, improve (might) improve relations and social
     needs
+  Reaction: 0
+  IsSocial: 1
+  interactionEndingType: 1
   interactionLenght: 7
+  targetNeedType: 0
+  targetNeedValue: 0
   need_InteractionInstructions: []
   relationshipChangeInstructions:
   - {fileID: 11400000, guid: 7b4974f8d293c534ab7543ca11734b08, type: 2}
-  Reaction: 0
-  scoringModifiers: []
-  IsSocial: 1
   socialResponceInteractions:
   - {fileID: 11400000, guid: cc0c11a9f49c39943ad8cf7b23469a64, type: 2}
+  scoringModifiers: []
+  hasFollowup: 0
+  followupInteractionSO: {fileID: 0}
