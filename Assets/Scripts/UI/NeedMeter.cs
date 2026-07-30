@@ -42,7 +42,7 @@ public class NeedMeter : MonoBehaviour, INeedAlertable
     {
         thisNeed = need;
         needName = need.NeedType.ToString();
-        needValue = thisNeed.NeedValue;
+        needValue = (int)thisNeed.NeedValue;
         needMaxValue = thisNeed.NeedMaxValue;
 
     }
@@ -51,7 +51,7 @@ public class NeedMeter : MonoBehaviour, INeedAlertable
     {
         thisNeed = need;
         needName = need.NeedType.ToString();
-        needValue = thisNeed.NeedValue;
+        needValue = (int)thisNeed.NeedValue;
         needMaxValue = thisNeed.NeedMaxValue;
         RefreshVisuals();
     }

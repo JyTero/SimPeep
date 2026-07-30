@@ -138,6 +138,7 @@ public class CharacterAIHandler : ManagementCore
 
     public void QueueInteraction(ActiveInteraction interaction, InteractionQueueSource queueSource)
     {
+        //Handle queueing interaction prio / source 
         charactersAIsByCharacter[interaction.ThisCharacter].QueueNewInteraction(interaction, queueSource);
     }
 

@@ -15,7 +15,7 @@ MonoBehaviour:
   needType: 5
   needValue: 85
   needMaxValue: 100
-  needDecay: 1
+  needDecay: 0.16
   needWeightOnInteractionScoring:
     serializedVersion: 2
     m_Curve:

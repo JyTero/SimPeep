@@ -16,8 +16,8 @@ public class NeedSO : ScriptableObject
     public int NeedMaxValue { get { return needMaxValue; } }
 
     [SerializeField]
-    private int needDecay;
-    public int NeedDecay { get { return needDecay; } }
+    private float needDecay;
+    public float NeedDecay { get { return needDecay; } }
 
     [SerializeField]
     private AnimationCurve needWeightOnInteractionScoring;

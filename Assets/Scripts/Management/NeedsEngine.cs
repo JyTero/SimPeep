@@ -123,7 +123,7 @@ public class NeedsEngine : ManagementCore
     }
 
     //Need Manipulation
-    private void AdjustNeed(Need need, int adjustAmount)
+    private void AdjustNeed(Need need, float adjustAmount)
     {
         need.NeedValue += adjustAmount;
         if (!changedNeeds.Contains(need))

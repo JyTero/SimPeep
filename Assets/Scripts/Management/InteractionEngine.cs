@@ -157,15 +157,21 @@ public class InteractionEngine : ManagementCore
         //OnTick Instructions
         if (interaction.TimeSinceLastInstructionsSent > OneUnitOfTime)
         {
-
-            interaction.TimeSinceLastInstructionsSent -= OneUnitOfTime;
-            List<Need_Instruction> needInstructions = new();
-            foreach (Need_InstructionSO niso in interaction.InteractionTuningSO.Need_InteractionInstructions)
+            bool tooMuchTime = true;
+            while (tooMuchTime)
             {
-                Need_Instruction ni = new(niso, interaction.ThisCharacter);
-                needInstructions.Add(ni);
+                interaction.TimeSinceLastInstructionsSent -= OneUnitOfTime;
+                List<Need_Instruction> needInstructions = new();
+                foreach (Need_InstructionSO niso in interaction.InteractionTuningSO.Need_InteractionInstructions)
+                {
+                    Need_Instruction ni = new(niso, interaction.ThisCharacter);
+                    needInstructions.Add(ni);
+                }
+                needsEngine.NewInstructions(needInstructions);
+
+                if (interaction.TimeSinceLastInstructionsSent < OneUnitOfTime)
+                    tooMuchTime = false;
             }
-            needsEngine.NewInstructions(needInstructions);
         }
         else
             interaction.TimeSinceLastInstructionsSent += dt;

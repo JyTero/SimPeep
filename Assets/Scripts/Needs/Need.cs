@@ -8,16 +8,16 @@ public class Need
     public NeedType NeedType { get { return needType; } set { needType = value; } }
 
     [SerializeField]
-    private int needValue;
-    public int NeedValue { get { return needValue; } set { needValue = value; } }
+    private float needValue;
+    public float NeedValue { get { return needValue; } set { needValue = value; } }
 
     [SerializeField]
     private int needMaxValue;
     public int NeedMaxValue { get { return needMaxValue; } set { needMaxValue = value; } }
 
     [SerializeField]
-    private int needDecay;
-    public int NeedDecay { get { return needDecay; } set { needDecay = value; } }
+    private float needDecay;
+    public float NeedDecay { get { return needDecay; } set { needDecay = value; } }
 
     public float TimeSinceLastNeedDecay;
 

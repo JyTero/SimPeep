@@ -10,7 +10,6 @@ public class ManagementCore : ManagerMono
     protected float deltaTime;
 
 
-
     protected override void Start()
     {
         base.Start();
