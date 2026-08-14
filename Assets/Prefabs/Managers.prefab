@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1068664814951767870
+--- !u!1 &6761343683097625567
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,17 +8,18 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1089882378126650916}
-  - component: {fileID: 3497791637233864374}
-  - component: {fileID: 5536759088225812990}
-  - component: {fileID: 2433389165369054653}
-  - component: {fileID: 6493427627136099017}
-  - component: {fileID: 8826535518518911749}
-  - component: {fileID: 3624566694689882462}
-  - component: {fileID: 8537978086826131476}
-  - component: {fileID: 8799867617383054739}
-  - component: {fileID: 5841369935084522219}
-  - component: {fileID: 1466843029237231860}
+  - component: {fileID: 6608420390964735961}
+  - component: {fileID: 6644106541285292176}
+  - component: {fileID: 8535162265290546603}
+  - component: {fileID: 1326277432743634088}
+  - component: {fileID: 3871018557923509895}
+  - component: {fileID: 4765156637402212414}
+  - component: {fileID: 1065971440834520512}
+  - component: {fileID: 7253179202390956413}
+  - component: {fileID: 7846952060556302379}
+  - component: {fileID: 6752346591112938952}
+  - component: {fileID: 4104780923883761845}
+  - component: {fileID: 7214233807078733602}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -26,13 +27,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1089882378126650916
+--- !u!4 &6608420390964735961
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
+  m_GameObject: {fileID: 6761343683097625567}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: -0, z: -0}
@@ -41,39 +42,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3497791637233864374
+--- !u!114 &6644106541285292176
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
+  m_GameObject: {fileID: 6761343683097625567}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8bea319482d43746b412b335905ae4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NeedsEngine
   IsDebug: 0
-  updateInterval: 1
---- !u!114 &5536759088225812990
+  updateInterval: 0
+--- !u!114 &8535162265290546603
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
+  m_GameObject: {fileID: 6761343683097625567}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a51d83362ea1c04594dbdbc097067b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Debuglandia
---- !u!114 &2433389165369054653
+--- !u!114 &1326277432743634088
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
+  m_GameObject: {fileID: 6761343683097625567}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 049b76768963b314fb2dbef95f490e14, type: 3}
@@ -81,56 +82,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterAIHandler
   IsDebug: 1
   updateInterval: 0.2
-  characterAIIdleTimer: 30
+  characterAIIdleTimer: 3
   interactionBaseScore: 10
---- !u!114 &6493427627136099017
+--- !u!114 &3871018557923509895
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70927add9b2117346846dad6c61b6aba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterRouting
-  IsDebug: 0
-  updateInterval: 0
-  routingMargin: 0.2
---- !u!114 &8826535518518911749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
+  m_GameObject: {fileID: 6761343683097625567}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9c6bf194dd6f784697b30c84b743302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractionEngine
   IsDebug: 1
-  updateInterval: 0.25
---- !u!114 &3624566694689882462
+  updateInterval: 0
+--- !u!114 &4765156637402212414
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
+  m_GameObject: {fileID: 6761343683097625567}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3657100735b81cf46a690faf99296833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Simulation
---- !u!114 &8537978086826131476
+  IsDebug: 0
+--- !u!114 &1065971440834520512
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
+  m_GameObject: {fileID: 6761343683097625567}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40918e3d0c90091418253ab54d36e952, type: 3}
@@ -138,43 +125,73 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LotManagement
   IsDebug: 0
   updateInterval: 0
---- !u!114 &8799867617383054739
+--- !u!114 &7253179202390956413
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
+  m_GameObject: {fileID: 6761343683097625567}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 724f9c3ab0db4ca41a067d8a88164062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClickHandler
-  IsDebug: 1
+  IsDebug: 0
   updateInterval: 0
---- !u!114 &5841369935084522219
+--- !u!114 &7846952060556302379
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
+  m_GameObject: {fileID: 6761343683097625567}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4639fc10398722849b1c4c0ee3cdf37e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadingScreen
---- !u!114 &1466843029237231860
+  loadingScreenCover: {fileID: 0}
+--- !u!114 &6752346591112938952
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1068664814951767870}
+  m_GameObject: {fileID: 6761343683097625567}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 536124f984adc50418f877a14394ff59, type: 3}
+  m_Script: {fileID: 11500000, guid: 20a35dd346a4c5d4b94e1262f9fdef89, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterRelationshipsManager
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterRelationshipEngine
+  IsDebug: 0
+  updateInterval: 0
+--- !u!114 &4104780923883761845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6761343683097625567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 555fb26b8c6173b4e9206417995220bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterControl
+  IsDebug: 0
+  updateInterval: 0
+  routingMargin: 0.2
+--- !u!114 &7214233807078733602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6761343683097625567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ff210d5790de984d872ce111dda3a9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemManager
   IsDebug: 0
   updateInterval: 0

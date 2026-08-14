@@ -30,10 +30,12 @@ public class Simulation : ManagerMono
     {
         float dt = Time.deltaTime * timeScale;
         AdvanceClock(dt);
-        characterAIHandler.MyUpdate(dt);
-        characterRouting.MyUpdate(dt);
+        itemManager.MyUpdate(dt);
+        CharacterControl.MyUpdate(dt);
         interactionEngine.MyUpdate(dt);
         needsEngine.MyUpdate(dt);
+        characterAIHandler.MyUpdate(dt);
+
 
     }
 
@@ -62,7 +64,7 @@ public class Simulation : ManagerMono
                         currentTime.currentHour = 0;
                     }
                 }
-                clockTimer = -OneUnitOfTime;
+                clockTimer -= OneUnitOfTime;
                 if (clockTimer < OneUnitOfTime)
                     tooMuchTime = false;
                 //DEBUG

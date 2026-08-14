@@ -10,22 +10,22 @@ public class LoadingScreen : MonoBehaviour
     private bool runStartup = false;
 
     protected CharacterAIHandler characterAIHandler;
-    protected CharacterRouting characterRouting;
+    protected CharacterControl characterRouting;
     protected InteractionEngine interactionEngine;
     protected NeedsEngine needsEngine;
     protected LotManager lotManager;
     protected UIController UIController;
-    protected CharacterRelationshipsManager relationshipsManager;
+    protected CharacterRelationshipEngine relationshipsManager;
 
     protected virtual void Start()
     {
         characterAIHandler = FindAnyObjectByType<CharacterAIHandler>();
-        characterRouting = FindAnyObjectByType<CharacterRouting>();
+        characterRouting = FindAnyObjectByType<CharacterControl>();
         interactionEngine = FindAnyObjectByType<InteractionEngine>();
         needsEngine = FindAnyObjectByType<NeedsEngine>();
         lotManager = FindAnyObjectByType<LotManager>();
         UIController = GetComponent<UIController>();
-        relationshipsManager = GetComponent<CharacterRelationshipsManager>();
+        relationshipsManager = GetComponent<CharacterRelationshipEngine>();
     }
 
     // Update is called once per frame
@@ -44,12 +44,14 @@ public class LoadingScreen : MonoBehaviour
             {
                 foreach (ItemBase item in lot.ItemsOnLot)
                 {
-                    foreach (InteractionSO iso in item.InteractionSOs)
+                    foreach (InteractionSO itso in item.InteractionSOs)
                     {
-                        item.NewStoredInteraction(new StoredInteraction(iso, item));
+                        item.NewStoredInteraction(new StoredInteraction(itso, item));
                     }
                 }
             }
+
+            lotManager.LoadingScreen();
 
             //UI
 

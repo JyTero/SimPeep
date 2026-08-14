@@ -36,6 +36,13 @@ public class ManagementCore : ManagerMono
         deltaTime = dt;
     }
 
+    protected ActiveInteraction NewActiveInteraction(Character chara, StoredInteraction storedInteraction)
+    {
+        ActiveInteraction ai = new ActiveInteraction(chara, storedInteraction);
+        ai.PrepareSubInteractions(lotManager, chara.ThisLot);
+        return ai;
+    }
+
     protected void RemoveListItemsFromAnotherList<T>(List<T> itemsToRemove, List<T> targetList)
     {
         foreach (T item in itemsToRemove)

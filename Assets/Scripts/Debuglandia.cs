@@ -3,24 +3,24 @@ using UnityEngine;
 public class Debuglandia : MonoBehaviour
 {
     protected CharacterAIHandler characterAIHandler;
-    protected CharacterRouting characterRouting;
+    protected CharacterControl characterRouting;
     protected InteractionEngine interactionEngine;
     protected NeedsEngine needsEngine;
     protected LotManager lotManager;
     protected UIController UIController;
-    protected CharacterRelationshipsManager relationshipsManager;
+    protected CharacterRelationshipEngine relationshipsManager;
 
     protected Simulation simulation;
 
     protected virtual void Start()
     {
         characterAIHandler = FindAnyObjectByType<CharacterAIHandler>();
-        characterRouting = FindAnyObjectByType<CharacterRouting>();
+        characterRouting = FindAnyObjectByType<CharacterControl>();
         interactionEngine = FindAnyObjectByType<InteractionEngine>();
         needsEngine = FindAnyObjectByType<NeedsEngine>();
         lotManager = FindAnyObjectByType<LotManager>();
         UIController = GetComponent<UIController>();
-        relationshipsManager = GetComponent<CharacterRelationshipsManager>();
+        relationshipsManager = GetComponent<CharacterRelationshipEngine>();
 
         simulation = FindAnyObjectByType<Simulation>();
     }

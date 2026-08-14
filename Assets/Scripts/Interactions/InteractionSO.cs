@@ -47,6 +47,14 @@ public class InteractionSO : ScriptableObject
     private List<Relationship_InstructionSO> relationshipChangeInstructions = new();
     public List<Relationship_InstructionSO> RelationshipChangeInstructions { get { return relationshipChangeInstructions; } }
 
+    [SerializeField]
+    private List <Item_InstructionSO> itemChangeInstructions = new();
+    public List<Item_InstructionSO > ItemChangeInstructions { get {return itemChangeInstructions; } }
+
+    [SerializeField, Tooltip("Way to use pre-existing interactions to build new ones. Example: Fridge spawns Food. Food has Pick Up interaction, which can be plased here to automatically  pick up the food on creation")]
+    private List<InteractionSO> subInteractionSOs = new();
+    public List<InteractionSO> SubInteractionSOs { get { return subInteractionSOs; } }
+    
     //List to make "choose one based on traits possible"?
     [SerializeField, ShowIf("IsSocial")]
     private List<InteractionSO> socialResponceInteractions = new();
@@ -63,8 +71,8 @@ public class InteractionSO : ScriptableObject
     public bool HasFollowup { get { return hasFollowup; } }
 
     [SerializeField, ShowIf("hasFollowup")]
-    private InteractionSO followupInteractionSO;
-    public InteractionSO FollowupInteractionSO {  get { return followupInteractionSO; } }
+    private List<InteractionSO> followupInteractionSOs;
+    public List<InteractionSO> FollowupInteractionSOs {  get { return followupInteractionSOs; } }
 
 
 

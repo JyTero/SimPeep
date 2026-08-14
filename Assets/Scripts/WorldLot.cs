@@ -11,4 +11,9 @@ public class WorldLot : MonoBehaviour
     [SerializeField]
     private List<Character> charactersOnLot = new();
     public List<Character> CharactersOnLot { get { return charactersOnLot; } }
+
+    public void AddItemToLot(ItemBase item)
+    {
+        itemsOnLot.Add(item);
+    }
 }

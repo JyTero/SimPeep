@@ -10,7 +10,7 @@ public class UIPanel : ManagerMono
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected virtual void Start()
+    protected override void Start()
     {
         base.Start();
         uiController = FindAnyObjectByType<UIController>();
@@ -20,11 +20,11 @@ public class UIPanel : ManagerMono
     {
         if (!isPanelActive)
             return;
-        OCSS();
+        OSCC();
 
     }
 
-    protected virtual void OCSS()
+    protected virtual void OSCC()
     {
         //PUT NOTHING HERE, USE OnSelectCharacterChange() for common functionality at this step
     }

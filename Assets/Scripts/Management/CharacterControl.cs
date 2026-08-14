@@ -1,22 +1,23 @@
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class CharacterRouting : ManagementCore
+public class CharacterControl : ManagementCore
 {
     [SerializeField]
     private float routingMargin;
 
-    private Debuglandia debuglandia;
     private Dictionary<Character, Transform> charactersRouting = new();
     private Dictionary<ActiveInteraction, Transform> interactionsRouting = new();
     // private List<Character> charactersAtDestination = new();
 
 
-    private void Start()
+    protected override void Start()
     {
-        debuglandia = FindAnyObjectByType<Debuglandia>();
+        base.Start();
+      
     }
 
     public void StartRouting(Character character, Transform destination)
@@ -68,15 +69,22 @@ public class CharacterRouting : ManagementCore
         foreach (ActiveInteraction interaction in interactionsRouting.Keys)
         {
             Character character = interaction.ThisCharacter;
-            character.transform.position = Vector3.MoveTowards(character.transform.position,
-                    interactionsRouting[interaction].position, character.characterSpeed * dt);
+            Vector3 frameDest = Vector3.MoveTowards(character.transform.position, 
+                                interactionsRouting[interaction].position, character.characterSpeed * dt);
+            //character.transform.LookAt(frameDest);
+            character.transform.position = frameDest;
+           // character.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.x, 0); //Gummy
 
             //IfAtDest?
             if (Vector3.Distance(character.transform.position, interactionsRouting[interaction].position) < routingMargin)
             {
                 charactersAtDest.Add(interaction);
+                if (IsDebug)
+                    Debug.Log($"{character.ItemName} reached destination ({interaction.InteractionSource})");
             }
 
+            else if (IsDebug)
+                Debug.Log($"{character.ItemName} routes towards {interaction.InteractionSource}");
         }
         foreach (ActiveInteraction interaction in charactersAtDest)
         {
@@ -90,6 +98,23 @@ public class CharacterRouting : ManagementCore
     private void CharacerAtDestination(Character chara)
     {
         //charactersAtDestination.Add(chara);
+    }
+
+
+    //Inventory / Carrying
+
+    public void PickupItem(Character character, ItemBase item)
+    {
+        item.transform.position = character.CarrySlot.position;
+        itemManager.RegisterMovingItem(item, character.CarrySlot);
+
+        character.PickupItem(item);
+
+    }
+
+    public void PutItemDown(Character character, Vector3 dest)
+    {
+
     }
 }
 

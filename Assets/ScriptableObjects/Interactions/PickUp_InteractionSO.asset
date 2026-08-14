@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
+  m_Name: PickUp_InteractionSO
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
+  interactionName: Pick Up
+  Description: Pick something up to carry on hand
+  Reaction: 0
+  IsSocial: 0
+  interactionEndingType: 1
+  interactionLenght: 1
+  targetNeedType: 0
+  targetNeedValue: 0
+  need_InteractionInstructions: []
+  relationshipChangeInstructions: []
+  itemChangeInstructions:
+  - {fileID: 11400000, guid: c3cbf80d9dea0b34aa2d5cc673eda76a, type: 2}
+  socialResponceInteractions: []
+  scoringModifiers: []
+  hasFollowup: 0
+  followupInteractionSO: {fileID: 0}

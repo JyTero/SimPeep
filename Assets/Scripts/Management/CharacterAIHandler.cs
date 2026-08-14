@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.TextCore.Text;
 
 public class CharacterAIHandler : ManagementCore
@@ -21,6 +22,7 @@ public class CharacterAIHandler : ManagementCore
     private Dictionary<Character, CharacterAI> occupiedCharacters = new();
 
     private Dictionary<Character, CharacterAI> charactersAIsByCharacter = new();
+    public Dictionary<Character, CharacterAI> CharactersAIsByCharacter { get { return charactersAIsByCharacter; } }
 
     private List<Character> charactersToRemove = new();
 
@@ -63,12 +65,16 @@ public class CharacterAIHandler : ManagementCore
         for (int i = idleCharacters.Count - 1; i >= 0; i--)
         {
             CharacterAI character = idleCharacters[i];
-            //HasQueued Interactions
-            ActiveInteraction queueInteraction = HandleQueue(character);
+
+            ActiveInteraction queueInteraction = GetInteractionFromQueue(character);
+
+
             if (queueInteraction == null)
                 continue;
             else
+            {
                 StartInteraction(queueInteraction, character);
+            }
         }
 
         //SearchInteraction
@@ -76,14 +82,14 @@ public class CharacterAIHandler : ManagementCore
         {
             //Gather
             CharacterAI characterAI = tasklessCharacters[i];
-            List<StoredInteraction> storedInteractions = lotManager.GetAllInteractionsOnLot(characterAI.chara.ThisLot);
+            List<StoredInteraction> storedInteractions = lotManager.GetAllStoredInteractionsOnLot(characterAI.chara.ThisLot);
 
             //Convert
             List<ActiveInteraction> interactions = new();
             foreach (StoredInteraction storedInteraction in storedInteractions)
             {
                 //TODO: Make "StoredInteraction" that holds interactionSO and item and is given here, instead of passing SOs.
-                interactions.Add(new ActiveInteraction(tasklessCharacters[i].chara, storedInteraction.InteractionTuningSO, storedInteraction.InteractionSource));
+                interactions.Add(NewActiveInteraction(characterAI.chara,storedInteraction));
             }
             //Validity
             //Score
@@ -128,16 +134,15 @@ public class CharacterAIHandler : ManagementCore
         }
     }
 
-    private ActiveInteraction HandleQueue(CharacterAI character)
+    private ActiveInteraction GetInteractionFromQueue(CharacterAI character)
     {
 
         if (character.InteractionQueuesByPriority.Count == 0)
             return null;
 
         string S = $"Iterating: {character.chara.ItemName}\n";
-        // Source - https://stackoverflow.com/a/105402
-        // Posted by jop, modified by community. See post 'Timeline' for change history
-        // Retrieved 2026-07-30, License - CC BY-SA 4.0
+
+
         foreach (InteractionQueuePriority iqp in (InteractionQueuePriority[])Enum.GetValues(typeof(InteractionQueuePriority)))
         {
             S += $"Queue type {iqp.ToString()}\n";
@@ -155,6 +160,8 @@ public class CharacterAIHandler : ManagementCore
                 //TODO: QUEUE CLEANUP (REMOVE DONE ACTION,
                 if (IsDebug)
                     Debug.Log(S);
+
+                UIController.RefreshInteractionQueueData(character);
                 return queueInteraction.interaction;
             }
         }
@@ -169,12 +176,21 @@ public class CharacterAIHandler : ManagementCore
 
         charactersAIsByCharacter[interaction.ThisCharacter].QueueNewInteraction(interaction, queuePriority);
 
+        UIController.RefreshInteractionQueueData(charactersAIsByCharacter[interaction.ThisCharacter]);
+        //DisplayInteractionQueue(charactersAIsByCharacter[interaction.ThisCharacter]);
+
     }
+
+
 
     private void StartInteraction(ActiveInteraction interaction, CharacterAI charaAI)
     {
+        charaAI.NewCurrentInteraction(interaction);
         interactionEngine.StartNewInteraction(interaction);
         activeCharacters.Add(charaAI.chara, charaAI);
+
+        UIController.RefreshCurrentInteractionData(charaAI.CurrentInteraction.InteractionName);
+
     }
 
     private void PrintInteractionScoring(List<ActiveInteraction> interactions)
@@ -193,99 +209,26 @@ public class CharacterAIHandler : ManagementCore
         activeCharacters.Remove(character);
         idleCharacters.Add(charaAI);
 
-        if (interaction.FollowupInteractionSO != null)
+        //Suggested FollowUp
+        if (interaction.FollowupInteractionSOs.Count != 0)
         {
-            //Find nearby interaction of that type
             List<StoredInteraction> storedInteractions = lotManager.GetAllInteractionsOnLot(charaAI.chara.ThisLot);
-            foreach (StoredInteraction stoIn in storedInteractions)
+            foreach (InteractionSO intso in interaction.FollowupInteractionSOs)
             {
-                if (stoIn.InteractionTuningSO == interaction.FollowupInteractionSO)
-                    charaAI.QueueNewInteraction(new ActiveInteraction(character, stoIn), InteractionQueuePriority.SuggestedFollowup);
+                //Find nearby interaction of that type
+                StoredInteraction si = lotManager.FindSuitableStoredInteractionOnLot(intso, character.ThisLot);
+                QueueInteraction(NewActiveInteraction(character, si), InteractionQueuePriority.SuggestedFollowup);
+                break;
+
             }
         }
+        if (charactersAIsByCharacter[character].InteractionQueue.Count == 1)    //1, bc List<QueuedInteraction> interactionQueue doesn't 
+            UIController.RefreshCurrentInteractionData("");                     //know when interaction has ended
 
     }
 
     public void RemoveCharacter(Character character)
     {
 
-    }
-
-    private enum CharacterAIState
-    {
-        Default,
-        Idle,
-        Active,
-        occupied,
-    }
-    public enum InteractionQueuePriority
-    {
-        UrgentReaction, //Fire, emergency
-        AINeedFixing,
-        SuggestedFollowup,
-        UserSelectNPCReaction,
-        UserSelect,
-        NormalAISelect,
-    }
-    private class CharacterAI
-    {
-        public Character chara;
-        public CharacterAIState aiState;
-
-        public float hasBeenIdleForTimer = 0;
-
-        //private List<QueuedInteraction> interactionQueue = new();
-        //public List<QueuedInteraction> InteractionQueue { get { return interactionQueue; } }
-
-        private Dictionary<InteractionQueuePriority, List<QueuedInteraction>> interactionQueuesByPriority = new();
-        public Dictionary<InteractionQueuePriority, List<QueuedInteraction>> InteractionQueuesByPriority { get { return interactionQueuesByPriority; } }
-
-        public CharacterAI()
-        {
-            interactionQueuesByPriority.Add(InteractionQueuePriority.UrgentReaction, new List<QueuedInteraction>());
-            interactionQueuesByPriority.Add(InteractionQueuePriority.AINeedFixing, new List<QueuedInteraction>());
-            interactionQueuesByPriority.Add(InteractionQueuePriority.UserSelectNPCReaction, new List<QueuedInteraction>());
-            interactionQueuesByPriority.Add(InteractionQueuePriority.UserSelect, new List<QueuedInteraction>());
-            interactionQueuesByPriority.Add(InteractionQueuePriority.SuggestedFollowup, new List<QueuedInteraction>());
-            interactionQueuesByPriority.Add(InteractionQueuePriority.NormalAISelect, new List<QueuedInteraction>());
-        }
-
-        public void QueueNewInteraction(ActiveInteraction interaction, InteractionQueuePriority queuePriority)
-        {
-            if (interactionQueuesByPriority.ContainsKey(queuePriority))
-                interactionQueuesByPriority[queuePriority].Add(new QueuedInteraction(interaction, queuePriority));
-            else
-                interactionQueuesByPriority.Add(queuePriority, new() { new QueuedInteraction(interaction, queuePriority) });
-        }
-
-        public void ClearQueuePart(InteractionQueuePriority quePrio)
-        {
-            interactionQueuesByPriority.Remove(quePrio);
-        }
-        //public void QueueToFirst(ActiveInteraction interaction, InteractionQueuePriority queueSource)
-        //{
-        //    interactionQueue.Insert(0, new QueuedInteraction(interaction, queueSource));
-        //}
-        public CharacterAI(Character c)
-        {
-            chara = c;
-            aiState = CharacterAIState.Idle;
-        }
-
-    }
-    //InteractionInScoring (Lighter than ActiveInteraction, to be used during scoring (Lot of items generated, should probs be lighter))
-    private class QueuedInteraction
-    {
-        public ActiveInteraction interaction;
-
-        private InteractionQueuePriority queuePriority;
-        public InteractionQueuePriority QueuePriority { get { return queuePriority; } }
-
-
-        public QueuedInteraction(ActiveInteraction interaction, InteractionQueuePriority queuePrio)
-        {
-            this.interaction = interaction;
-            this.queuePriority = queuePrio;
-        }
     }
 }

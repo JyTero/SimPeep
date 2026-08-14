@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using UnityEditor.Rendering;
 using UnityEngine;
 
-public class CharacterRelationshipsManager : ManagementCore
+public class CharacterRelationshipEngine : ManagementCore
 {
     private Dictionary<Character, Dictionary<Character, CharacterRelationship>> relationshipsByCharacter = new();
     public Dictionary<Character, Dictionary<Character, CharacterRelationship>> RelationshipsByCharacter { get { return relationshipsByCharacter; } }

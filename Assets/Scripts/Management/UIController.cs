@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -17,6 +18,9 @@ public class UIController : ManagementCore
 
     [SerializeField]
     private GameObject SelectionParent;
+
+    [SerializeField]
+    private InteractionQueue_UIPanel interactionQueue_UIPanel;
 
     [SerializeField]
     private GameObject buttonPrefab;
@@ -93,7 +97,7 @@ public class UIController : ManagementCore
         if (SelectedCharacter)
         {
             //Debug.Log($"Chose interaction " + storedInteraction.InteractionTuningSO.InteractionName);
-            characterAIHandler.QueueInteraction(new ActiveInteraction(SelectedCharacter, storedInteraction), CharacterAIHandler.InteractionQueuePriority.UserSelect);
+            characterAIHandler.QueueInteraction(NewActiveInteraction(SelectedCharacter, storedInteraction), InteractionQueuePriority.UserSelect);
 
         }
     }
@@ -106,7 +110,14 @@ public class UIController : ManagementCore
         needsUIPanel.OnSelectCharacterChange();
         relationshipsUIPanel.OnSelectCharacterChange();
 
+
     }
+
+    public CharacterAI GetCharacterAIByCharacter(Character character)
+    {
+        return characterAIHandler.CharactersAIsByCharacter[character];
+    }
+
 
     public void NeedsPanelButtonClick()
     {
@@ -125,5 +136,36 @@ public class UIController : ManagementCore
         needsUIPanel.DisablePanel();
     }
 
+    //INTERACTIONQUEUE
+    public void RefreshInteractionQueueData(CharacterAI chara)
+    {
+        List<string> interactionQueue = MakeQueuedInteractionNamesList(chara);
+        MakeQueuedInteractionNamesList(chara);
+        interactionQueue_UIPanel.RefreshQueueData(interactionQueue);
+    }
+    private List<string> MakeQueuedInteractionNamesList(CharacterAI chara)
+    {
+        //UI (/DEBUG)
+        List<string> qi = new();
+        foreach (InteractionQueuePriority iqp in (InteractionQueuePriority[])Enum.GetValues(typeof(InteractionQueuePriority)))
+        {
+            if (!chara.InteractionQueuesByPriority.ContainsKey(iqp))
+                continue;
+            else
+            {
+                foreach (QueuedInteraction queInteraction in chara.InteractionQueuesByPriority[iqp])
+                {
+                    qi.Add(queInteraction.interaction.InteractionName);
+                }
+            }
+        }
 
+        return qi;
+
+    }
+
+    public void RefreshCurrentInteractionData(string currentInteraction)
+    {
+        interactionQueue_UIPanel.RefreshCurrentInteractionData(currentInteraction);
+    }
 }

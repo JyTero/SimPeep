@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
-  m_Name: UseToilet_Toilet_InteractionSO
-  m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
-  interactionName: Use Toilet
-  Description: 
+  m_Name: CookFood_InteractionSO
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
+  interactionName: Cook Food
+  Description: Begin chain of interactions to cook food using stove
   Reaction: 0
   IsSocial: 0
-  interactionEndingType: 2
-  interactionLenght: 4
-  targetNeedType: 3
-  targetNeedValue: 95
-  need_InteractionInstructions:
-  - {fileID: 11400000, guid: db3790b297fd71744bece2948df9c369, type: 2}
+  interactionEndingType: 1
+  interactionLenght: 1
+  targetNeedType: 0
+  targetNeedValue: 0
+  need_InteractionInstructions: []
   relationshipChangeInstructions: []
-  itemChangeInstructions: []
+  itemChangeInstructions:
+  - {fileID: 11400000, guid: 8e9c9eaaaf5757040b83a64c0b4da433, type: 2}
+  subInteractionSOs: []
   socialResponceInteractions: []
   scoringModifiers: []
   hasFollowup: 1
-  followupInteractionSOs:
-  - {fileID: 11400000, guid: a046f9d1ac79ded4290c54a777df6d46, type: 2}
+  followupInteractionSOs: []

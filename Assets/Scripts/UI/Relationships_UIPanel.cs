@@ -18,7 +18,7 @@ public class Relationships_UIPanel : UIPanel
     //{
     //    base.OnSelectCharacterChange();
     //}
-    protected override void OCSS()
+    protected override void OSCC()
     {
         ActivatePanel();
         // UpdatePanel();
@@ -29,7 +29,7 @@ public class Relationships_UIPanel : UIPanel
     {
         base.ActivatePanel();
 
-        List<CharacterRelationship> relationships = relationshipsManager.RelationshipsByCharacter[uiController.SelectedCharacter].Values.ToList();
+        List<CharacterRelationship> relationships = relationshipEngine.RelationshipsByCharacter[uiController.SelectedCharacter].Values.ToList();
         DisableAllActiveRelationshipUIItems();
         //Confirm pool
         if (!(relationshipUIItemGOPool.Count >= relationships.Count))

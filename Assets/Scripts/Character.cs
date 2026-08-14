@@ -24,6 +24,13 @@ public class Character : Interactable
     [SerializeField]
     private List<NeedSO> needSOs = new();
 
+    [SerializeField]
+    private Transform carrySlot;
+    public Transform CarrySlot { get { return carrySlot; } }
+
+    private ItemBase carriedItem;
+    public ItemBase CarriedItem { get { return carriedItem; } }
+
     private void Awake()
     {
         MakeNeedSOsToObjects();
@@ -37,6 +44,7 @@ public class Character : Interactable
 
         //DEBUG
         thisLot = FindAnyObjectByType<WorldLot>();
+      //  GenerateStoredInteractions();
     }
 
     //DEBUG
@@ -47,6 +55,17 @@ public class Character : Interactable
             Need need = new Need(needSO, this);
             needs.Add(needSO.NeedType, need);
         }
+    }
+
+    public void PickupItem(ItemBase item)
+    {
+        carriedItem = item;
+        
+    }
+
+    public void PutItemDown(Vector3 position)
+    {
+
     }
 
     private void OnDestroy()

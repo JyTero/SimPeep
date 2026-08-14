@@ -3,15 +3,19 @@ using UnityEngine;
 public class ManagerMono : MonoBehaviour
 {
     protected CharacterAIHandler characterAIHandler;
-    protected CharacterRouting characterRouting;
+    protected CharacterControl CharacterControl;
     protected InteractionEngine interactionEngine;
     protected NeedsEngine needsEngine;
     protected LotManager lotManager;
     protected UIController UIController;
-    protected CharacterRelationshipsManager relationshipsManager;
+    protected CharacterRelationshipEngine relationshipEngine;
+    protected ItemManager itemManager;
+   
     private int oneUnitOfTime = 1;
     protected int OneUnitOfTime { get { return oneUnitOfTime; } }
-
+    
+    private Vector3 negSpawnPos= new Vector3(-1,-1,-1);
+    protected Vector3 NegSpawnPos { get { return negSpawnPos; } }
 
     [SerializeField]
     protected bool IsDebug;
@@ -19,11 +23,12 @@ public class ManagerMono : MonoBehaviour
     protected virtual void Start()
     {
         characterAIHandler = FindAnyObjectByType<CharacterAIHandler>();
-        characterRouting = FindAnyObjectByType<CharacterRouting>();
+        CharacterControl = FindAnyObjectByType<CharacterControl>();
         interactionEngine = FindAnyObjectByType<InteractionEngine>();
         needsEngine = FindAnyObjectByType<NeedsEngine>();
         lotManager = FindAnyObjectByType<LotManager>();
         UIController = FindAnyObjectByType<UIController>();
-        relationshipsManager = FindAnyObjectByType<CharacterRelationshipsManager>();
+        relationshipEngine = FindAnyObjectByType<CharacterRelationshipEngine>();
+        itemManager = FindAnyObjectByType<ItemManager>();
     }
 }

@@ -37,4 +37,12 @@ public class Interactable : MonoBehaviour
     {
         allInteractions.Add(sInteraction);
     }
+
+    //protected void GenerateStoredInteractions()
+    //{
+    //    foreach(InteractionSO itso in interactionSOs)
+    //    {
+    //        allInteractions.Add(new StoredInteraction(itso, this));
+    //    }
+    //}
 }

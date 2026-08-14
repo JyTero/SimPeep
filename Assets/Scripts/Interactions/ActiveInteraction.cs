@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,24 +40,23 @@ public class ActiveInteraction
     private List<InteractionScoringModifier> scoringModifiers = new();
     public List<InteractionScoringModifier> ScoringModifiers { get { return scoringModifiers; } }
 
-    private InteractionSO followupInteractionSO;
-    public InteractionSO FollowupInteractionSO { get { return followupInteractionSO; } }
+    private List<InteractionSO> followupInteractionSOs;
+    public List<InteractionSO> FollowupInteractionSOs { get { return followupInteractionSOs; } }
 
     //RuntimeData
+    public List<StoredInteraction> subInteractions = new();
+    public bool isSubinteraction;
+    public bool subInteractionsHaveRan = false;
+    public ActiveInteraction parentInteraction;
+
     public float interactionLenghtAccumulation;
     public InteractionState interactionState;
+    public bool allInstructionsDone = false;
+
 
     public float TimeSinceLastInstructionsSent;
     public float interactionScore;
 
-    public ActiveInteraction(Character chara, InteractionSO itSO, Interactable interactable)
-    {
-        interactionTuningSO = itSO;
-        interactionSource = interactable;
-        thisCharacter = chara;
-
-        CommonConstruct();
-    }
     public ActiveInteraction(Character chara, StoredInteraction storedInteraction)
     {
         interactionTuningSO = storedInteraction.InteractionTuningSO;
@@ -82,8 +82,21 @@ public class ActiveInteraction
             needsToWeight.Add(needInstructionSO.NeedToAdjust);
         }
         TimeSinceLastInstructionsSent = 0;
-        followupInteractionSO = InteractionTuningSO.FollowupInteractionSO;
+        followupInteractionSOs = InteractionTuningSO.FollowupInteractionSOs;
+    }
 
+    public void PrepareSubInteractions(LotManager lotManager, WorldLot thisLot)
+    {
+        foreach (InteractionSO itso in interactionTuningSO.SubInteractionSOs)
+        {
+            StoredInteraction subSi = lotManager.FindSuitableStoredInteractionOnLot(itso, thisLot);
+            subInteractions.Add(subSi);
+        }
+    }
+    public void MakeIntoSubInteraction(ActiveInteraction pi)
+    {
+        isSubinteraction = true;
+        parentInteraction = pi;
     }
 
     private void BuildInteractionEnding()

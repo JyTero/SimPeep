@@ -17,7 +17,7 @@ public class Needs_UIPanel : UIPanel
     private List<GameObject> NeedMeterGOPool = new();
 
 
-    protected void Start()
+    protected override void Start()
     {
         base.Start();
 
@@ -36,7 +36,7 @@ public class Needs_UIPanel : UIPanel
     //    base.OnSelectCharacterChange();
 
     //}
-    protected override void OCSS()
+    protected override void OSCC()
     {
        ActivatePanel();
        // UpdatePanel();

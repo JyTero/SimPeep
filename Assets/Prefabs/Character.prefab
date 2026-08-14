@@ -32,7 +32,8 @@ Transform:
   m_LocalPosition: {x: 0.35356, y: 0.24749, z: 0.35356}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 8530011011793490133}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4354359111728614167
@@ -59,6 +60,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 74cbe71bfd86e744cb9a4acc40bc89dc, type: 2}
   - {fileID: 11400000, guid: 86719ccca67eb4b4aa133f93bc6bc073, type: 2}
   - {fileID: 11400000, guid: 2cb0186c691b2964881c5d3ca52ffc5b, type: 2}
+  carrySlot: {fileID: 8530011011793490133}
 --- !u!33 &1499788276434373728
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -139,3 +141,34 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &8234640230103474434
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8530011011793490133}
+  m_Layer: 0
+  m_Name: HandCarry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8530011011793490133
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8234640230103474434}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.274, y: 0.11634, z: 0.604}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3715783593040135689}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

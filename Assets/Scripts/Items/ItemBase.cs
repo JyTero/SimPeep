@@ -18,8 +18,10 @@ public class ItemBase : Interactable
     public int ItemPrice { get { return itemPrice; } set { itemPrice = value; } }
 
 
-    private void Awake()
+    protected override void Start()
     {
+        base.Start();
+
         itemName = itemData.ItemName;
         itemDescription  = itemData.ItemDescription;
         itemType = itemData.ItemType;
@@ -29,6 +31,6 @@ public class ItemBase : Interactable
             interactionSOs.Add(iso);
         }
 
-       // allInteractions = itemData.AllInteractions;
+       // GenerateStoredInteractions();
     }
 }

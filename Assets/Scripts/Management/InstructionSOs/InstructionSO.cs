@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class InstructionSO : ScriptableObject
 {
-    [SerializeField, Tooltip("Use this to leave notes about the interaction, such as what are its planned owner items")]
+    [SerializeField, Tooltip("Use this to leave notes about the instruction, such as use cases")]
     private string Description;
 
     //Move to separet subclass 
