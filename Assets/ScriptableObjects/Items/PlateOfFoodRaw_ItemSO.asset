@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc25f5866b27ced42ac742f8a11b0679, type: 3}
-  m_Name: Shower_ItemSO
+  m_Name: PlateOfFoodRaw_ItemSO
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: Water Faller
+  itemName: Plate of Raw Food
   itemDescription: 
-  itemPrice: 870
+  itemPrice: 2
   allInteractions:
-  - {fileID: 11400000, guid: 46295dd2631d6c54aa23120c6376e1b9, type: 2}
+  - {fileID: 11400000, guid: 11da4c17e4772ef4b943f6185e4d7e00, type: 2}
+  - {fileID: 11400000, guid: be9c4344ecc01934a9f96bc29d114df7, type: 2}
+  - {fileID: 11400000, guid: e7798c4fe7b27a645ac0f53dd8be20b1, type: 2}

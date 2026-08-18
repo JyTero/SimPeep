@@ -63,9 +63,9 @@ public class Character : Interactable
         
     }
 
-    public void PutItemDown(Vector3 position)
+    public void PutItemDown()
     {
-
+        carriedItem = null;
     }
 
     private void OnDestroy()

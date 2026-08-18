@@ -75,9 +75,9 @@ public class CharacterAI
         aiState = CharacterAIState.Idle;
     }
 
-    public void AddSubInterations(List<ActiveInteraction> sis)
+    public void AddSubInteration(ActiveInteraction sis)
     {
-        subInteractionQueue = sis;
+        subInteractionQueue.Add(sis);
     }
 
     public void RemoveSubInteraction(ActiveInteraction si)

@@ -20,7 +20,7 @@ public class InteractionEngine : ManagementCore
 
     public void StartNewInteraction(ActiveInteraction interaction)
     {
-        interaction.interactionState = InteractionState.Starting;
+        interaction.SetInteractionState(InteractionState.Starting);
 
         if (IsDebug)
             Debug.Log($"{interaction.ThisCharacter.ItemName} started interaction {interaction.InteractionName} (of {interaction.InteractionSource.ItemName})");
@@ -54,34 +54,40 @@ public class InteractionEngine : ManagementCore
 
     private void RouteToInteraction(ActiveInteraction interaction)
     {
-        interaction.interactionState = InteractionState.Moving;
-        CharacterControl.StartRouting(interaction);
+        if (interaction.InteractionTuningSO.SkipMovement)
+            interaction.SetInteractionState(InteractionState.AtDestination);
+        else if (interaction.InteractionSource as ItemBase == interaction.ThisCharacter.CarriedItem)
+            interaction.SetInteractionState(InteractionState.AtDestination);
+
+        else
+        {
+            interaction.SetInteractionState(InteractionState.Moving);
+            CharacterControl.StartRouting(interaction);
+        }
     }
 
     public void OnInteractionDestinationArrival(ActiveInteraction interaction)
     {
-        //Later, make more complicated for multi step interactions (They shall be a "container of interactions"
-
         //Queue Social Interactions to wait, router initialises on arrival
         if (interaction.InteractionSource is Character)
         {
             if (interaction.IsReaction)
-                interaction.interactionState = InteractionState.Waiting;
+                interaction.SetInteractionState(InteractionState.Waiting);
             else
             {
                 //Run interaction on both parties from the same orderr
-                interaction.interactionState = InteractionState.Running;
+                interaction.SetInteractionState(InteractionState.Running);
                 SendOnInteractionBeginInstructions(interaction);
 
                 //Social Responce interaction handling
-                waitingInteractionsByWaitee[interaction.InteractionSource as Character].interactionState = InteractionState.Running;
+                waitingInteractionsByWaitee[interaction.InteractionSource as Character].SetInteractionState(InteractionState.Running);
                 SendOnInteractionBeginInstructions(waitingInteractionsByWaitee[interaction.InteractionSource as Character]);
             }
 
         }
         else
         {
-            interaction.interactionState = InteractionState.Running;
+            interaction.SetInteractionState(InteractionState.Running);
             SendOnInteractionBeginInstructions(interaction);
         }
     }
@@ -89,6 +95,55 @@ public class InteractionEngine : ManagementCore
     private void SendOnInteractionBeginInstructions(ActiveInteraction interaction)
     {
         //TBD
+        List<ItemCapability> itemCapabilities = new();
+        if (interaction.InteractionTuningSO.RequiredItemCapabilities.Count > 0)
+        {
+            foreach (ItemCapabilites itemCapability in interaction.InteractionTuningSO.RequiredItemCapabilities)
+            {
+                ItemBase item = interaction.InteractionSource as ItemBase;
+                if (item.Capabilites.Contains(itemCapability))
+                    itemCapabilities.Add(item.CapabilitiesByEnum[itemCapability]);
+            }
+        }
+        HandleItemCapabilities(itemCapabilities, interaction);
+    }
+
+    private void HandleItemCapabilities(List<ItemCapability> itemCapabilities, ActiveInteraction interaction)
+    {
+        foreach (ItemCapability itemCapability in itemCapabilities)
+        {
+            //Needs
+            List<Need_Instruction> needInstructions = new();
+            foreach (Need_InstructionSO needInstructionSO in itemCapability.OnBeginNeed_InteractionInstructions)
+            {
+                needInstructions.Add(new Need_Instruction(needInstructionSO, interaction.ThisCharacter));
+            }
+            needsEngine.NewInstructions(needInstructions);
+
+            //Relationships
+            List<RelationshipChange_Instruction> relChangeInstructions = new();
+            foreach (Relationship_InstructionSO relso in itemCapability.OnBeginRelationshipChangeInstructions)
+            {
+                relChangeInstructions.Add(new RelationshipChange_Instruction(relso, interaction.ThisCharacter, interaction.InteractionSource as Character));
+            }
+            relationshipEngine.HandleRelationshipInstructions(relChangeInstructions);
+
+            //ItemInstructions
+            List<Item_Instruction> itemInstructions = new();
+            foreach (Item_InstructionSO itemInstructionSO in itemCapability.OnBeginItemChangeInstructions)
+            {
+                itemInstructions.Add(new Item_Instruction(itemInstructionSO, interaction.ThisCharacter, interaction.InteractionSource as ItemBase));
+
+            }
+            itemManager.HandleItemInstructions(itemInstructions);
+
+            //CapabilityLogic
+            capabilityHandler.HandleCapability(itemCapability, interaction.ThisCharacter);
+
+            //SubInteractions
+            HandleSubInteractions(itemCapability.OnBeginSubInteractionSOs, interaction);
+        }
+
     }
 
     private void RegisterToWait(ActiveInteraction interaction)
@@ -112,11 +167,12 @@ public class InteractionEngine : ManagementCore
 
     private void InteractionUpdate(float deltaTime)
     {
-
         for (int i = activeInteractions.Count - 1; i >= 0; i--)
         {
             ActiveInteraction interaction = activeInteractions[i];
-            switch (interaction.interactionState)
+            //if (IsDebug)
+            //    Debug.Log($"Interaction {interaction.InteractionName} is in state {interaction.InteractionState}");
+            switch (interaction.InteractionState)
             {
                 case InteractionState.Starting:
                     break;
@@ -134,13 +190,15 @@ public class InteractionEngine : ManagementCore
                 case InteractionState.Ending:
                     EndInteraction(interaction);
                     break;
+                case InteractionState.SubInteractions:
+                    RunningSubInteractions(interaction);
+                    break;
                 case InteractionState.Default:
                     break;
             }
-
             if (InteractionShouldEnd(interaction))
             {
-                interaction.interactionState = InteractionState.Ending;
+                interaction.SetInteractionState(InteractionState.Ending);
 
             }
 
@@ -173,11 +231,18 @@ public class InteractionEngine : ManagementCore
     }
     private bool InteractionShouldEnd(ActiveInteraction interaction)
     {
-        switch (interaction.InteractionEndingType)
+        if (interaction.InteractionState == InteractionState.SubInteractions)
+            return false;
+        if (interaction.InteractionState == InteractionState.Moving)
+            return false;
+        if (interaction.InteractionState == InteractionState.Ending)
+            return false;
 
+
+        switch (interaction.InteractionEndingType)
         {
             case InteractionEndingType.Default:
-                return true;
+                return false;
             case InteractionEndingType.SetTime:
                 interaction.interactionLenghtAccumulation += deltaTime + updateInterval;
                 if (interaction.interactionLenghtAccumulation > interaction.InteractionLength)
@@ -214,51 +279,50 @@ public class InteractionEngine : ManagementCore
             //Begin next subinteraction
             if (charaAI.SubInteractionQueue.Count > 0)
             {
+                activeInteractions.Remove(interaction);
                 StartSubInteraction(charaAI.SubInteractionQueue[0]);
                 return;
             }
             else //OR finish parent
             {
                 interaction.parentInteraction.subInteractionsHaveRan = true;
-                EndInteraction(interaction.parentInteraction);
+                //interaction.parentInteraction.SetInteractionState(InteractionState.Ending);
+                //EndInteraction(interaction.parentInteraction);
+                activeInteractions.Remove(interaction);
+                //return;
             }
         }
         else if (interaction.InteractionTuningSO.SubInteractionSOs.Count != 0 && !interaction.subInteractionsHaveRan)
         {
-            HandleSubInteractions(interaction);
+            HandleSubInteractions(interaction.subInteractions, interaction);
             return;
         }
 
         activeInteractions.Remove(interaction);
+
+        if (!interaction.isSubinteraction)
+            characterAIHandler.OnInteractionEnd(interaction.ThisCharacter, interaction);
+
         if (IsDebug)
             Debug.Log($"{interaction.ThisCharacter.ItemName} finished interaction {interaction.InteractionName} (of {interaction.InteractionSource.ItemName})");
 
-        characterAIHandler.OnInteractionEnd(interaction.ThisCharacter, interaction);
     }
 
+    private void RunningSubInteractions(ActiveInteraction interaction)
+    {
+        if (interaction.subInteractionsHaveRan)
+            interaction.SetInteractionState(InteractionState.Ending);
+    }
 
     private void SendOnInteractionEndInstructions(ActiveInteraction interaction)
     {
         //Relationships
-        //TODO: Make RelationshipsEngine, move to there
+        List<RelationshipChange_Instruction> relChangeInstructions = new();
         foreach (Relationship_InstructionSO relso in interaction.InteractionTuningSO.RelationshipChangeInstructions)
         {
-            Character thisCharacter = interaction.ThisCharacter;
-            Character targetCharacter = interaction.InteractionSource as Character;
-            if (relationshipEngine.HasExistingRelationship(thisCharacter, targetCharacter))
-            {
-                relationshipEngine.AdjustRelationship(thisCharacter, targetCharacter, relso.RelationshipScoreChange);
-            }
-            else
-            {
-                relationshipEngine.NewRelationship(thisCharacter, targetCharacter);
-                relationshipEngine.AdjustRelationship(thisCharacter, targetCharacter, relso.RelationshipScoreChange);
-            }
-
-
-            if (IsDebug)
-                Debug.Log($"Relations!({interaction.ThisCharacter.ItemName} towards {interaction.InteractionSource.ItemName})");
+            relChangeInstructions.Add(new RelationshipChange_Instruction(relso, interaction.ThisCharacter, interaction.InteractionSource as Character));
         }
+        relationshipEngine.HandleRelationshipInstructions(relChangeInstructions);
 
         //Item, Also should be handled elsewhere
         Iteminstructions(interaction);
@@ -267,77 +331,57 @@ public class InteractionEngine : ManagementCore
 
     private void Iteminstructions(ActiveInteraction interaction)
     {
-        foreach (Item_InstructionSO itemInstruction in interaction.InteractionTuningSO.ItemChangeInstructions)
+        List<Item_Instruction> itemInstructions = new();
+        foreach (Item_InstructionSO itemInstructionSO in interaction.InteractionTuningSO.ItemChangeInstructions)
         {
-            Character thisCharacter = interaction.ThisCharacter;
-            ItemBase thisItem = interaction.InteractionSource as ItemBase;
-            if (itemInstruction.SpawnItem)
-            {
-                //HandleItemSPawning
-                ItemBase newItem = itemManager.SpawnNewItem(itemInstruction.ItemToSpawn, thisCharacter.ThisLot);
-                newItem.gameObject.transform.position = thisItem.transform.position;
-                //Spawned items appear "between farmes" (fixed update or smth), this should cause a frame of waiting for the character to have item ready
-                continue;
-            }
-            else if (itemInstruction.MoveThisItem)
-            {
-                switch (itemInstruction.WhereToMoveItem)
-                {
-                    case ItemLocation.Default:
-                        break;
-                    case ItemLocation.LotSpace:
-                        break;
-                    case ItemLocation.WorldSpace:
-                        break;
-                    case ItemLocation.InCharactacter:
-                        break;
-                    case ItemLocation.OnCharacter:
-                        CharacterControl.PickupItem(thisCharacter, thisItem);
-                        break;
-                    default:
-                        break;
-                }
-            }
+            itemInstructions.Add(new Item_Instruction(itemInstructionSO, interaction.ThisCharacter, interaction.InteractionSource as ItemBase));
+
         }
+        itemManager.HandleItemInstructions(itemInstructions);
     }
 
-    private void HandleSubInteractions(ActiveInteraction interaction)
+    private void HandleSubInteractions(List<SubInteraction> subInteractions, ActiveInteraction mainInteraction)
     {
-        List<ActiveInteraction> subInteractions = new();
-        CharacterAI thisCharaAI = characterAIHandler.CharactersAIsByCharacter[interaction.ThisCharacter];
+        if (subInteractions.Count == 0)
+            return;
 
+        CharacterAI thisCharaAI = characterAIHandler.CharactersAIsByCharacter[mainInteraction.ThisCharacter];
+
+        mainInteraction.SetInteractionState(InteractionState.SubInteractions);
         int i = 0;
-        foreach (StoredInteraction subInteraction in interaction.subInteractions)
+        foreach (SubInteraction subInteraction in subInteractions)
         {
-            //If null, interaction couldnt be found, try again now | GUMMY
             StoredInteraction retrySub;
-            if (subInteraction == null)
+
+            //Item created by this interaction
+            if (subInteraction.InteractionOnCreatedObject)
             {
-                retrySub = lotManager.FindSuitableStoredInteractionOnLot(interaction.InteractionTuningSO.SubInteractionSOs[i], interaction.ThisCharacter.ThisLot);
-                if (retrySub != null)
-                {
-                    ActiveInteraction activeSubInteraction = NewActiveInteraction(interaction.ThisCharacter, retrySub);
-                    activeSubInteraction.MakeIntoSubInteraction(interaction);
-                    subInteractions.Add(activeSubInteraction);
-                    thisCharaAI.AddSubInterations(subInteractions);
-                }
+                retrySub = itemManager.GetInteractionOnInteractable(subInteraction.StoredInteractionSO, itemManager.GetItemCreatedByInstuction(mainInteraction.ThisCharacter));
+                ActiveInteraction activeSubInteraction = NewActiveInteraction(mainInteraction.ThisCharacter, retrySub);
+                activeSubInteraction.MakeIntoSubInteraction(mainInteraction);
+                //subInteractions.Add(activeSubInteraction);
+                thisCharaAI.AddSubInteration(activeSubInteraction);
             }
+
+            //Any pre-existing world Item
             else
             {
-                ActiveInteraction activeSubInteraction = NewActiveInteraction(interaction.ThisCharacter, subInteraction);
-                activeSubInteraction.MakeIntoSubInteraction(interaction);
-                subInteractions.Add(activeSubInteraction);
-                thisCharaAI.AddSubInterations(subInteractions);
+                retrySub = lotManager.FindSuitableStoredInteractionOnLot(subInteraction.StoredInteractionSO, mainInteraction.ThisCharacter.ThisLot);
+                ActiveInteraction activeSubInteraction = NewActiveInteraction(mainInteraction.ThisCharacter, retrySub);
+                activeSubInteraction.MakeIntoSubInteraction(mainInteraction);
+                //subInteractions.Add(activeSubInteraction);
+                thisCharaAI.AddSubInteration(activeSubInteraction);
             }
 
             i++;
         }
         StartSubInteraction(thisCharaAI.SubInteractionQueue[0]);
-        thisCharaAI.RemoveSubInteraction(thisCharaAI.SubInteractionQueue[0]);
     }
-    private void StartSubInteraction(ActiveInteraction interaction)
+    private void StartSubInteraction(ActiveInteraction subInteraction)
     {
-        StartNewInteraction(interaction);
+        CharacterAI thisCharaAI = characterAIHandler.CharactersAIsByCharacter[subInteraction.parentInteraction.ThisCharacter];
+        thisCharaAI.RemoveSubInteraction(thisCharaAI.SubInteractionQueue[0]);
+        StartNewInteraction(subInteraction);
 
     }
 }

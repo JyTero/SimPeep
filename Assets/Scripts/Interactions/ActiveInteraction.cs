@@ -44,13 +44,21 @@ public class ActiveInteraction
     public List<InteractionSO> FollowupInteractionSOs { get { return followupInteractionSOs; } }
 
     //RuntimeData
-    public List<StoredInteraction> subInteractions = new();
+    public List<SubInteraction> subInteractions = new();
     public bool isSubinteraction;
     public bool subInteractionsHaveRan = false;
     public ActiveInteraction parentInteraction;
 
+    //public List<Interactable> InteractablesCreatedByThisInteraction = new();
+    //public List<Interactable> InteractablesCreatedByThisInteraction { get { return  InteractablesCreatedByThisInteraction; } }
+
     public float interactionLenghtAccumulation;
-    public InteractionState interactionState;
+    private InteractionState interactionState;
+    public InteractionState InteractionState { get { return interactionState; } }
+    public void SetInteractionState(InteractionState intrctState)
+    {
+        interactionState = intrctState;
+    }
     public bool allInstructionsDone = false;
 
 
@@ -87,10 +95,14 @@ public class ActiveInteraction
 
     public void PrepareSubInteractions(LotManager lotManager, WorldLot thisLot)
     {
-        foreach (InteractionSO itso in interactionTuningSO.SubInteractionSOs)
+        foreach (SubInteraction subInteraction in interactionTuningSO.SubInteractionSOs)
         {
-            StoredInteraction subSi = lotManager.FindSuitableStoredInteractionOnLot(itso, thisLot);
-            subInteractions.Add(subSi);
+            //if(subInteraction.InteractionOnCreatedObject)
+              //  continue;
+
+            //SubInteraction subSi = lotManager.FindSuitableStoredInteractionOnLot(subInteraction.StoredInteractionSO, thisLot);
+            //subInteractions.Add(subSi);
+            subInteractions.Add(subInteraction);
         }
     }
     public void MakeIntoSubInteraction(ActiveInteraction pi)
@@ -125,10 +137,14 @@ public class StoredInteraction
     private Interactable interactionSource;
     public Interactable InteractionSource { get { return interactionSource; } }
 
+    public bool hiddenInteraction;
+    public bool HiddenInteraction { get { return hiddenInteraction; } }
+
     public StoredInteraction(InteractionSO interactionTuningSO, Interactable interactionSource)
     {
         this.interactionTuningSO = interactionTuningSO;
         this.interactionSource = interactionSource;
+        hiddenInteraction = interactionTuningSO.HiddenInteraction;
     }
 }
 
@@ -141,4 +157,5 @@ public enum InteractionState
     Waiting,
     Running,
     Ending,
+    SubInteractions,
 }

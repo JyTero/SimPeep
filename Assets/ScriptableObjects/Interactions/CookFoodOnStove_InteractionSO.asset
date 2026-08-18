@@ -10,24 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
-  m_Name: GetSnacks_VendingMachine_InteractionSO
-  m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
-  interactionName: Get Snacks
-  Description: Get Snacks Vending Machine (Should be begining burst need instruction)
+  m_Name: CookFoodOnStove_InteractionSO
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
+  interactionName: Cook food on Stove
+  Description: 
   Reaction: 0
   IsSocial: 0
-  hiddenInteraction: 0
+  hiddenInteraction: 1
   skipMovement: 0
   interactionEndingType: 1
-  interactionLenght: 4
+  interactionLenght: 6
   targetNeedType: 0
   targetNeedValue: 0
-  need_InteractionInstructions:
-  - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}
+  need_InteractionInstructions: []
   relationshipChangeInstructions: []
   itemChangeInstructions: []
   subInteractionSOs: []
-  requiredCapabilities: []
+  requiredItemCapabilities: 00000000
   socialResponceInteractions: []
   scoringModifiers: []
   hasFollowup: 0

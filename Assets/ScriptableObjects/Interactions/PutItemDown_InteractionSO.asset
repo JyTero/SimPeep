@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
-  m_Name: GetSnacks_VendingMachine_InteractionSO
-  m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
-  interactionName: Get Snacks
-  Description: Get Snacks Vending Machine (Should be begining burst need instruction)
+  m_Name: PutItemDown_InteractionSO
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
+  interactionName: Put Down
+  Description: Put held item down
   Reaction: 0
   IsSocial: 0
   hiddenInteraction: 0
-  skipMovement: 0
+  skipMovement: 1
   interactionEndingType: 1
-  interactionLenght: 4
+  interactionLenght: 1
   targetNeedType: 0
   targetNeedValue: 0
-  need_InteractionInstructions:
-  - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}
+  need_InteractionInstructions: []
   relationshipChangeInstructions: []
-  itemChangeInstructions: []
+  itemChangeInstructions:
+  - {fileID: 11400000, guid: 0ee34e984dec571498c179c0c1216e6c, type: 2}
   subInteractionSOs: []
   requiredCapabilities: []
   socialResponceInteractions: []

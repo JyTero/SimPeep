@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d175a152defbc45b9a8506e2c9e0a4, type: 3}
+  m_Name: PutItemDown_InstructionSO
+  m_EditorClassIdentifier: Assembly-CSharp::Item_InstructionSO
+  Description: Put down onto the lot
+  spawnItem: 0
+  itemToSpawn: {fileID: 0}
+  moveThisItem: 1
+  whereToMoveItem: 1

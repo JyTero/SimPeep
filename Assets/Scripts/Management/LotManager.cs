@@ -2,7 +2,7 @@ using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using static UnityEditor.PlayerSettings;
+
 
 public class LotManager : ManagementCore
 {
@@ -29,14 +29,11 @@ public class LotManager : ManagementCore
         allLots.Add(lot);
     }
 
-    public void NewItemOnLot(ItemBase item, WorldLot lot)
+    public void NewItemOnLot(ItemBase item)
     {
         this.lot.AddItemToLot(item);
-
-        foreach(InteractionSO itso in item.InteractionSOs)
-        {
-            item.NewStoredInteraction(new StoredInteraction(itso, item));
-        }
+        foreach (StoredInteraction si in item.AllInteractions)
+            allStoredInteractions.Add(si);
     }
 
     public List<StoredInteraction> GetAllInteractionsOnLot(WorldLot lot)

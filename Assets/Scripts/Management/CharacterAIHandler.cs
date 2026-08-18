@@ -29,7 +29,7 @@ public class CharacterAIHandler : ManagementCore
     private Debuglandia debuglandia;
 
 
-    private void Start()
+    protected override void Start()
     {
         base.Start();
         debuglandia = FindAnyObjectByType<Debuglandia>();
@@ -88,8 +88,10 @@ public class CharacterAIHandler : ManagementCore
             List<ActiveInteraction> interactions = new();
             foreach (StoredInteraction storedInteraction in storedInteractions)
             {
-                //TODO: Make "StoredInteraction" that holds interactionSO and item and is given here, instead of passing SOs.
-                interactions.Add(NewActiveInteraction(characterAI.chara,storedInteraction));
+                if (storedInteraction.hiddenInteraction)
+                    continue;
+
+                interactions.Add(NewActiveInteraction(characterAI.chara, storedInteraction));
             }
             //Validity
             //Score
@@ -213,10 +215,26 @@ public class CharacterAIHandler : ManagementCore
         if (interaction.FollowupInteractionSOs.Count != 0)
         {
             List<StoredInteraction> storedInteractions = lotManager.GetAllInteractionsOnLot(charaAI.chara.ThisLot);
+            StoredInteraction si = null;
+
             foreach (InteractionSO intso in interaction.FollowupInteractionSOs)
             {
+                //Carried item takes prio
+                if (character.CarriedItem != null)
+                {
+                    foreach (StoredInteraction storedInteraction in character.CarriedItem.AllInteractions)
+                    {
+                        if (storedInteraction.InteractionTuningSO == intso)
+                        {
+                            si = storedInteraction;
+                            break;
+                        }
+                    }
+                }
                 //Find nearby interaction of that type
-                StoredInteraction si = lotManager.FindSuitableStoredInteractionOnLot(intso, character.ThisLot);
+                else
+                    si = lotManager.FindSuitableStoredInteractionOnLot(intso, character.ThisLot);
+
                 QueueInteraction(NewActiveInteraction(character, si), InteractionQueuePriority.SuggestedFollowup);
                 break;
 

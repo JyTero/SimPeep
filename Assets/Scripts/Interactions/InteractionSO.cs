@@ -14,9 +14,18 @@ public class InteractionSO : ScriptableObject
     private string Description;
 
     public bool Reaction;
+   
+
     [HideIf("Reaction")]
     public bool IsSocial;
 
+    [SerializeField ,Tooltip("Hidden interactions alern't selectable by user or normal interaction selection")]
+    private bool hiddenInteraction;
+    public bool HiddenInteraction {  get { return hiddenInteraction; } }
+
+    [SerializeField, Tooltip("Skip moving stage on interaction execution, runs interaction immediately instead")]
+    private bool skipMovement;
+    public bool SkipMovement {  get { return skipMovement; } }
 
     //Interaction Ending Data    
     [SerializeField]
@@ -52,9 +61,13 @@ public class InteractionSO : ScriptableObject
     public List<Item_InstructionSO > ItemChangeInstructions { get {return itemChangeInstructions; } }
 
     [SerializeField, Tooltip("Way to use pre-existing interactions to build new ones. Example: Fridge spawns Food. Food has Pick Up interaction, which can be plased here to automatically  pick up the food on creation")]
-    private List<InteractionSO> subInteractionSOs = new();
-    public List<InteractionSO> SubInteractionSOs { get { return subInteractionSOs; } }
-    
+    private List<SubInteraction> subInteractionSOs = new();
+    public List<SubInteraction> SubInteractionSOs { get { return subInteractionSOs; } }
+
+    [SerializeField, Tooltip("Capabilities the interaction utilises")]
+    private List<ItemCapabilites> requiredItemCapabilities = new();
+    public List<ItemCapabilites> RequiredItemCapabilities { get { return requiredItemCapabilities; } }
+
     //List to make "choose one based on traits possible"?
     [SerializeField, ShowIf("IsSocial")]
     private List<InteractionSO> socialResponceInteractions = new();

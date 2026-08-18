@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ManagerMono : MonoBehaviour
@@ -10,6 +11,9 @@ public class ManagerMono : MonoBehaviour
     protected UIController UIController;
     protected CharacterRelationshipEngine relationshipEngine;
     protected ItemManager itemManager;
+    protected CapabilityHandler capabilityHandler;
+
+    protected InstructionEngine instructionEngine;
    
     private int oneUnitOfTime = 1;
     protected int OneUnitOfTime { get { return oneUnitOfTime; } }
@@ -30,5 +34,8 @@ public class ManagerMono : MonoBehaviour
         UIController = FindAnyObjectByType<UIController>();
         relationshipEngine = FindAnyObjectByType<CharacterRelationshipEngine>();
         itemManager = FindAnyObjectByType<ItemManager>();
+        capabilityHandler = FindAnyObjectByType<CapabilityHandler>();
+        
+        instructionEngine = FindAnyObjectByType<InstructionEngine>();
     }
 }

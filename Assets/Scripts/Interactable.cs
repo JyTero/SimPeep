@@ -13,7 +13,7 @@ public class Interactable : MonoBehaviour
 
     protected virtual void Start()
     {
-        LateStartTimer();
+        //LateStartTimer();
     }
     private IEnumerator LateStartTimer()
     {
@@ -22,7 +22,7 @@ public class Interactable : MonoBehaviour
     }
     public void LateStart()
     {
-        thisLot = FindAnyObjectByType<WorldLot>();
+       // thisLot = FindAnyObjectByType<WorldLot>();
     }
 
     [SerializeField]
@@ -36,6 +36,10 @@ public class Interactable : MonoBehaviour
     public void NewStoredInteraction(StoredInteraction sInteraction)
     {
         allInteractions.Add(sInteraction);
+    }
+    public void ChangeCurrentLot(WorldLot lot)
+    {
+        thisLot = lot;
     }
 
     //protected void GenerateStoredInteractions()

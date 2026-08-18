@@ -25,14 +25,14 @@ public class Item_InstructionSO : InstructionSO
     public ItemLocation WhereToMoveItem { get { return whereToMoveItem; } }
     private bool moveToLotSpace, moveToWorldSpace, moveToInCharacter, moveToOnCharacter = false;
 
-    [SerializeField, ShowIf("moveToLotSpace")]
-    private WorldLot lotToMoveIn;
-    public WorldLot LotToMoveIn { get { return lotToMoveIn; } }
+    //[SerializeField, ShowIf("moveToLotSpace")]
+    //private WorldLot lotToMoveIn;
+    //public WorldLot LotToMoveIn { get { return lotToMoveIn; } }
 
 
-    [SerializeField, ShowIf(EConditionOperator.Or, "moveToLotSpace", "moveToWorldSpace")]
-    private Vector3 destination;
-    public Vector3 Destination { get { return destination; } }
+    //[SerializeField, ShowIf(EConditionOperator.Or, "moveToLotSpace", "moveToWorldSpace")]
+    //private Vector3 destination;
+    //public Vector3 Destination { get { return destination; } }
 
 
     private void OnValidate()
@@ -75,6 +75,7 @@ public class Item_InstructionSO : InstructionSO
     }
 }
 
+
 public enum ItemLocation
 {
     Default,
@@ -82,4 +83,5 @@ public enum ItemLocation
     WorldSpace,         //Item outside of lots but in world
     InCharactacter,     //In character inventory (TBD)
     OnCharacter,        //Character carrying item
+    ItemSlot,           //ItemSlot on item
 }

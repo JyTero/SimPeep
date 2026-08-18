@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ItemTuningSO", menuName = "Scriptable Objects/ItemTuningSO")]
+[CreateAssetMenu(fileName = "ItemSO", menuName = "Scriptable Objects/ItemSO")]
 
-public class ItemTuningSO : ScriptableObject
+public class ItemSO : ScriptableObject
 {
     [SerializeField]
     private string itemName;

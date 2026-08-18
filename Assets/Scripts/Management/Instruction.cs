@@ -3,20 +3,14 @@ using UnityEngine;
 
 //[Serializable]
 public abstract class Instruction
-{
-    //remember to add new lists to InteractionSO when creating new sub classes
-    
-    //[SerializeField]
-    //protected float instructionTriggerTime;
-    //public float InstructionTriggerTime { get { return instructionTriggerTime; } }
-
-    
+{  
     public float InstructionLifetime;
     public float InstructionLenght;
     public float TimeSinceLastUse;
     
 
 }
+
 [Serializable]
 public class Need_Instruction : Instruction
 {
@@ -54,3 +48,41 @@ public class Need_Instruction : Instruction
         TimeSinceLastUse = 0;
     }
 }
+
+public class RelationshipChange_Instruction : Instruction
+{
+    private Relationship_InstructionSO relInstructionSO;
+    public Relationship_InstructionSO RelInstructionSO { get { return relInstructionSO; } }
+
+    private Character sourceCharacter;
+    public Character SourceCharacter { get { return sourceCharacter; } }
+
+    private Character targetCharacter;
+    public Character TargetCharacter { get { return targetCharacter; } }
+
+    public RelationshipChange_Instruction(Relationship_InstructionSO relInstructionSO, Character sourceCharacter, Character targetCharacter)
+    {
+        this.relInstructionSO = relInstructionSO;
+        this.sourceCharacter = sourceCharacter;
+        this.targetCharacter = targetCharacter;
+    }
+}
+public class Item_Instruction : Instruction
+{
+    private Item_InstructionSO itemInstructionSO;
+    public Item_InstructionSO ItemInstructionSO { get { return itemInstructionSO; } }
+
+    private Character thisCharacter;
+    public Character ThisCharacter { get { return thisCharacter; } }
+
+    private ItemBase thisItem;
+    public ItemBase ThisItem { get { return thisItem; } }
+
+    public Item_Instruction(Item_InstructionSO itemInstructionSO, Character thisCharacter, ItemBase thisItem)
+    {
+        this.itemInstructionSO = itemInstructionSO;
+        this.thisCharacter = thisCharacter;
+        this.thisItem = thisItem;
+    }
+}
+

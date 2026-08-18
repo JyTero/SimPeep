@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fd5a1704747a5443bfa4e17516de41b, type: 3}
-  m_Name: Sink_ItemTuningSO
-  m_EditorClassIdentifier: Assembly-CSharp::ItemTuningSO
-  itemName: Boudoir of Bather
+  m_Script: {fileID: 11500000, guid: bc25f5866b27ced42ac742f8a11b0679, type: 3}
+  m_Name: Sink_ItemSO
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSO
+  itemName: Sinking Water
   itemDescription: 
-  itemPrice: 260
+  itemPrice: 300
   allInteractions:
   - {fileID: 11400000, guid: a046f9d1ac79ded4290c54a777df6d46, type: 2}

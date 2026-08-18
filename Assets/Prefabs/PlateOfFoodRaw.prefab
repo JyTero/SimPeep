@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7018220297851502066}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.19740064, y: -0, z: -0, w: 0.98032296}
+  m_LocalRotation: {x: -0.1974007, y: 0, z: 0, w: 0.9803229}
   m_LocalPosition: {x: -2.92, y: 0.73, z: 4.33954}
   m_LocalScale: {x: 1, y: 0.066689, z: 1}
   m_ConstrainProportionsScale: 0
@@ -49,7 +49,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
   itemName: Plate
   interactionSOs: []
-  itemData: {fileID: 11400000, guid: 48bd2eac7d7b5f44798346573c143600, type: 2}
+  itemData: {fileID: 11400000, guid: cd5fc85aa20ada546b94ac3f13c6ba8e, type: 2}
+  itemDescription: 
+  itemInitialised: 0
 --- !u!33 &290930702303372338
 MeshFilter:
   m_ObjectHideFlags: 0

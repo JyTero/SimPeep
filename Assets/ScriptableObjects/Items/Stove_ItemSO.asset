@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc25f5866b27ced42ac742f8a11b0679, type: 3}
-  m_Name: Shower_ItemSO
+  m_Name: Stove_ItemSO
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: Water Faller
+  itemName: Steve's Stove
   itemDescription: 
-  itemPrice: 870
+  itemPrice: 670
   allInteractions:
-  - {fileID: 11400000, guid: 46295dd2631d6c54aa23120c6376e1b9, type: 2}
+  - {fileID: 11400000, guid: 59f846900863b85498dda6b9129ad40c, type: 2}

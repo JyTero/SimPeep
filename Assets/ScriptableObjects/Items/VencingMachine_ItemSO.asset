@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fd5a1704747a5443bfa4e17516de41b, type: 3}
-  m_Name: VendingMachine_ItemSO
-  m_EditorClassIdentifier: Assembly-CSharp::ItemTuningSO
-  itemName: Vending Machine
-  itemDescription: Snaccs for all the snaccing needs
-  itemPrice: 1200
+  m_Script: {fileID: 11500000, guid: bc25f5866b27ced42ac742f8a11b0679, type: 3}
+  m_Name: VencingMachine_ItemSO
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSO
+  itemName: Snack Dispenser
+  itemDescription: 
+  itemPrice: 2400
   allInteractions:
   - {fileID: 11400000, guid: f2b52d6b4ebe5e048bedae9aa88be67f, type: 2}

@@ -70,6 +70,10 @@ public class UIController : ManagementCore
         int i = 0;
         foreach (StoredInteraction storedInteraction in storedInteractions)
         {
+            if (storedInteraction.hiddenInteraction)
+                continue;
+
+
             GameObject buttonGO = buttonPool[i];
 
             buttonGO.GetComponentInChildren<TextMeshProUGUI>().text = storedInteraction.InteractionTuningSO.InteractionName;

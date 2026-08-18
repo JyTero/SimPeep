@@ -51,6 +51,30 @@ public class CharacterRelationshipEngine : ManagementCore
         }
         Debug.Log(s);
     }
+
+    public void HandleRelationshipInstructions(List<RelationshipChange_Instruction> relInstructions)
+    {
+        foreach (RelationshipChange_Instruction relChangeInstruction in relInstructions)
+        {
+            Character thisCharacter = relChangeInstruction.SourceCharacter;
+            Character targetCharacter = relChangeInstruction.TargetCharacter;
+            Relationship_InstructionSO relso = relChangeInstruction.RelInstructionSO;
+
+            if (relationshipEngine.HasExistingRelationship(thisCharacter, targetCharacter))
+            {
+                relationshipEngine.AdjustRelationship(thisCharacter, targetCharacter, relso.RelationshipScoreChange);
+            }
+            else
+            {
+                relationshipEngine.NewRelationship(thisCharacter, targetCharacter);
+                relationshipEngine.AdjustRelationship(thisCharacter, targetCharacter, relso.RelationshipScoreChange);
+            }
+
+
+            if (IsDebug)
+                Debug.Log($"Relations!({thisCharacter.ItemName} towards {targetCharacter.ItemName})");
+        }
+    }
 }
 
 public class CharacterRelationship
@@ -68,6 +92,7 @@ public class CharacterRelationship
     }
 
 }
+
 
 
 

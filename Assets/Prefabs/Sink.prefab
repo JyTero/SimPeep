@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5269985495508784278}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.8, y: -1.22, z: 4.54278}
   m_LocalScale: {x: 0.5, y: 1, z: 0.5}
   m_ConstrainProportionsScale: 0
@@ -47,9 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de3c0e49226a81341aebc33b33aeef0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
-  itemName: Seat of Relief
+  itemName: Bodoir of Bathing
   interactionSOs: []
-  itemData: {fileID: 11400000, guid: c54b8a021688ce04fa0096d1a197c16a, type: 2}
+  itemData: {fileID: 11400000, guid: 37d87efd7c0acc94c8bd2002b23597b1, type: 2}
+  itemDescription: 
+  itemInitialised: 0
 --- !u!33 &811480212801791064
 MeshFilter:
   m_ObjectHideFlags: 0
