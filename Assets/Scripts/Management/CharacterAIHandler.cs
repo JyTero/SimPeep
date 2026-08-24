@@ -88,7 +88,9 @@ public class CharacterAIHandler : ManagementCore
             List<ActiveInteraction> interactions = new();
             foreach (StoredInteraction storedInteraction in storedInteractions)
             {
-                if (storedInteraction.hiddenInteraction)
+                if (storedInteraction.InteractionTuningSO.HiddenInteraction)
+                    continue;
+                if (storedInteraction.InteractionTuningSO.InvalidInteraction)
                     continue;
 
                 interactions.Add(NewActiveInteraction(characterAI.chara, storedInteraction));
@@ -183,7 +185,19 @@ public class CharacterAIHandler : ManagementCore
 
     }
 
-
+    public void AtDestination(Character character)
+    {
+        CharacterAI cai = activeCharacters[character];
+        if (cai != null)
+        {
+            if (cai.CurrentSubInteraction != null)
+                cai.CurrentSubInteraction.SetInteractionState(InteractionState.AtDestination); //Refere to current interaction, even if sub (cant use CAI.CurrentInteraction for subs)
+            else
+                cai.CurrentInteraction.SetInteractionState(InteractionState.AtDestination);
+        }
+        else
+            Debug.LogError("Unhandeled AtDestination");
+    }
 
     private void StartInteraction(ActiveInteraction interaction, CharacterAI charaAI)
     {
@@ -222,7 +236,7 @@ public class CharacterAIHandler : ManagementCore
                 //Carried item takes prio
                 if (character.CarriedItem != null)
                 {
-                    foreach (StoredInteraction storedInteraction in character.CarriedItem.AllInteractions)
+                    foreach (StoredInteraction storedInteraction in character.CarriedItem.StoredInteractions)
                     {
                         if (storedInteraction.InteractionTuningSO == intso)
                         {

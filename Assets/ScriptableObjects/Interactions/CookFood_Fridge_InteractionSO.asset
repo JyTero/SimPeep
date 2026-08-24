@@ -18,18 +18,16 @@ MonoBehaviour:
   IsSocial: 0
   hiddenInteraction: 0
   skipMovement: 0
+  invalidInteraction: 0
   interactionEndingType: 1
   interactionLenght: 1
   targetNeedType: 0
   targetNeedValue: 0
   need_InteractionInstructions: []
   relationshipChangeInstructions: []
-  itemChangeInstructions:
-  - {fileID: 11400000, guid: 8e9c9eaaaf5757040b83a64c0b4da433, type: 2}
-  subInteractionSOs:
-  - storedInteractionSO: {fileID: 11400000, guid: 11da4c17e4772ef4b943f6185e4d7e00, type: 2}
-    interactionOnCreatedObject: 1
-  requiredItemCapabilities: 
+  itemChangeInstructions: []
+  subInteractions: []
+  requiredItemCapabilities: 04000000
   socialResponceInteractions: []
   scoringModifiers: []
   hasFollowup: 1

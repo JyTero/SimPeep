@@ -9,7 +9,9 @@ public class ItemCapability : MonoBehaviour
     protected ItemCapabilites thisCapability;
     public ItemCapabilites ThisCapability { get { return thisCapability; } }
 
-    protected string capablityName;
+    [HideInInspector]
+    public string CapabilityName;
+
     protected List<List<Instruction>> instructionLists= new();
 
 
@@ -49,9 +51,4 @@ public class ItemCapability : MonoBehaviour
     private List<SubInteraction> onEndSubInteractionSOs = new();
     public List<SubInteraction> OnEndSubInteractionSOs { get { return onEndSubInteractionSOs; } }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected virtual void Start()
-    {
-
-    }
 }

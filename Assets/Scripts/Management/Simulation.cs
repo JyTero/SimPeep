@@ -35,6 +35,7 @@ public class Simulation : ManagerMono
         interactionEngine.MyUpdate(dt);
         needsEngine.MyUpdate(dt);
         characterAIHandler.MyUpdate(dt);
+        characterPathfinding.MyUpdate(dt);
 
 
     }

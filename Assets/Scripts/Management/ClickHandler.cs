@@ -32,7 +32,7 @@ public class ClickHandler : ManagementCore
                     if (IsDebug)
                         Debug.Log("On Item");
 
-                    UIController.ShowListOfInteractions(intr.AllInteractions);
+                    UIController.ShowListOfInteractions(intr.StoredInteractions);
                     return;
                 }
 
@@ -52,7 +52,7 @@ public class ClickHandler : ManagementCore
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                var chara = hit.collider.gameObject.GetComponent<Character>();
+                var chara = hit.collider.transform.parent.GetComponent<Character>();
                 if (chara != null)
                 {
                     if (IsDebug)

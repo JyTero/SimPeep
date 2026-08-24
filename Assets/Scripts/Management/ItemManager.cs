@@ -1,6 +1,4 @@
-using NUnit.Framework;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ItemManager : ManagementCore
@@ -11,7 +9,7 @@ public class ItemManager : ManagementCore
     private Dictionary<ItemBase, Transform> itemsMoving = new();
     public Dictionary<ItemBase, Transform> ItemsMoving { get { return itemsMoving; } }
 
-    private Dictionary<Character, ItemBase> itemsCreatedByCharacter = new();
+    private Dictionary<Character, ItemBase> itemsCreatedByInteraction = new();
 
     private List<ItemBase> unreadyItems = new();
 
@@ -26,15 +24,51 @@ public class ItemManager : ManagementCore
     {
         ItemBase returne = Instantiate(prefab, spawnPos, Quaternion.identity).GetComponent<ItemBase>();
         returne.ChangeCurrentLot(lot);
+        InitialiseItem(returne);
 
-        unreadyItems.Add(returne);
+       // unreadyItems.Add(returne);
         return returne;
 
+    }
+    public void DestroyItem(ItemBase item)
+    {
+        allItems.Remove(item);
+        lotManager.RemoveItemFromLot(item);
+        Destroy(item.gameObject);
+    }
+
+    public void InitialiseItem(ItemBase item) //Move to ItemManager
+    {
+        ItemSO itemData = item.ItemData;
+        if (item.ItemName == "")
+
+            item.ItemName = itemData.ItemName;
+
+        //if(itemDescription == "")
+        //itemDescription  = itemData.ItemDescription;
+
+        item.ItemPrice = itemData.ItemPrice;
+        foreach (InteractionSO iso in itemData.AllInteractions)
+        {
+            item.InteractionSOs.Add(iso);
+        }
+
+        capabilityHandler.InitialiseItemCapabilities(item);
+
+        foreach (InteractionSO itso in item.InteractionSOs)
+        {
+            item.NewStoredInteraction(new StoredInteraction(itso, item));
+        }
+
+        //IF(WithinLotGrid)
+        //Place onto center of nearest tile
+
+        item.itemInitialised = true;
     }
 
     public StoredInteraction GetInteractionOnInteractable(InteractionSO itsoTemplate, Interactable interactable)
     {
-        foreach (StoredInteraction storedInteraction in interactable.AllInteractions)
+        foreach (StoredInteraction storedInteraction in interactable.StoredInteractions)
         {
             if (storedInteraction.InteractionTuningSO == itsoTemplate)
                 return storedInteraction;
@@ -97,11 +131,15 @@ public class ItemManager : ManagementCore
             if (itemInstructionSO.SpawnItem)
             {
                 //HandleItemSPawning
-                ItemBase ib = itemManager.SpawnNewItem(itemInstructionSO.ItemToSpawn, thisCharacter.ThisLot, thisItem.transform.position);
-                itemsCreatedByCharacter.Add(thisCharacter, ib);
+                ItemBase ib = SpawnNewItem(itemInstructionSO.ItemToSpawn, thisCharacter.ThisLot, thisItem.transform.position);
+                itemsCreatedByInteraction.Add(thisCharacter, ib);
                 //newItem.gameObject.transform.position = thisItem.transform.position;
                 //Spawned items appear "between farmes" (fixed update or smth), this should cause a frame of waiting for the character to have item ready
                 continue;
+            }
+            else if(itemInstructionSO.DestroyItem)
+            {
+                DestroyItem(thisItem);
             }
             else if (itemInstructionSO.MoveThisItem)
             {
@@ -110,6 +148,7 @@ public class ItemManager : ManagementCore
                     case ItemLocation.Default:
                         break;
                     case ItemLocation.LotSpace:
+                        OnItemPutDown(thisItem, thisCharacter);
                         CharacterControl.PutItemDownGround(thisCharacter);
                         break;
                     case ItemLocation.WorldSpace:
@@ -117,6 +156,7 @@ public class ItemManager : ManagementCore
                     case ItemLocation.InCharactacter:
                         break;
                     case ItemLocation.OnCharacter:
+                        OnItemPickUp(thisItem, thisCharacter);
                         CharacterControl.PickupItem(thisCharacter, thisItem);
                         break;
                     case ItemLocation.ItemSlot:
@@ -129,14 +169,44 @@ public class ItemManager : ManagementCore
         }
     }
 
-    public void PlaceCarriedItemToSlot(Character character, ItemSlot slot)
+    private void OnItemPickUp(ItemBase item, Character character)
     {
-        character.PutItemDown();
-        slot.PlaceItemToSlot(character.CarriedItem);
+        StoredInteraction si = item.StoredInteractions.Find(x => x.InteractionTuningSO.InteractionName == "Put Down"); //PutItemDown_InteractionSO
+        if (si != null)
+            si.InvalidInteraction = false;
+
+        si = item.StoredInteractions.Find(x => x.InteractionTuningSO.InteractionName == "Pick Up");
+        if (si != null)
+            si.InvalidInteraction = true;
+
     }
-    public ItemBase GetItemCreatedByInstuction(Character character)
+
+    private void OnItemPutDown(ItemBase item, Character character)
     {
-        return itemsCreatedByCharacter[character];
+        StoredInteraction si = item.StoredInteractions.Find(x => x.InteractionTuningSO.InteractionName == "Put Down"); //PutItemDown_InteractionSO
+        if (si != null)
+            si.InvalidInteraction = true;
+
+        si = item.StoredInteractions.Find(x => x.InteractionTuningSO.InteractionName == "Pick Up");
+        if (si != null)
+            si.InvalidInteraction = false;
+    }
+
+    public bool IsSlotValidForItem(ItemBase item, Item_Slot slot)
+    {
+        if (slot.ValidItemSO == null)
+            return true;
+        else if (slot.ValidItemSO == item.ItemData)
+            return true;
+        else 
+            return false;
+    }
+
+    public ItemBase GetItemCreatedByInteraction(Character character)
+    {
+        ItemBase item = itemsCreatedByInteraction[character];
+        itemsCreatedByInteraction.Remove(character);
+        return item;
     }
 
     public void RegisterMovingItem(ItemBase item, Transform anchor)
@@ -147,6 +217,25 @@ public class ItemManager : ManagementCore
     {
         ItemsMoving.Remove(item);
     }
+
+    //Slots
+    public void PlaceCarriedItemToSlot(Character character, Item_Slot slot)
+    {
+        ItemBase item = character.CarriedItem;
+        if (!IsSlotValidForItem(item, slot))
+            return;
+        DeregisterMovingItem(item);
+        character.PutItemDown();
+        slot.PlaceItemToSlot(item);
+
+    }
+    public void PlaceItemToSlot(ItemBase item, Item_Slot slot)
+    {
+        if (!IsSlotValidForItem(item, slot))
+            return;
+    }
+
+
 }
 
 

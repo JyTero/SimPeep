@@ -57,6 +57,7 @@ public class ActiveInteraction
     public InteractionState InteractionState { get { return interactionState; } }
     public void SetInteractionState(InteractionState intrctState)
     {
+        //Debug.Log($"InteractionStateChange: {InteractionName} had state {interactionState}, new state: {intrctState}");
         interactionState = intrctState;
     }
     public bool allInstructionsDone = false;
@@ -95,7 +96,7 @@ public class ActiveInteraction
 
     public void PrepareSubInteractions(LotManager lotManager, WorldLot thisLot)
     {
-        foreach (SubInteraction subInteraction in interactionTuningSO.SubInteractionSOs)
+        foreach (SubInteraction subInteraction in interactionTuningSO.SubInteractions)
         {
             //if(subInteraction.InteractionOnCreatedObject)
               //  continue;
@@ -137,14 +138,14 @@ public class StoredInteraction
     private Interactable interactionSource;
     public Interactable InteractionSource { get { return interactionSource; } }
 
-    public bool hiddenInteraction;
-    public bool HiddenInteraction { get { return hiddenInteraction; } }
+    //Invalid interactions will not be selectable by anyone (picking up already carried item)
+    public bool InvalidInteraction;
 
     public StoredInteraction(InteractionSO interactionTuningSO, Interactable interactionSource)
     {
         this.interactionTuningSO = interactionTuningSO;
         this.interactionSource = interactionSource;
-        hiddenInteraction = interactionTuningSO.HiddenInteraction;
+        InvalidInteraction = interactionTuningSO.InvalidInteraction;
     }
 }
 
@@ -159,3 +160,14 @@ public enum InteractionState
     Ending,
     SubInteractions,
 }
+//NEXT UP:
+// Implement Destroy Item       Done
+// Destroy Raw food             Done
+// Spawn Cooked food
+// Place onto stove
+// Pick up cooked food
+// (
+//      Implement Dining Table and Chairs
+//      Use them to eat.
+// )
+// Eat.

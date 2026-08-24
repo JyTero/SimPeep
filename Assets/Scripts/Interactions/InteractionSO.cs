@@ -27,6 +27,11 @@ public class InteractionSO : ScriptableObject
     private bool skipMovement;
     public bool SkipMovement {  get { return skipMovement; } }
 
+    [SerializeField, Tooltip("Invalid interactions will not be selectable by anyone/thing (picking up already carried item).\nThis is the start state")]
+    private bool invalidInteraction;
+    public bool InvalidInteraction { get { return invalidInteraction; } }
+
+
     //Interaction Ending Data    
     [SerializeField]
     private InteractionEndingType interactionEndingType;
@@ -36,8 +41,8 @@ public class InteractionSO : ScriptableObject
     private bool untillNeedAtValue = false;
 
     [SerializeField, ShowIf("setTime")]
-    private int interactionLenght;
-    public int InteractionLenght { get { return interactionLenght; } }
+    private float interactionLenght;
+    public float InteractionLenght { get { return interactionLenght; } }
 
     [SerializeField, ShowIf("untillNeedAtValue")]
     private NeedType targetNeedType;
@@ -61,8 +66,8 @@ public class InteractionSO : ScriptableObject
     public List<Item_InstructionSO > ItemChangeInstructions { get {return itemChangeInstructions; } }
 
     [SerializeField, Tooltip("Way to use pre-existing interactions to build new ones. Example: Fridge spawns Food. Food has Pick Up interaction, which can be plased here to automatically  pick up the food on creation")]
-    private List<SubInteraction> subInteractionSOs = new();
-    public List<SubInteraction> SubInteractionSOs { get { return subInteractionSOs; } }
+    private List<SubInteraction> subInteractions = new();
+    public List<SubInteraction> SubInteractions { get { return subInteractions; } }
 
     [SerializeField, Tooltip("Capabilities the interaction utilises")]
     private List<ItemCapabilites> requiredItemCapabilities = new();

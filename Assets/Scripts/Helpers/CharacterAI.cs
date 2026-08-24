@@ -13,6 +13,9 @@ public class CharacterAI
     private ActiveInteraction currentInteraction;
     public ActiveInteraction CurrentInteraction {  get { return currentInteraction; } }
 
+    private ActiveInteraction currentSubInteraction;
+    public ActiveInteraction CurrentSubInteraction { get { return currentSubInteraction; } }
+
     private Dictionary<InteractionQueuePriority, List<QueuedInteraction>> interactionQueuesByPriority = new();
     public Dictionary<InteractionQueuePriority, List<QueuedInteraction>> InteractionQueuesByPriority { get { return interactionQueuesByPriority; } }
 
@@ -35,6 +38,10 @@ public class CharacterAI
     public void NewCurrentInteraction(ActiveInteraction interaction)
     {
         currentInteraction = interaction;
+    }
+    public void NewCurrentSubInteraction(ActiveInteraction interaction)
+    {
+        currentSubInteraction = interaction;
     }
 
     public void QueueNewInteraction(ActiveInteraction interaction, InteractionQueuePriority queuePriority)

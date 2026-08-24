@@ -6,6 +6,7 @@ public class ItemBase : Interactable
 {
     [SerializeField]
     private ItemSO itemData;
+    public ItemSO ItemData {  get { return itemData; } }
 
 
     [SerializeField]
@@ -20,18 +21,18 @@ public class ItemBase : Interactable
     private List<ItemCapability> capabilityComponents;
     public List<ItemCapability> CapabilityComponents { get { return capabilityComponents; } }
 
-
-
+   
     private Dictionary<ItemCapabilites, ItemCapability> capabilitiesByEnum = new();
     public Dictionary<ItemCapabilites, ItemCapability> CapabilitiesByEnum { get { return capabilitiesByEnum; } }
 
-
-    private ItemType itemType;
-    public ItemType ItemType { get { return itemType; } set { itemType = value; } }
-
-
     private int itemPrice;
     public int ItemPrice { get { return itemPrice; } set { itemPrice = value; } }
+
+    private List<Item_Slot> itemSlotsOnItem = new();
+    public List<Item_Slot> ItemSlotsOnItem { get { return itemSlotsOnItem; }}
+
+    private List<Character_Slot> characterSlotsOnItem = new();
+    public List<Character_Slot> CharacterSlotsOnItem { get { return characterSlotsOnItem; }}
 
     [HideInInspector]
     public bool itemInitialised = false;
@@ -40,28 +41,8 @@ public class ItemBase : Interactable
     {
         base.Start();
 
-        if (itemName == "")
-            itemName = itemData.ItemName;
-
-        //if(itemDescription == "")
-        //itemDescription  = itemData.ItemDescription;
-
-        itemType = itemData.ItemType;
-        itemPrice = itemData.ItemPrice;
-        foreach (InteractionSO iso in itemData.AllInteractions)
-        {
-            interactionSOs.Add(iso);
-        }
-
-        itemInitialised = true;
-
-        foreach (ItemCapabilites capability in Capabilites)
-        {
-            foreach (ItemCapability ic in capabilityComponents)
-            {
-                if (ic.ThisCapability == capability)
-                    capabilitiesByEnum.Add(capability, ic);
-            }
-        }
+       
     }
+
+    
 }

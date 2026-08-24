@@ -33,12 +33,6 @@ public class LoadingScreen : MonoBehaviour
     {
         if (!runStartup)
         {
-            Character[] characters = FindObjectsByType<Character>();
-            foreach (Character chara in characters)
-            {
-                NewCharacter(chara);
-
-            }
             //Lots & Items
             foreach (WorldLot lot in lotManager.AllLots)
             {
@@ -53,6 +47,13 @@ public class LoadingScreen : MonoBehaviour
 
             lotManager.LoadingScreen();
 
+            //Characters
+            Character[] characters = FindObjectsByType<Character>();
+            foreach (Character chara in characters)
+            {
+                NewCharacter(chara);
+
+            }
             //UI
 
 
@@ -73,10 +74,12 @@ public class LoadingScreen : MonoBehaviour
             chara.NewStoredInteraction(new StoredInteraction(iso, chara));
 
         }
-        
 
-            //Relations
-            relationshipsManager.NewCharacter(chara);
+        chara.ChangeCurrentTile(lotManager.GetTileInteractableIsOn(chara));
+        chara.transform.position = chara.CurrentTile.TilePos;
+
+        //Relations
+        relationshipsManager.NewCharacter(chara);
 
     }
 }

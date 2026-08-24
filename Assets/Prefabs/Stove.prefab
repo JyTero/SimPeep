@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6677374733486984202}
+  - component: {fileID: 113425654867969759}
   m_Layer: 0
-  m_Name: StopTop
+  m_Name: StoveTop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,6 +32,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 158690243205893505}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &113425654867969759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4821625198751853988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53af469e7be07e44697eac7c6d7fca54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Item_Slot
+  slotTransform: {fileID: 6677374733486984202}
+  limitSlotToSpecificItemType: 0
+  validItemSO: {fileID: 0}
 --- !u!1 &7910699575505835471
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,18 +117,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoveCapability
   thisCapability: 0
+  CapabilityName: 
   onBeginNeed_InteractionInstructions: []
   onBeginRelationshipChangeInstructions: []
   onBeginItemChangeInstructions: []
-  onBeginSubInteractionSOs:
-  - storedInteractionSO: {fileID: 0}
-    interactionOnCreatedObject: 0
+  onBeginSubInteractionSOs: []
   onEndNeed_InteractionInstructions: []
   onEndRelationshipChangeInstructions: []
   onEndItemChangeInstructions: []
   onEndSubInteractionSOs: []
-  stoveCookSlot:
-    slotTransform: {fileID: 0}
+  stoveCookSlot: {fileID: 113425654867969759}
 --- !u!33 &4051895236254469951
 MeshFilter:
   m_ObjectHideFlags: 0

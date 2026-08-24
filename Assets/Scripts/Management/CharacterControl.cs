@@ -24,19 +24,29 @@ public class CharacterControl : ManagementCore
     {
         charactersRouting.Add(character, destination);
     }
+
     public void StartRouting(ActiveInteraction interaction)
     {
+        if(interaction.ThisCharacter.CharacterPhysicalState != CharacterPhysicalStateEnum.Standing)
+            StandUpFromSlot(interaction.ThisCharacter, interaction.ThisCharacter.OccupiedSlot);
+
+
         if (interaction.IsReaction)
-            interactionsRouting.Add(interaction, interaction.ThisCharacter.transform);
+            characterPathfinding.NewCharacterFindingPath(interaction.ThisCharacter, interaction.ThisCharacter.transform.position);
         else
-            interactionsRouting.Add(interaction, interaction.InteractionSource.transform);
+            characterPathfinding.NewCharacterFindingPath(interaction.ThisCharacter, interaction.InteractionSource.transform.position);
+
+        //if (interaction.IsReaction)
+        //    interactionsRouting.Add(interaction, interaction.ThisCharacter.transform);
+        //else
+        //    interactionsRouting.Add(interaction, interaction.InteractionSource.transform);
     }
 
     protected override void TimedUpdate(float dt)
     {
         base.TimedUpdate(dt);
-        CharacterRoutingUpdate();
-        InteractionRoutingUpdate(dt);
+        //CharacterRoutingUpdate();
+        //InteractionRoutingUpdate(dt);
     }
 
     //"other"(?) moving (When moving without tied interaction)
@@ -95,11 +105,27 @@ public class CharacterControl : ManagementCore
 
         }
     }
-    private void CharacerAtDestination(Character chara)
+    public void CharacerAtDestination(Character chara)
     {
         //charactersAtDestination.Add(chara);
     }
 
+    public void SitCharacterToSlot(Character character, Character_Slot slot)
+    {
+        character.transform.position = slot.SlotTransform.position;
+        character.CharacterPhysicalState = CharacterPhysicalStateEnum.SittingOnObject;
+        character.OccupiedSlot = slot;
+
+        slot.PlaceCharacterToSlot(character);
+    }
+    public void StandUpFromSlot(Character character, Character_Slot slot)
+    {
+        character.transform.position = slot.ParentItem.transform.position;
+        character.CharacterPhysicalState = CharacterPhysicalStateEnum.Standing;
+        character.OccupiedSlot = null;
+
+        slot.ClearSlot(character);
+    }
 
     //Inventory / Carrying
 

@@ -30,12 +30,13 @@ public class Interactable : MonoBehaviour
     public List<InteractionSO> InteractionSOs { get { return interactionSOs; } }
 
 
-    protected List<StoredInteraction> allInteractions = new();
-    public List<StoredInteraction> AllInteractions { get { return allInteractions; } }
+    protected List<StoredInteraction> storedInteractions = new();
+    public List<StoredInteraction> StoredInteractions { get { return storedInteractions; } }
+
 
     public void NewStoredInteraction(StoredInteraction sInteraction)
     {
-        allInteractions.Add(sInteraction);
+        storedInteractions.Add(sInteraction);
     }
     public void ChangeCurrentLot(WorldLot lot)
     {

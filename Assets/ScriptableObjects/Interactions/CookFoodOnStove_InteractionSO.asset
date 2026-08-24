@@ -25,7 +25,11 @@ MonoBehaviour:
   need_InteractionInstructions: []
   relationshipChangeInstructions: []
   itemChangeInstructions: []
-  subInteractionSOs: []
+  subInteractionSOs:
+  - interactionSO: {fileID: 0}
+    interactionOnCreatedObject: 0
+    interactionOnHeldObject: 0
+    interactionOnItemHeldObject: 0
   requiredItemCapabilities: 00000000
   socialResponceInteractions: []
   scoringModifiers: []

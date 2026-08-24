@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
+  m_Name: EatFood_InteractionSO
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
+  interactionName: Eat the Food
+  Description: 
+  Reaction: 0
+  IsSocial: 0
+  hiddenInteraction: 0
+  skipMovement: 0
+  interactionEndingType: 1
+  interactionLenght: 6
+  targetNeedType: 0
+  targetNeedValue: 0
+  need_InteractionInstructions:
+  - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}
+  - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}
+  relationshipChangeInstructions: []
+  itemChangeInstructions:
+  - {fileID: 11400000, guid: de06b8b9c038b694bae43ee53ffdac1d, type: 2}
+  subInteractionSOs: []
+  requiredItemCapabilities: 
+  socialResponceInteractions: []
+  scoringModifiers: []
+  hasFollowup: 0
+  followupInteractionSOs: []

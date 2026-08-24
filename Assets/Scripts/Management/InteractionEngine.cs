@@ -6,9 +6,6 @@ using UnityEngine;
 
 public class InteractionEngine : ManagementCore
 {
-    [SerializeField]
-    private GameObject plateRawFood;
-
     private List<ActiveInteraction> activeInteractions = new();
 
     private Dictionary<Character, ActiveInteraction> waitingInteractionsByWaitee = new();
@@ -94,7 +91,6 @@ public class InteractionEngine : ManagementCore
 
     private void SendOnInteractionBeginInstructions(ActiveInteraction interaction)
     {
-        //TBD
         List<ItemCapability> itemCapabilities = new();
         if (interaction.InteractionTuningSO.RequiredItemCapabilities.Count > 0)
         {
@@ -286,13 +282,14 @@ public class InteractionEngine : ManagementCore
             else //OR finish parent
             {
                 interaction.parentInteraction.subInteractionsHaveRan = true;
+                charaAI.NewCurrentSubInteraction(null);
                 //interaction.parentInteraction.SetInteractionState(InteractionState.Ending);
                 //EndInteraction(interaction.parentInteraction);
                 activeInteractions.Remove(interaction);
                 //return;
             }
         }
-        else if (interaction.InteractionTuningSO.SubInteractionSOs.Count != 0 && !interaction.subInteractionsHaveRan)
+        else if (interaction.InteractionTuningSO.SubInteractions.Count != 0 && !interaction.subInteractionsHaveRan)
         {
             HandleSubInteractions(interaction.subInteractions, interaction);
             return;
@@ -356,20 +353,39 @@ public class InteractionEngine : ManagementCore
             //Item created by this interaction
             if (subInteraction.InteractionOnCreatedObject)
             {
-                retrySub = itemManager.GetInteractionOnInteractable(subInteraction.StoredInteractionSO, itemManager.GetItemCreatedByInstuction(mainInteraction.ThisCharacter));
+                //No stored interaction found, item might not be ready? (Check order of initialise new item and this running)
+
+                retrySub = itemManager.GetInteractionOnInteractable(subInteraction.InteractionSO, itemManager.GetItemCreatedByInteraction(mainInteraction.ThisCharacter));
+                //MakeSubinteractionActive(mainInteraction, retrySub);
                 ActiveInteraction activeSubInteraction = NewActiveInteraction(mainInteraction.ThisCharacter, retrySub);
                 activeSubInteraction.MakeIntoSubInteraction(mainInteraction);
-                //subInteractions.Add(activeSubInteraction);
                 thisCharaAI.AddSubInteration(activeSubInteraction);
             }
+            //Item carried by user
+            else if(subInteraction.InteractionOnItemHeldObject){
 
+            }
+            //Item on a main item slot
+            else if (subInteraction.InteractionOnItemHeldObject)
+            {
+                foreach(Item_Slot slot in (mainInteraction.InteractionSource as ItemBase).ItemSlotsOnItem)
+                {
+                    if (slot.ItemInSlot == null)
+                        continue;
+
+                    retrySub = itemManager.GetInteractionOnInteractable(subInteraction.InteractionSO, slot.ItemInSlot);
+                    if (retrySub == null)
+                        continue;
+                    //else
+                        //the thingy
+                }
+            }
             //Any pre-existing world Item
             else
             {
-                retrySub = lotManager.FindSuitableStoredInteractionOnLot(subInteraction.StoredInteractionSO, mainInteraction.ThisCharacter.ThisLot);
+                retrySub = lotManager.FindSuitableStoredInteractionOnLot(subInteraction.InteractionSO, mainInteraction.ThisCharacter.ThisLot);
                 ActiveInteraction activeSubInteraction = NewActiveInteraction(mainInteraction.ThisCharacter, retrySub);
                 activeSubInteraction.MakeIntoSubInteraction(mainInteraction);
-                //subInteractions.Add(activeSubInteraction);
                 thisCharaAI.AddSubInteration(activeSubInteraction);
             }
 
@@ -377,10 +393,18 @@ public class InteractionEngine : ManagementCore
         }
         StartSubInteraction(thisCharaAI.SubInteractionQueue[0]);
     }
+    private void MakeSubinteractionActive(ActiveInteraction mainInteraction, StoredInteraction subInteraction)
+    {
+        CharacterAI thisCharaAI = characterAIHandler.CharactersAIsByCharacter[mainInteraction.ThisCharacter];
+        ActiveInteraction activeSubInteraction = NewActiveInteraction(mainInteraction.ThisCharacter, subInteraction);
+        activeSubInteraction.MakeIntoSubInteraction(mainInteraction);
+        thisCharaAI.AddSubInteration(activeSubInteraction);
+    }
     private void StartSubInteraction(ActiveInteraction subInteraction)
     {
         CharacterAI thisCharaAI = characterAIHandler.CharactersAIsByCharacter[subInteraction.parentInteraction.ThisCharacter];
         thisCharaAI.RemoveSubInteraction(thisCharaAI.SubInteractionQueue[0]);
+        thisCharaAI.NewCurrentSubInteraction(subInteraction);
         StartNewInteraction(subInteraction);
 
     }

@@ -15,6 +15,11 @@ public class Item_InstructionSO : InstructionSO
     private GameObject itemToSpawn;
     public GameObject ItemToSpawn { get { return itemToSpawn; } }
 
+    //Destroy
+    [SerializeField]
+    private bool destroyItem;
+    public bool DestroyItem { get { return destroyItem; }}
+
     //Move
     [SerializeField]
     private bool moveThisItem;

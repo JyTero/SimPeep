@@ -70,9 +70,10 @@ public class UIController : ManagementCore
         int i = 0;
         foreach (StoredInteraction storedInteraction in storedInteractions)
         {
-            if (storedInteraction.hiddenInteraction)
+            if (storedInteraction.InteractionTuningSO.HiddenInteraction)
                 continue;
-
+            if (storedInteraction.InvalidInteraction)
+                continue;
 
             GameObject buttonGO = buttonPool[i];
 

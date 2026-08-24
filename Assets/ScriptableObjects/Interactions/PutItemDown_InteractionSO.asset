@@ -18,6 +18,7 @@ MonoBehaviour:
   IsSocial: 0
   hiddenInteraction: 0
   skipMovement: 1
+  invalidInteraction: 1
   interactionEndingType: 1
   interactionLenght: 1
   targetNeedType: 0
@@ -26,8 +27,8 @@ MonoBehaviour:
   relationshipChangeInstructions: []
   itemChangeInstructions:
   - {fileID: 11400000, guid: 0ee34e984dec571498c179c0c1216e6c, type: 2}
-  subInteractionSOs: []
-  requiredCapabilities: []
+  subInteractions: []
+  requiredItemCapabilities: 
   socialResponceInteractions: []
   scoringModifiers: []
   hasFollowup: 0

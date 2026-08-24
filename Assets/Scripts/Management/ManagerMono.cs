@@ -12,6 +12,7 @@ public class ManagerMono : MonoBehaviour
     protected CharacterRelationshipEngine relationshipEngine;
     protected ItemManager itemManager;
     protected CapabilityHandler capabilityHandler;
+    protected CharacterPathfinding characterPathfinding;
 
     protected InstructionEngine instructionEngine;
    
@@ -35,7 +36,8 @@ public class ManagerMono : MonoBehaviour
         relationshipEngine = FindAnyObjectByType<CharacterRelationshipEngine>();
         itemManager = FindAnyObjectByType<ItemManager>();
         capabilityHandler = FindAnyObjectByType<CapabilityHandler>();
-        
+        characterPathfinding = FindAnyObjectByType<CharacterPathfinding>();
+
         instructionEngine = FindAnyObjectByType<InstructionEngine>();
     }
 }
