@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ManagementCore : ManagerMono
 {
-    [SerializeField, Tooltip("Time, in seconds, between this system running")]
+    [SerializeField, Tooltip("Added time, in seconds, between this system running")]
     protected float updateInterval;
     protected float timeSinceLastUdate;
 

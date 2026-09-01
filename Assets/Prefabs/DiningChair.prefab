@@ -55,8 +55,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1367757105729238322}
   - component: {fileID: 7662311884121030725}
+  - component: {fileID: 8080093359434159081}
   - component: {fileID: 1154990222143555115}
-  - component: {fileID: 1109771040226545824}
   - component: {fileID: 3521381918748997084}
   - component: {fileID: 814914827530540142}
   m_Layer: 0
@@ -100,17 +100,12 @@ MonoBehaviour:
   itemDescription: 
   capabilites: 01000000
   capabilityComponents:
-  - {fileID: 1109771040226545824}
+  - {fileID: 0}
+  itemSlotsOnItem: []
+  characterSlotsOnItem:
+  - {fileID: 6147565703740879433}
   itemInitialised: 0
---- !u!33 &1154990222143555115
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7036940345958300515}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1109771040226545824
+--- !u!114 &8080093359434159081
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,11 +114,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7036940345958300515}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2b70ae57a9b2d948ac247ed006f9d3a, type: 3}
+  m_Script: {fileID: 11500000, guid: b7c4763ea2e84ef4dbdedcf02c6f748c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SittableCapability
-  thisCapability: 1
-  CapabilityName: Sit
+  m_EditorClassIdentifier: Assembly-CSharp::TuckableChair_Capability
+  thisCapability: 3
+  CapabilityName: 
   onBeginNeed_InteractionInstructions: []
   onBeginRelationshipChangeInstructions: []
   onBeginItemChangeInstructions: []
@@ -132,7 +127,14 @@ MonoBehaviour:
   onEndRelationshipChangeInstructions: []
   onEndItemChangeInstructions: []
   onEndSubInteractionSOs: []
-  sitSlot: {fileID: 6147565703740879433}
+--- !u!33 &1154990222143555115
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7036940345958300515}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &3521381918748997084
 MeshRenderer:
   m_ObjectHideFlags: 0

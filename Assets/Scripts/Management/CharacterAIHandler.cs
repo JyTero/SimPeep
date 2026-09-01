@@ -43,6 +43,10 @@ public class CharacterAIHandler : ManagementCore
 
     }
 
+    public void RemoveCharacter(Character character)
+    {
+
+    }
 
     protected override void TimedUpdate(float dt)
     {
@@ -58,7 +62,7 @@ public class CharacterAIHandler : ManagementCore
     }
 
 
-
+    //INTERACTION SELECTION
     private void RunDecisionMaking(float deltaTime)
     {
         //Idle
@@ -124,7 +128,7 @@ public class CharacterAIHandler : ManagementCore
 
                 interaction.interactionScore = score;
             }
-            if (IsDebug)
+            if (debugLog)
                 PrintInteractionScoring(interactions);
 
             //Pick best (/Random)
@@ -162,14 +166,14 @@ public class CharacterAIHandler : ManagementCore
                 if (character.InteractionQueuesByPriority[iqp].Count == 0)
                     character.ClearQueuePart(iqp);
                 //TODO: QUEUE CLEANUP (REMOVE DONE ACTION,
-                if (IsDebug)
+                if (debugLog)
                     Debug.Log(S);
 
                 UIController.RefreshInteractionQueueData(character);
                 return queueInteraction.interaction;
             }
         }
-        if (IsDebug)
+        if (debugLog)
             Debug.Log(S);
         return null;
     }
@@ -188,15 +192,18 @@ public class CharacterAIHandler : ManagementCore
     public void AtDestination(Character character)
     {
         CharacterAI cai = activeCharacters[character];
-        if (cai != null)
-        {
-            if (cai.CurrentSubInteraction != null)
-                cai.CurrentSubInteraction.SetInteractionState(InteractionState.AtDestination); //Refere to current interaction, even if sub (cant use CAI.CurrentInteraction for subs)
-            else
-                cai.CurrentInteraction.SetInteractionState(InteractionState.AtDestination);
-        }
-        else
-            Debug.LogError("Unhandeled AtDestination");
+        cai.CurrentInteraction.PopInteractionState();
+
+        //OLD
+        //if (cai != null)
+        //{
+        //    if (cai.CurrentSubInteraction != null)
+        //        cai.CurrentSubInteraction.SetInteractionStateOLD(EInteractionState.AtDestination); //Refere to current interaction, even if sub (cant use CAI.CurrentInteraction for subs)
+        //    else
+        //        cai.CurrentInteraction.SetInteractionStateOLD(EInteractionState.AtDestination);
+        //}
+        //else
+        //    Debug.LogError("Unhandeled AtDestination");
     }
 
     private void StartInteraction(ActiveInteraction interaction, CharacterAI charaAI)
@@ -259,8 +266,80 @@ public class CharacterAIHandler : ManagementCore
 
     }
 
-    public void RemoveCharacter(Character character)
+
+    //MISC
+    public void FindAvailableChairAtTable(Character character)
     {
+        List<ItemBase> tuckableChairsAttachedToTables = new();
+
+        foreach (ItemBase item in character.ThisLot.ItemsOnLot)
+        {
+            if (item.Capabilites.Contains(ItemCapabilites.TuckableChairCapability))
+            {
+                TuckableChair_Capability tcc = item.CapabilitiesByEnum[ItemCapabilites.TuckableChairCapability] as TuckableChair_Capability;
+                if (tcc.Table == null)
+                    continue;
+                else
+                {
+                    tuckableChairsAttachedToTables.Add(item);
+                }
+            }
+
+        }
+    }
+
+    public SeatingWithTableData FindSeatWithTable(Character character)
+    {
+        Dictionary<ItemBase, List<Item_Slot>> diningTablesAndSlots = new();
+        foreach (ItemBase item in character.ThisLot.ItemsOnLot) // <-- Name of DiningTable_ItemSO
+        {
+            if (item.ItemData.ItemName != "Eatin' table")
+                continue;
+
+            List<Item_Slot> slots = new();
+            foreach (Item_Slot slot in item.ItemSlotsOnItem)
+            {
+                if (slot.SlotType.name == "DiningChairSlot") // DiningChairSlot is the asset name
+                    slots.Add(slot);
+            }
+            diningTablesAndSlots.Add(item, slots);
+        }
+
+        //TODO: Get the nearest one
+
+        ItemBase rChair = null;
+        ItemBase rTable = null;
+        Item_Slot rSlot = null;
+        foreach (var pair in diningTablesAndSlots)
+        {
+            rTable = pair.Key;
+            List<Item_Slot> chairSlots = pair.Value;
+            DiningTable_Capability dtc = rTable.GetComponent<DiningTable_Capability>();
+            if (!dtc)
+                continue;
+            foreach (Item_Slot chairSlot in chairSlots)
+            {
+                if (!chairSlot.ItemInSlot)
+                    continue;
+                if (chairSlot.ItemInSlot.ItemData.name != "DiningChair_ItemSO")
+                    continue;
+
+                Item_Slot onTableSlot = dtc.TableSlotsByChairSlot[chairSlot];
+                if (onTableSlot.IsEmpty())
+                {
+                    rSlot = onTableSlot;
+                    rChair = chairSlot.ItemInSlot;
+                    break;
+                }
+
+            }
+            if (rChair != null)
+                break;
+        }
+        //AllFound!
+        //table, chairSlot, onTableSlot
+       return new SeatingWithTableData(rTable, rChair, rSlot);
+
 
     }
 }

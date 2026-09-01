@@ -10,12 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10d175a152defbc45b9a8506e2c9e0a4, type: 3}
-  m_Name: SpawnRawFood_InstructionSO
+  m_Name: SpawnRawFoodToIThistemSpawnSlot_InstructionSO
   m_EditorClassIdentifier: Assembly-CSharp::Item_InstructionSO
   Description: SpawnRawFood
   spawnItem: 1
   itemToSpawn: {fileID: 7018220297851502066, guid: 71c939c78b7b1414fb31408e5280a78a, type: 3}
+  whereToSpawnItem: 5
+  slotParentItemLocationSpwn: 0
+  slotTypeSOSpwn: {fileID: 11400000, guid: 4fe0a69746068e046b94f97ddf92419a, type: 2}
+  destroyItem: 0
   moveThisItem: 0
   whereToMoveItem: 0
-  lotToMoveIn: {fileID: 0}
-  destination: {x: 0, y: 0, z: 0}
+  slotParentItemLocationMove: 0
+  targetItemType: {fileID: 0}
+  targetSlotType: {fileID: 0}
+  moveFromThisItemSlot: 0
+  slotTypeToPickFrom: {fileID: 0}
+  replaceItem: 0
+  thisInstructionTargetItem: 0
+  newItemPrefab: {fileID: 0}

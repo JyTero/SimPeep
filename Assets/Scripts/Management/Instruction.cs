@@ -3,17 +3,25 @@ using UnityEngine;
 
 //[Serializable]
 public abstract class Instruction
-{  
+{
+    protected string instructionName = "";
+    public string InstructionName { get { return instructionName; } }
+
     public float InstructionLifetime;
     public float InstructionLenght;
     public float TimeSinceLastUse;
     
-
+protected void InstructName(string name)
+    {
+        instructionName = name;
+    }
 }
 
 [Serializable]
 public class Need_Instruction : Instruction
 {
+    public Need_InstructionSO sourceSO;
+
     [SerializeField]
     protected NeedType needToAdjust;
     public NeedType NeedToAdjust { get { return needToAdjust; } }
@@ -37,7 +45,7 @@ public class Need_Instruction : Instruction
 
 
 
-    public Need_Instruction(Need_InstructionSO niso, Character chara)
+    public Need_Instruction(Need_InstructionSO niso, Character chara, string itemAndInteractionName)
     {
         needToAdjust = niso.NeedToAdjust;
         needAdjustValuePerTic = niso.NeedAdjustValuePerTic;
@@ -46,6 +54,10 @@ public class Need_Instruction : Instruction
         InstructionLifetime = 0;
         InstructionLenght = 0; //Might get used later for something
         TimeSinceLastUse = 0;
+        this.sourceSO = niso;
+
+        string n = chara.ItemName + itemAndInteractionName;
+        InstructName(n);
     }
 }
 
@@ -65,12 +77,15 @@ public class RelationshipChange_Instruction : Instruction
         this.relInstructionSO = relInstructionSO;
         this.sourceCharacter = sourceCharacter;
         this.targetCharacter = targetCharacter;
+
+        string n = sourceCharacter.ItemName + targetCharacter; //Not as relevant (for now) hence lackluster implementation
+        InstructName(n);
     }
 }
 public class Item_Instruction : Instruction
 {
-    private Item_InstructionSO itemInstructionSO;
-    public Item_InstructionSO ItemInstructionSO { get { return itemInstructionSO; } }
+    private Item_InstructionData itemInstructionData;
+    public Item_InstructionData ItemInstructionSO { get { return itemInstructionData; } }
 
     private Character thisCharacter;
     public Character ThisCharacter { get { return thisCharacter; } }
@@ -78,9 +93,15 @@ public class Item_Instruction : Instruction
     private ItemBase thisItem;
     public ItemBase ThisItem { get { return thisItem; } }
 
-    public Item_Instruction(Item_InstructionSO itemInstructionSO, Character thisCharacter, ItemBase thisItem)
+    //public Item_Instruction(Item_InstructionSO itemInstructionSO, Character thisCharacter, ItemBase thisItem)
+    //{
+    //    this.itemInstructionData = itemInstructionSO;
+    //    this.thisCharacter = thisCharacter;
+    //    this.thisItem = thisItem;
+    //}
+    public Item_Instruction(Item_InstructionData itemInstructionData, Character thisCharacter, ItemBase thisItem)
     {
-        this.itemInstructionSO = itemInstructionSO;
+        this.itemInstructionData = itemInstructionData;
         this.thisCharacter = thisCharacter;
         this.thisItem = thisItem;
     }

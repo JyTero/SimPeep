@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class ActiveInteraction
@@ -53,13 +54,67 @@ public class ActiveInteraction
     //public List<Interactable> InteractablesCreatedByThisInteraction { get { return  InteractablesCreatedByThisInteraction; } }
 
     public float interactionLenghtAccumulation;
-    private InteractionState interactionState;
-    public InteractionState InteractionState { get { return interactionState; } }
-    public void SetInteractionState(InteractionState intrctState)
+    private EInteractionState opreviousNonMoveState;
+    public EInteractionState OPreviousNonMoveState { get { return opreviousNonMoveState; } }
+    private EInteractionState OinteractionState;
+    public EInteractionState OInteractionState { get { return OinteractionState; } }
+    public bool allStateInteractionsSent = false;
+    public InstructionSO currentInstruction = null;
+
+    public Slot knownSlot;
+    public ItemBase knownItem;
+    public LotGridTile knownTile;
+
+    public bool runningActions = false;
+    public bool isAction = false;
+    public List<ActiveInteraction> actions = new();
+
+
+    public void SetInteractionStateOLD(EInteractionState newState)
     {
         //Debug.Log($"InteractionStateChange: {InteractionName} had state {interactionState}, new state: {intrctState}");
-        interactionState = intrctState;
+        if (OinteractionState != EInteractionState.Moving)
+            opreviousNonMoveState = OinteractionState;
+        OinteractionState = newState;
     }
+
+    //NewStates
+    private ActiveInteractionState state; //Push, peak, pop
+    public ActiveInteractionState State { get { return state; } }
+    public ActiveInteractionState previousNonMoveState;
+    public Stack<ActiveInteractionState> previousInteractionStates = new();
+
+
+
+    private UIController uiController;
+    public void PushInteractionState(EInteractionState newState)
+    {
+        previousInteractionStates.Push(state);
+        state = new(newState);
+
+        uiController.RefreshInteractionStateData(this);
+
+    }
+    public void PopInteractionState()
+    {
+       ActiveInteractionState ais = previousInteractionStates.Pop();
+        if (ais != null)
+            state = ais;
+        else
+            Debug.LogError($"Null interaction state on {thisCharacter.ItemName} ({InteractionName})");
+
+        uiController.RefreshInteractionStateData(this);
+    }
+
+    //public void ChangeToPreviousState()
+    //{
+    //    interactionState = previousNonMoveState;
+
+    //}
+
+
+    public List<Item_Instruction> ItemChangeInstructionSOsOnInteractionBegin = new();
+
     public bool allInstructionsDone = false;
 
 
@@ -72,6 +127,11 @@ public class ActiveInteraction
         interactionSource = storedInteraction.InteractionSource;
         thisCharacter = chara;
 
+        uiController= GameObject.FindAnyObjectByType<UIController>();
+
+        state = new(EInteractionState.Default);
+
+
         CommonConstruct();
     }
 
@@ -80,13 +140,13 @@ public class ActiveInteraction
         interactionName = interactionTuningSO.InteractionName;
         BuildInteractionEnding();
         interactionLenghtAccumulation = 0;
-        interactionState = InteractionState.Default;
+        OinteractionState = EInteractionState.Default;
         interactionScore = 0;
         isReaction = interactionTuningSO.Reaction;
 
         scoringModifiers = interactionTuningSO.ScoringModifiers;
 
-        foreach (Need_InstructionSO needInstructionSO in interactionTuningSO.Need_InteractionInstructions)
+        foreach (Need_InstructionSO needInstructionSO in interactionTuningSO.Need_InteractionInstructionsOnInteractionTick)
         {
             needsToWeight.Add(needInstructionSO.NeedToAdjust);
         }
@@ -99,7 +159,7 @@ public class ActiveInteraction
         foreach (SubInteraction subInteraction in interactionTuningSO.SubInteractions)
         {
             //if(subInteraction.InteractionOnCreatedObject)
-              //  continue;
+            //  continue;
 
             //SubInteraction subSi = lotManager.FindSuitableStoredInteractionOnLot(subInteraction.StoredInteractionSO, thisLot);
             //subInteractions.Add(subSi);
@@ -149,7 +209,7 @@ public class StoredInteraction
     }
 }
 
-public enum InteractionState
+public enum EInteractionState
 {
     Default,
     Starting,
@@ -159,6 +219,10 @@ public enum InteractionState
     Running,
     Ending,
     SubInteractions,
+    Routine,
+    Instruction,
+
+
 }
 //NEXT UP:
 // Implement Destroy Item       Done

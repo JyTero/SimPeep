@@ -17,7 +17,7 @@ public class ClickHandler : ManagementCore
         {
             if (EventSystem.current.IsPointerOverGameObject())
             {
-                if (IsDebug)
+                if (debugLog)
                     Debug.Log("On UI");
                 return;
             }
@@ -29,7 +29,7 @@ public class ClickHandler : ManagementCore
                 var intr = hit.collider.gameObject.GetComponent<Interactable>();
                 if (intr != null)
                 {
-                    if (IsDebug)
+                    if (debugLog)
                         Debug.Log("On Item");
 
                     UIController.ShowListOfInteractions(intr.StoredInteractions);
@@ -44,7 +44,7 @@ public class ClickHandler : ManagementCore
         {
             if (EventSystem.current.IsPointerOverGameObject())
             {
-                if (IsDebug)
+                if (debugLog)
                     Debug.Log("On UI");
                 return;
             }
@@ -55,7 +55,7 @@ public class ClickHandler : ManagementCore
                 var chara = hit.collider.transform.parent.GetComponent<Character>();
                 if (chara != null)
                 {
-                    if (IsDebug)
+                    if (debugLog)
                         Debug.Log("On Character");
 
                     UIController.ChangeSelectCharacter(chara);

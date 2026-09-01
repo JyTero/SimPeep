@@ -12,23 +12,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
   m_Name: EatFood_InteractionSO
   m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
-  interactionName: Eat the Food
+  interactionName: Eat the Food on Cooked Plate
   Description: 
   Reaction: 0
   IsSocial: 0
   hiddenInteraction: 0
   skipMovement: 0
+  interactionDestinationDifferentFromSource: 0
+  destinationItem: {fileID: 0}
+  invalidInteraction: 0
   interactionEndingType: 1
   interactionLenght: 6
   targetNeedType: 0
   targetNeedValue: 0
-  need_InteractionInstructions:
+  need_InteractionInstructionsOnInteractionBegin: []
+  need_InteractionInstructionsOnInteractionTick:
   - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}
   - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}
-  relationshipChangeInstructions: []
-  itemChangeInstructions:
-  - {fileID: 11400000, guid: de06b8b9c038b694bae43ee53ffdac1d, type: 2}
-  subInteractionSOs: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
+  relationshipChangeInstructionsOnInteractionEnd: []
+  itemChangeInstructionSOsOnInteractionBegin:
+  - {fileID: 11400000, guid: a887caa0b527e4148a40347f5988efb0, type: 2}
+  itemChangeInstructionSOsOnInteractionEnd: []
+  characterInstructionSOsOnInteractionBegin: []
+  characterInstructionSOsOnInteractionEnd: []
+  subInteractions: []
   requiredItemCapabilities: 
   socialResponceInteractions: []
   scoringModifiers: []

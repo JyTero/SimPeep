@@ -14,18 +14,28 @@ public class InteractionSO : ScriptableObject
     private string Description;
 
     public bool Reaction;
-   
+
 
     [HideIf("Reaction")]
     public bool IsSocial;
 
-    [SerializeField ,Tooltip("Hidden interactions alern't selectable by user or normal interaction selection")]
+    [SerializeField, Tooltip("Hidden interactions alern't selectable by user or normal interaction selection")]
     private bool hiddenInteraction;
-    public bool HiddenInteraction {  get { return hiddenInteraction; } }
+    public bool HiddenInteraction { get { return hiddenInteraction; } }
 
-    [SerializeField, Tooltip("Skip moving stage on interaction execution, runs interaction immediately instead")]
+    [SerializeField, HideIf("interactionDestinationDifferentFromSource"),
+        Tooltip("Skip moving stage on interaction execution, runs interaction immediately instead")]
     private bool skipMovement;
-    public bool SkipMovement {  get { return skipMovement; } }
+    public bool SkipMovement { get { return skipMovement; } }
+
+    //InteractionDestination differ form Item (Cooking RawPlate should be done at stove, not at plate)
+    [SerializeField, HideIf("skipMovement")]
+    private bool interactionDestinationDifferentFromSource;
+    public bool InteractionDestinationDifferentFromSource { get { return interactionDestinationDifferentFromSource; } }
+
+    [SerializeField, ShowIf("interactionDestinationDifferentFromSource")]
+    private ItemSO destinationItem;
+    public ItemSO DestinationItem { get { return destinationItem; } }
 
     [SerializeField, Tooltip("Invalid interactions will not be selectable by anyone/thing (picking up already carried item).\nThis is the start state")]
     private bool invalidInteraction;
@@ -53,19 +63,44 @@ public class InteractionSO : ScriptableObject
 
 
     //Each instruction variant has its own list 
-    [SerializeField]
-    private List<Need_InstructionSO> need_InteractionInstructions = new();
-    public List<Need_InstructionSO> Need_InteractionInstructions { get { return need_InteractionInstructions; } }
+    [SerializeField, Foldout("ON INTERACTION BEGIN")]
+    private List<Need_InstructionSO> need_InteractionInstructionsOnInteractionBegin = new();
+    public List<Need_InstructionSO> Need_InteractionInstructionsOnInteractionBegin { get { return need_InteractionInstructionsOnInteractionBegin; } }
+    [SerializeField, Foldout("ON INTERACTION TICK")]
+    private List<Need_InstructionSO> need_InteractionInstructionsOnInteractionTick = new();
+    public List<Need_InstructionSO> Need_InteractionInstructionsOnInteractionTick { get { return need_InteractionInstructionsOnInteractionTick; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<Need_InstructionSO> need_InteractionInstructionsOnInteractionEnd = new();
+    public List<Need_InstructionSO> Need_InteractionInstructionsOnInteractionEnd { get { return need_InteractionInstructionsOnInteractionEnd; } }
 
-    [SerializeField]
-    private List<Relationship_InstructionSO> relationshipChangeInstructions = new();
-    public List<Relationship_InstructionSO> RelationshipChangeInstructions { get { return relationshipChangeInstructions; } }
+    [SerializeField, Foldout("ON INTERACTION BEGIN")]
+    private List<Relationship_InstructionSO> relationshipChangeInstructionsOnInteractionBegin = new();
+    public List<Relationship_InstructionSO> RelationshipChangeInstructionsOnInteraction { get { return relationshipChangeInstructionsOnInteractionBegin; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<Relationship_InstructionSO> relationshipChangeInstructionsOnInteractionEnd = new();
+    public List<Relationship_InstructionSO> RelationshipChangeInstructionsOnInteractionEnd { get { return relationshipChangeInstructionsOnInteractionEnd; } }
 
-    [SerializeField]
-    private List <Item_InstructionSO> itemChangeInstructions = new();
-    public List<Item_InstructionSO > ItemChangeInstructions { get {return itemChangeInstructions; } }
+    [SerializeField, Foldout("ON INTERACTION BEGIN")] 
+    private List<Item_InstructionSO> itemChangeInstructionSOsOnInteractionBegin = new();
+    public List<Item_InstructionSO> ItemChangeInstructionSOsOnInteractionBegin { get { return itemChangeInstructionSOsOnInteractionBegin; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<Item_InstructionSO> itemChangeInstructionSOsOnInteractionEnd = new();
+    public List<Item_InstructionSO> ItemChangeInstructionSOsOnInteractionEnd { get { return itemChangeInstructionSOsOnInteractionEnd; } }
 
-    [SerializeField, Tooltip("Way to use pre-existing interactions to build new ones. Example: Fridge spawns Food. Food has Pick Up interaction, which can be plased here to automatically  pick up the food on creation")]
+    [SerializeField, Foldout("ON INTERACTION BEGIN")]
+    private List<Character_InstructionSO> characterInstructionSOsOnInteractionBegin = new();
+    public List<Character_InstructionSO> CharacterInstructionSOsOnInteractionBegin { get { return characterInstructionSOsOnInteractionBegin; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<Character_InstructionSO> characterInstructionSOsOnInteractionEnd = new();
+    public List<Character_InstructionSO> CharacterInstructionSOsOnInteractionEnd { get { return characterInstructionSOsOnInteractionEnd; } }
+
+
+    //[SerializeField]
+    //private List<InstructionData> itemInstructionDatas = new();
+    //public List<InstructionData> ItemInstructionDatas { get { return itemInstructionDatas; } }
+
+
+    [SerializeField, Tooltip("TBH KINDA DEPRICATED NGL! Way to use pre-existing interactions to build new ones. Example: Fridge spawns Food. Food has Pick Up interaction, which can be plased here to automatically  pick up the food on creation")]
     private List<SubInteraction> subInteractions = new();
     public List<SubInteraction> SubInteractions { get { return subInteractions; } }
 
@@ -90,7 +125,7 @@ public class InteractionSO : ScriptableObject
 
     [SerializeField, ShowIf("hasFollowup")]
     private List<InteractionSO> followupInteractionSOs;
-    public List<InteractionSO> FollowupInteractionSOs {  get { return followupInteractionSOs; } }
+    public List<InteractionSO> FollowupInteractionSOs { get { return followupInteractionSOs; } }
 
 
 
@@ -113,7 +148,7 @@ public class InteractionSO : ScriptableObject
         }
     }
 
-   
+
 }
 
 

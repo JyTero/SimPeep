@@ -71,7 +71,7 @@ public class CharacterRelationshipEngine : ManagementCore
             }
 
 
-            if (IsDebug)
+            if (debugLog)
                 Debug.Log($"Relations!({thisCharacter.ItemName} towards {targetCharacter.ItemName})");
         }
     }

@@ -20,8 +20,6 @@ public class Character : Interactable
     private List<TraitSO> traits = new();
     public List<TraitSO> Traits { get { return traits; } }
 
-    private LotGridTile currentTile;
-    public LotGridTile CurrentTile { get { return currentTile; } }
 
 
     public CharacterPhysicalStateEnum CharacterPhysicalState;
@@ -64,11 +62,6 @@ public class Character : Interactable
             Need need = new Need(needSO, this);
             needs.Add(needSO.NeedType, need);
         }
-    }
-
-    public void ChangeCurrentTile(LotGridTile newTile)
-    {
-        currentTile = newTile;
     }
 
     public void PickupItem(ItemBase item)

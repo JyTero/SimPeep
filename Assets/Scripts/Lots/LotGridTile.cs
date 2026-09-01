@@ -45,6 +45,12 @@ public class LotGridTile
         walkable = false;
         itemOnTile = item;
     }
+    public void RemoveItemFromTile(ItemBase item)
+    {
+        walkable = true;
+        itemOnTile = null;
+    }
+
     public void SlotOnTile(Item_Slot slot)
     {
         itemSlotOnTile = slot;

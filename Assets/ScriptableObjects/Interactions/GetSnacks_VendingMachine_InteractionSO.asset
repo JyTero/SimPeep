@@ -18,16 +18,26 @@ MonoBehaviour:
   IsSocial: 0
   hiddenInteraction: 0
   skipMovement: 0
+  interactionDestinationDifferentFromSource: 0
+  destinationItem: {fileID: 0}
+  invalidInteraction: 0
   interactionEndingType: 1
   interactionLenght: 4
   targetNeedType: 0
   targetNeedValue: 0
-  need_InteractionInstructions:
+  need_InteractionInstructionsOnInteractionBegin: []
+  need_InteractionInstructionsOnInteractionTick:
   - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}
-  relationshipChangeInstructions: []
-  itemChangeInstructions: []
-  subInteractionSOs: []
-  requiredCapabilities: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
+  relationshipChangeInstructionsOnInteractionEnd: []
+  itemChangeInstructionSOsOnInteractionBegin: []
+  itemChangeInstructionSOsOnInteractionEnd: []
+  characterInstructionSOsOnInteractionBegin:
+  - {fileID: 11400000, guid: 7b6baa559ce995c4c86b7268d4b79a2a, type: 2}
+  characterInstructionSOsOnInteractionEnd: []
+  subInteractions: []
+  requiredItemCapabilities: 
   socialResponceInteractions: []
   scoringModifiers: []
   hasFollowup: 0

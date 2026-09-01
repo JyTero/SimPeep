@@ -18,14 +18,24 @@ MonoBehaviour:
   IsSocial: 0
   hiddenInteraction: 0
   skipMovement: 0
+  interactionDestinationDifferentFromSource: 0
+  destinationItem: {fileID: 0}
   invalidInteraction: 0
   interactionEndingType: 1
   interactionLenght: 0.5
   targetNeedType: 0
   targetNeedValue: 0
-  need_InteractionInstructions: []
-  relationshipChangeInstructions: []
-  itemChangeInstructions: []
+  need_InteractionInstructionsOnInteractionBegin: []
+  need_InteractionInstructionsOnInteractionTick: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
+  relationshipChangeInstructionsOnInteractionEnd: []
+  itemChangeInstructionSOsOnInteractionBegin: []
+  itemChangeInstructionSOsOnInteractionEnd: []
+  characterInstructionSOsOnInteractionBegin:
+  - {fileID: 11400000, guid: 7b6baa559ce995c4c86b7268d4b79a2a, type: 2}
+  characterInstructionSOsOnInteractionEnd:
+  - {fileID: 11400000, guid: 9067223e5fc57b249832edf8d2818ff4, type: 2}
   subInteractions: []
   requiredItemCapabilities: 01000000
   socialResponceInteractions: []

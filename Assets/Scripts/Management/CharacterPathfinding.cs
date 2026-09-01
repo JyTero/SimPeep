@@ -27,6 +27,14 @@ public class CharacterPathfinding : ManagementCore
 
     }
 
+    public void NewCharacterFindingPath(Character character, LotGridTile destinationTile)
+    {
+        if (character.CurrentTile == destinationTile)
+            characterAIHandler.AtDestination(character);
+        else
+            charactersFindingPath.Add(new CharacterFindingPath(character, destinationTile));
+    }
+
     protected override void TimedUpdate(float dt)
     {
         base.TimedUpdate(dt);
@@ -104,12 +112,13 @@ public class CharacterPathfinding : ManagementCore
             }
         }
     }
+
     private List<TileInScoring> FormShortestPathToDestination(TileInScoring destination)
     {
         List<TileInScoring> path = new();
         bool pathDone = false;
-        path.Add(destination);
-        TileInScoring nextTile = destination.ShortestRouteTile;
+        path.Add(destination.ShortestRouteTile);
+        TileInScoring nextTile = destination.ShortestRouteTile.ShortestRouteTile;
 
         while (!pathDone)
         {
@@ -129,6 +138,8 @@ public class CharacterPathfinding : ManagementCore
         for (int i = charactersFindingPath.Count - 1; i >= 0; i--)
         {
             CharacterFindingPath character = charactersFindingPath[i];
+            if(!character.HasPath)
+                continue;
 
             character.Character.transform.position = character.Path[character.Path.Count - 1].Tile.TilePos;
             character.Character.ChangeCurrentTile(character.Path[character.Path.Count - 1].Tile);

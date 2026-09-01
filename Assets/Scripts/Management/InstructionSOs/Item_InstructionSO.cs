@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Item_InstructionSO", menuName = "Scriptable Objects/Instruction/Item_InstructionSO")]
@@ -15,20 +16,87 @@ public class Item_InstructionSO : InstructionSO
     private GameObject itemToSpawn;
     public GameObject ItemToSpawn { get { return itemToSpawn; } }
 
+    [SerializeField, ShowIf("spawnItem")]
+    private EItemDestination whereToSpawnItem;
+    public EItemDestination WhereToSpawnItem { get { return whereToSpawnItem; } }
+
+    [SerializeField, ShowIf(EConditionOperator.And, "spawnItem", "spawnItemToSlot")]
+    private EItemLocation slotParentItemLocationSpwn;
+    public EItemLocation SlotParentItemLocationSpwn { get { return slotParentItemLocationSpwn; } }
+
+    [SerializeField, ShowIf(EConditionOperator.And, "spawnItem", "spawnItemToSlot")]
+    private SlotTypeSO slotTypeSOSpwn;
+    public SlotTypeSO SlotTypeSOSpwn { get { return slotTypeSOSpwn; } }
+
+
     //Destroy
     [SerializeField]
     private bool destroyItem;
-    public bool DestroyItem { get { return destroyItem; }}
+    public bool DestroyItem { get { return destroyItem; } }
 
-    //Move
+    //MoveThis
     [SerializeField]
     private bool moveThisItem;
     public bool MoveThisItem { get { return moveThisItem; } }
 
-    [SerializeField, ShowIf("moveThisItem")]
-    private ItemLocation whereToMoveItem;
-    public ItemLocation WhereToMoveItem { get { return whereToMoveItem; } }
-    private bool moveToLotSpace, moveToWorldSpace, moveToInCharacter, moveToOnCharacter = false;
+    [SerializeField, ShowIf(EConditionOperator.Or, "moveThisItem","moveFromThisItemSlot")]
+    private EItemDestination whereToMoveItem;
+    public EItemDestination WhereToMoveItem { get { return whereToMoveItem; } }
+
+    [SerializeField, ShowIf(EConditionOperator.And, "moveThisItem", "moveItemToSlot")]
+    private EItemLocation slotParentItemLocationMove;
+    public EItemLocation SlotParentItemLocationMove { get { return slotParentItemLocationMove; } }
+
+    [SerializeField, ShowIf(EConditionOperator.And, "moveThisItem", "moveItemToSlot")]
+    private ItemSO targetItemType;
+    public ItemSO TargetItemType { get { return targetItemType; } }
+
+    [SerializeField, ShowIf(EConditionOperator.And, "moveThisItem", "moveItemToSlotOnCertainItemType")]
+    private SlotTypeSO targetSlotType;
+    public SlotTypeSO TargetSlotType { get { return targetSlotType; } }
+
+    //MoveFromThisItem's Slot
+    [SerializeField]
+    private bool moveFromThisItemSlot;
+    public bool MoveFromThisItemSlot { get { return moveFromThisItemSlot; } }
+
+    [SerializeField, ShowIf("moveFromThisItemSlot")]
+    private SlotTypeSO slotTypeToPickFrom;
+    public SlotTypeSO SlotTypeToPickFrom {  get { return slotTypeToPickFrom; }}
+    //USES ItemDestination whereToMoveItem
+
+    //Replace with
+    [SerializeField]
+    private bool replaceItem;
+    public bool ReplaceItem { get { return replaceItem; } }
+
+    [SerializeField, ShowIf("replaceItem")]
+    private EItemLocation thisInstructionTargetItem;
+    public EItemLocation ThisInstructionTargetItem { get { return thisInstructionTargetItem; } }
+    [SerializeField, ShowIf("replaceItem")]
+    private GameObject newItemPrefab;
+    public GameObject NewItemPrefab { get { return newItemPrefab; } }
+
+
+    //Call Routine
+    [SerializeField]
+    private bool runRoutine;
+    public bool RunRoutine { get { return runRoutine; } }
+
+    [SerializeField, ShowIf("runRoutine")]
+    private ERoutine routine;
+    public ERoutine Routine {  get { return routine; } }
+
+    //RunInteractionAsInstruction
+    [SerializeField]
+    private bool runInteractionAsInstruction;
+    public bool RunInteractionAsInstruction {  get { return runInteractionAsInstruction; } }
+
+    [SerializeField, ShowIf("runInteractionAsInstruction")]
+    private InteractionSO interactionToRunSO;
+    public InteractionSO InteractionToRunSO {  get { return interactionToRunSO; } }
+
+
 
     //[SerializeField, ShowIf("moveToLotSpace")]
     //private WorldLot lotToMoveIn;
@@ -39,54 +107,81 @@ public class Item_InstructionSO : InstructionSO
     //private Vector3 destination;
     //public Vector3 Destination { get { return destination; } }
 
+    private bool spawnItemToSlot, moveItemToSlot, moveItemToSlotOnCertainItemType = false;
 
     private void OnValidate()
     {
+        switch (WhereToSpawnItem)
+        {
+            case EItemDestination.Default:
+                spawnItemToSlot = false;
+                break;
+            case EItemDestination.LotSpace:
+                spawnItemToSlot = false;
+                break;
+            case EItemDestination.WorldSpace:
+                spawnItemToSlot = false;
+                break;
+            case EItemDestination.InCharactacter:
+                spawnItemToSlot = false;
+                break;
+            case EItemDestination.OnCharacter:
+                spawnItemToSlot = false;
+                break;
+            case EItemDestination.ItemSlot:
+                spawnItemToSlot = true;
+                break;
+            default:
+                break;
+        }
         switch (WhereToMoveItem)
         {
-            case ItemLocation.Default:
-                moveToLotSpace = false;
-                moveToWorldSpace = false;
-                moveToInCharacter = false;
-                moveToOnCharacter = false;
+            case EItemDestination.Default:
+                moveItemToSlot = false;
                 break;
-            case ItemLocation.LotSpace:
-                moveToLotSpace = true;
-                moveToWorldSpace = false;
-                moveToInCharacter = false;
-                moveToOnCharacter = false;
+            case EItemDestination.LotSpace:
+                moveItemToSlot = false;
                 break;
-            case ItemLocation.WorldSpace:
-                moveToLotSpace = false;
-                moveToWorldSpace = true;
-                moveToInCharacter = false;
-                moveToOnCharacter = false;
+            case EItemDestination.WorldSpace:
+                moveItemToSlot = false;
                 break;
-            case ItemLocation.InCharactacter:
-                moveToLotSpace = false;
-                moveToWorldSpace = false;
-                moveToInCharacter = true;
-                moveToOnCharacter = false;
+            case EItemDestination.InCharactacter:
+                moveItemToSlot = false;
                 break;
-            case ItemLocation.OnCharacter:
-                moveToLotSpace = false;
-                moveToWorldSpace = false;
-                moveToInCharacter = false;
-                moveToOnCharacter = true;
+            case EItemDestination.OnCharacter:
+                moveItemToSlot = false;
+                break;
+            case EItemDestination.ItemSlot:
+                moveItemToSlot = true;
+                break;
+            default:
+                break;
+        }
+        switch (SlotParentItemLocationMove)
+        {
+            case EItemLocation.ThisItem:
+                moveItemToSlotOnCertainItemType = false;
+                break;
+            case EItemLocation.Any:
+                moveItemToSlotOnCertainItemType = false;
+                break;
+            case EItemLocation.AnyOfType:
+                moveItemToSlotOnCertainItemType = true;
+                break;
+            case EItemLocation.OnItemCreatedByInteraction:
+                moveItemToSlotOnCertainItemType = false;
+                break;
+            case EItemLocation.OnMainItem:
+                moveItemToSlotOnCertainItemType = false;
+                break;
+            case EItemLocation.OnHeldItem:
+                moveItemToSlotOnCertainItemType = false;
+                break;
+            case EItemLocation.OnMainItemSlot:
+                moveItemToSlotOnCertainItemType = false;
                 break;
             default:
                 break;
         }
     }
-}
-
-
-public enum ItemLocation
-{
-    Default,
-    LotSpace,           //Basic on lot object
-    WorldSpace,         //Item outside of lots but in world
-    InCharactacter,     //In character inventory (TBD)
-    OnCharacter,        //Character carrying item
-    ItemSlot,           //ItemSlot on item
 }

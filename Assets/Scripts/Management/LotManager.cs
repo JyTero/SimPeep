@@ -2,9 +2,11 @@ using NaughtyAttributes;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 
 public class LotManager : ManagementCore
@@ -43,6 +45,9 @@ public class LotManager : ManagementCore
             if (lgt != null)
                 PlaceItemToCenterOfTile(item, lgt);
 
+            item.ChangeCurrentTile(lgt);
+            if (debugLog)
+                Debug.Log($"Initialising: {item.ItemName}");
             itemManager.InitialiseItem(item);
         }
         allStoredInteractions = GetAllInteractionsOnLot(lot);
@@ -66,6 +71,21 @@ public class LotManager : ManagementCore
         allLots.Add(lot);
     }
 
+    public void RemoveLot(WorldLot lot)
+    {
+        allLots.Remove(lot);
+    }
+
+    //Items and Interactions
+    public void PlaceItemOntoLot(WorldLot lot, LotGridTile tile, ItemBase item)
+    {
+        NewItemOnLot(item);
+        PlaceItemToTile(item, tile);
+    }
+    public void PickItemUpFromLot(ItemBase item)
+    {
+        RemoveItemFromLot(item);
+    }
     public void NewItemOnLot(ItemBase item)
     {
         this.lot.AddItemToLot(item);
@@ -78,6 +98,9 @@ public class LotManager : ManagementCore
         this.lot.RemoveItemFromLot(item);
         foreach (StoredInteraction si in item.StoredInteractions)
             allStoredInteractions.Remove(si);
+
+        if (item.CurrentTile != null)
+            item.CurrentTile.RemoveItemFromTile(item);
     }
 
     public List<StoredInteraction> GetAllInteractionsOnLot(WorldLot lot)
@@ -113,18 +136,74 @@ public class LotManager : ManagementCore
         }
         return null;
     }
+    public List<Item_Slot> FindSuitableSlotsOnLot(ItemBase itemToBeSlotted, WorldLot lot)
+    {
+        List<Item_Slot> suitableSlots = new();
+
+        foreach (ItemBase item in lot.ItemsOnLot)
+        {
+            if (item.ItemSlotsOnItem.Count == 0)
+                continue;
+
+            foreach (Item_Slot slot in item.ItemSlotsOnItem)
+            {
+                if (slot.SlotType.LimitedSlot)
+                    continue;
+                if (slot.ItemInSlot != null)
+                    continue;
+                if (slot.SlotType.ValidItemSO.Count == 0 || slot.SlotType.ValidItemSO.Contains(itemToBeSlotted.ItemData))
+                {
+                    suitableSlots.Add(slot);
+                }
+            }
+        }
+        return suitableSlots;
+    }
 
     public List<StoredInteraction> GetAllStoredInteractionsOnLot(WorldLot lot)
     {
         return allStoredInteractions;
     }
-
-    public void RemoveLot(WorldLot lot)
+    public List<ItemBase> GetAllItemsOnLot(WorldLot lot)
     {
-        allLots.Remove(lot);
+        return lot.ItemsOnLot;
+    }
+    public ItemBase GetItemOnLotByType(WorldLot lot, ItemSO itemSO)
+    {
+        return lot.ItemsOnLot.FirstOrDefault(item => item.ItemData == itemSO);
     }
 
+
+
     //LotGrid
+    public List<LotGridTile> GetNeighboringTiles(LotGridTile centerTile)
+    {
+        List<LotGridTile> neighborTiles = new();
+
+        for (int neighborX = centerTile.X - 1; neighborX <= centerTile.X + 1; neighborX++)
+        {
+            for (int neighborY = centerTile.Y - 1; neighborY <= centerTile.Y + 1; neighborY++)
+            {
+                LotGridTile neighborLgt = lotManager.GetLotTile(neighborX, neighborY);
+                if (neighborLgt == null)
+                    continue;
+                if (neighborLgt == centerTile)
+                    continue;
+                neighborTiles.Add(neighborLgt);
+            }
+        }
+        return neighborTiles;
+    }
+    public LotGridTile GetNearbyFreeTile(LotGridTile center)
+    {
+        if (!center.itemOnTile)
+            return center;
+        List<LotGridTile> neighbors = GetNeighboringTiles(center);
+        foreach (LotGridTile neighbor in neighbors)
+            if (!neighbor.itemOnTile)
+                return neighbor;
+        return null;
+    }
     public LotGridTile GetTileInteractableIsOn(Interactable interactable)
     {
         WorldLot lot = interactable.ThisLot;
@@ -153,10 +232,23 @@ public class LotManager : ManagementCore
     {
         return lotTile.PartOfLot.transform.position + new Vector3((lotTile.X + 0.5f) * lotTileSize, 0f, (lotTile.Y + 0.5f) * lotTileSize);
     }
+    public void PlaceItemToTile(ItemBase item, LotGridTile tile)
+    {
+        tile.PlaceItemToTile(item);
+        PlaceItemToCenterOfTile(item, tile);
+    }
+    public void RemoveItemFromTile(ItemBase removedItem, LotGridTile tile)
+    {
+        tile.RemoveItemFromTile(removedItem);
+    }
+
 
     //DEBUG
     private void OnDrawGizmos()
     {
+        if (!displayGizmos)
+            return;
+
         foreach (WorldLot lot in allLots)
         {
             Vector3 bottomLeft = transform.position;

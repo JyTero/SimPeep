@@ -16,15 +16,28 @@ MonoBehaviour:
   Description: Pick something up to carry on hand
   Reaction: 0
   IsSocial: 0
+  hiddenInteraction: 0
+  skipMovement: 0
+  interactionDestinationDifferentFromSource: 0
+  destinationItem: {fileID: 0}
+  invalidInteraction: 0
   interactionEndingType: 1
-  interactionLenght: 1
+  interactionLenght: 0.25
   targetNeedType: 0
   targetNeedValue: 0
-  need_InteractionInstructions: []
-  relationshipChangeInstructions: []
-  itemChangeInstructions:
+  need_InteractionInstructionsOnInteractionBegin: []
+  need_InteractionInstructionsOnInteractionTick: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
+  relationshipChangeInstructionsOnInteractionEnd: []
+  itemChangeInstructionSOsOnInteractionBegin: []
+  itemChangeInstructionSOsOnInteractionEnd:
   - {fileID: 11400000, guid: c3cbf80d9dea0b34aa2d5cc673eda76a, type: 2}
+  characterInstructionSOsOnInteractionBegin: []
+  characterInstructionSOsOnInteractionEnd: []
+  subInteractions: []
+  requiredItemCapabilities: 
   socialResponceInteractions: []
   scoringModifiers: []
   hasFollowup: 0
-  followupInteractionSO: {fileID: 0}
+  followupInteractionSOs: []

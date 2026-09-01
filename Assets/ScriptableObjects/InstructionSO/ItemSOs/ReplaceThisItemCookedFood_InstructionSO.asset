@@ -10,11 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10d175a152defbc45b9a8506e2c9e0a4, type: 3}
-  m_Name: DestroyItem_InsturctionSO
+  m_Name: ReplaceThisItemCookedFood_InstructionSO
   m_EditorClassIdentifier: Assembly-CSharp::Item_InstructionSO
-  Description: Destroy the source item
+  Description: ReplaceTargetItem with another
   spawnItem: 0
   itemToSpawn: {fileID: 0}
-  destroyItem: 1
+  destroyItem: 0
   moveThisItem: 0
   whereToMoveItem: 0
+  replaceItem: 1
+  itemLocation: 5
+  newItemPrefab: {fileID: 6491236442190121975, guid: dcbb6e812d341c848b10f70ce6482bb0, type: 3}

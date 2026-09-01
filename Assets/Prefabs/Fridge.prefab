@@ -45,8 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item_Slot
   slotTransform: {fileID: 2271522606605693201}
-  limitSlotToSpecificItemType: 0
-  validItemSO: {fileID: 0}
+  slotType: {fileID: 11400000, guid: 4fe0a69746068e046b94f97ddf92419a, type: 2}
 --- !u!1 &8694821721088304388
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,7 +56,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7018337030924598860}
   - component: {fileID: 7172986521224081868}
-  - component: {fileID: 14881374614336247}
   - component: {fileID: 8659652938097495456}
   - component: {fileID: 6540759664791211847}
   - component: {fileID: 3425456383334135602}
@@ -100,33 +98,12 @@ MonoBehaviour:
   interactionSOs: []
   itemData: {fileID: 11400000, guid: edebb3c81cede8140adceeedd09e9ec1, type: 2}
   itemDescription: 
-  capabilites: 04000000
-  capabilityComponents:
-  - {fileID: 14881374614336247}
+  capabilites: 
+  capabilityComponents: []
+  itemSlotsOnItem:
+  - {fileID: 495399399499182052}
+  characterSlotsOnItem: []
   itemInitialised: 0
---- !u!114 &14881374614336247
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8694821721088304388}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76899c7c6e9036b43830cc4433c0a94e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpawnItem_Capability
-  thisCapability: 4
-  CapabilityName: 
-  onBeginNeed_InteractionInstructions: []
-  onBeginRelationshipChangeInstructions: []
-  onBeginItemChangeInstructions: []
-  onBeginSubInteractionSOs: []
-  onEndNeed_InteractionInstructions: []
-  onEndRelationshipChangeInstructions: []
-  onEndItemChangeInstructions: []
-  onEndSubInteractionSOs: []
-  spawnSlot: {fileID: 495399399499182052}
 --- !u!33 &8659652938097495456
 MeshFilter:
   m_ObjectHideFlags: 0

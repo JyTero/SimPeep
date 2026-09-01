@@ -4,6 +4,7 @@ using UnityEngine;
 [Serializable]
 public class Slot : MonoBehaviour
 {
+
     [SerializeField]
     protected Transform slotTransform;
     public Transform SlotTransform { get { return slotTransform; } }
@@ -14,4 +15,9 @@ public class Slot : MonoBehaviour
     {
         this.parentItem = parentItem;
     }
+
+
+
+
+
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 public class ManagerMono : MonoBehaviour
 {
     protected CharacterAIHandler characterAIHandler;
-    protected CharacterControl CharacterControl;
+    protected CharacterControl characterControl;
     protected InteractionEngine interactionEngine;
     protected NeedsEngine needsEngine;
     protected LotManager lotManager;
@@ -13,7 +13,6 @@ public class ManagerMono : MonoBehaviour
     protected ItemManager itemManager;
     protected CapabilityHandler capabilityHandler;
     protected CharacterPathfinding characterPathfinding;
-
     protected InstructionEngine instructionEngine;
    
     private int oneUnitOfTime = 1;
@@ -23,12 +22,14 @@ public class ManagerMono : MonoBehaviour
     protected Vector3 NegSpawnPos { get { return negSpawnPos; } }
 
     [SerializeField]
-    protected bool IsDebug;
+    protected bool debugLog;
+    [SerializeField]
+    protected bool displayGizmos;
 
     protected virtual void Start()
     {
         characterAIHandler = FindAnyObjectByType<CharacterAIHandler>();
-        CharacterControl = FindAnyObjectByType<CharacterControl>();
+        characterControl = FindAnyObjectByType<CharacterControl>();
         interactionEngine = FindAnyObjectByType<InteractionEngine>();
         needsEngine = FindAnyObjectByType<NeedsEngine>();
         lotManager = FindAnyObjectByType<LotManager>();

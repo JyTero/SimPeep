@@ -16,6 +16,8 @@ public class LoadingScreen : MonoBehaviour
     protected LotManager lotManager;
     protected UIController UIController;
     protected CharacterRelationshipEngine relationshipsManager;
+    protected Debuglandia debuglandia;
+
 
     protected virtual void Start()
     {
@@ -26,6 +28,7 @@ public class LoadingScreen : MonoBehaviour
         lotManager = FindAnyObjectByType<LotManager>();
         UIController = GetComponent<UIController>();
         relationshipsManager = GetComponent<CharacterRelationshipEngine>();
+        debuglandia = GetComponent<Debuglandia>();
     }
 
     // Update is called once per frame
@@ -46,6 +49,7 @@ public class LoadingScreen : MonoBehaviour
             }
 
             lotManager.LoadingScreen();
+
 
             //Characters
             Character[] characters = FindObjectsByType<Character>();

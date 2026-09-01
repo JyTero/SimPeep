@@ -45,8 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item_Slot
   slotTransform: {fileID: 6677374733486984202}
-  limitSlotToSpecificItemType: 0
-  validItemSO: {fileID: 0}
+  slotType: {fileID: 11400000, guid: ed0c380a948946b408425ee31aa0502e, type: 2}
 --- !u!1 &7910699575505835471
 GameObject:
   m_ObjectHideFlags: 0
@@ -100,9 +99,11 @@ MonoBehaviour:
   interactionSOs: []
   itemData: {fileID: 11400000, guid: ce094440d2b4b614f875069d790d8ca0, type: 2}
   itemDescription: 
-  capabilites: 00000000
-  capabilityComponents:
-  - {fileID: 8193744452690017048}
+  capabilites: 
+  capabilityComponents: []
+  itemSlotsOnItem:
+  - {fileID: 113425654867969759}
+  characterSlotsOnItem: []
   itemInitialised: 0
 --- !u!114 &8193744452690017048
 MonoBehaviour:
@@ -111,7 +112,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7910699575505835471}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15f3e35f3b2553c4dbdb2ac327696887, type: 3}
   m_Name: 
@@ -124,7 +125,8 @@ MonoBehaviour:
   onBeginSubInteractionSOs: []
   onEndNeed_InteractionInstructions: []
   onEndRelationshipChangeInstructions: []
-  onEndItemChangeInstructions: []
+  onEndItemChangeInstructions:
+  - {fileID: 11400000, guid: 136c4f6e0efdb1e448d0b229f34fccdd, type: 2}
   onEndSubInteractionSOs: []
   stoveCookSlot: {fileID: 113425654867969759}
 --- !u!33 &4051895236254469951

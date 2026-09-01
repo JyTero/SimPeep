@@ -18,19 +18,26 @@ MonoBehaviour:
   IsSocial: 0
   hiddenInteraction: 0
   skipMovement: 0
+  interactionDestinationDifferentFromSource: 1
+  destinationItem: {fileID: 11400000, guid: ce094440d2b4b614f875069d790d8ca0, type: 2}
+  invalidInteraction: 0
   interactionEndingType: 1
-  interactionLenght: 0
+  interactionLenght: 6
   targetNeedType: 0
   targetNeedValue: 0
-  need_InteractionInstructions: []
-  relationshipChangeInstructions: []
-  itemChangeInstructions:
+  need_InteractionInstructionsOnInteractionBegin: []
+  need_InteractionInstructionsOnInteractionTick: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
+  relationshipChangeInstructionsOnInteractionEnd: []
+  itemChangeInstructionSOsOnInteractionBegin:
   - {fileID: 11400000, guid: c3cbf80d9dea0b34aa2d5cc673eda76a, type: 2}
-  subInteractions:
-  - interactionSO: {fileID: 11400000, guid: 59f846900863b85498dda6b9129ad40c, type: 2}
-    interactionOnCreatedObject: 0
-    interactionOnHeldObject: 0
-    interactionOnItemHeldObject: 0
+  - {fileID: 11400000, guid: 91135e10c7e8aae4dae3a72d7106c56d, type: 2}
+  itemChangeInstructionSOsOnInteractionEnd:
+  - {fileID: 11400000, guid: 136c4f6e0efdb1e448d0b229f34fccdd, type: 2}
+  characterInstructionSOsOnInteractionBegin: []
+  characterInstructionSOsOnInteractionEnd: []
+  subInteractions: []
   requiredItemCapabilities: 
   socialResponceInteractions: []
   scoringModifiers: []

@@ -31,7 +31,7 @@ public class Simulation : ManagerMono
         float dt = Time.deltaTime * timeScale;
         AdvanceClock(dt);
         itemManager.MyUpdate(dt);
-        CharacterControl.MyUpdate(dt);
+        characterControl.MyUpdate(dt);
         interactionEngine.MyUpdate(dt);
         needsEngine.MyUpdate(dt);
         characterAIHandler.MyUpdate(dt);

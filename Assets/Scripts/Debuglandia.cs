@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Debuglandia : MonoBehaviour
@@ -11,6 +13,9 @@ public class Debuglandia : MonoBehaviour
     protected CharacterRelationshipEngine relationshipsManager;
 
     protected Simulation simulation;
+
+
+    private List<Slot> slots = new();
 
     protected virtual void Start()
     {
@@ -68,4 +73,40 @@ public class Debuglandia : MonoBehaviour
 
     }
 
+    //private void OnDrawGizmos()
+    //{
+
+    //}
+
+    //public void GetAllSlots()
+    //{
+    //    List<ItemBase> items = lotManager.GetAllItemsOnLot(FindAnyObjectByType<WorldLot>());
+    //    foreach (ItemBase item in items)
+    //    {
+    //        if (item.ItemSlotsOnItem.Count == 0)
+    //            continue;
+    //        else
+    //        {
+    //            foreach (Item_Slot slot in item.ItemSlotsOnItem)
+    //            {
+    //                slots.Add(slot);
+    //            }
+    //        }
+    //    }
+    //}
+    //public void SlotVisualiser()
+    //{
+    //    Gizmos.color = Color.gray;
+    //    foreach (Slot slot in slots)
+    //    {
+    //        Gizmos.DrawWireSphere(transform.position, 0.15f);
+
+    //    }
+
+    //    //// Optional: show orientation
+    //    //Gizmos.DrawLine(
+    //    //    transform.position,
+    //    //    transform.position + transform.forward * 0.4f
+    //    //);
+    //}
 }

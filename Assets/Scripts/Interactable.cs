@@ -11,6 +11,9 @@ public class Interactable : MonoBehaviour
     protected WorldLot thisLot;
     public WorldLot ThisLot { get { return thisLot; } }
 
+    protected LotGridTile currentTile;
+    public LotGridTile CurrentTile { get { return currentTile; } }
+
     protected virtual void Start()
     {
         //LateStartTimer();
@@ -41,6 +44,11 @@ public class Interactable : MonoBehaviour
     public void ChangeCurrentLot(WorldLot lot)
     {
         thisLot = lot;
+    }
+
+    public void ChangeCurrentTile(LotGridTile tile)
+    {
+        currentTile = tile;
     }
 
     //protected void GenerateStoredInteractions()

@@ -1,6 +1,8 @@
 using NUnit.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -27,12 +29,14 @@ public class CharacterControl : ManagementCore
 
     public void StartRouting(ActiveInteraction interaction)
     {
-        if(interaction.ThisCharacter.CharacterPhysicalState != CharacterPhysicalStateEnum.Standing)
+        if (interaction.ThisCharacter.CharacterPhysicalState != CharacterPhysicalStateEnum.Standing)
             StandUpFromSlot(interaction.ThisCharacter, interaction.ThisCharacter.OccupiedSlot);
 
 
         if (interaction.IsReaction)
             characterPathfinding.NewCharacterFindingPath(interaction.ThisCharacter, interaction.ThisCharacter.transform.position);
+        else if (interaction.InteractionTuningSO.InteractionDestinationDifferentFromSource)
+            characterPathfinding.NewCharacterFindingPath(interaction.ThisCharacter, lotManager.GetItemOnLotByType(interaction.ThisCharacter.ThisLot, interaction.InteractionTuningSO.DestinationItem).transform.position);
         else
             characterPathfinding.NewCharacterFindingPath(interaction.ThisCharacter, interaction.InteractionSource.transform.position);
 
@@ -42,6 +46,16 @@ public class CharacterControl : ManagementCore
         //    interactionsRouting.Add(interaction, interaction.InteractionSource.transform);
     }
 
+    public void RouteToTile(Character character, LotGridTile destinationTile)
+    {
+        if (character.CharacterPhysicalState != CharacterPhysicalStateEnum.Standing)
+            StandUpFromSlot(character, character.OccupiedSlot);
+
+        characterPathfinding.NewCharacterFindingPath(character, destinationTile);
+
+
+    }
+
     protected override void TimedUpdate(float dt)
     {
         base.TimedUpdate(dt);
@@ -49,62 +63,20 @@ public class CharacterControl : ManagementCore
         //InteractionRoutingUpdate(dt);
     }
 
+    public bool IsCharacterNextToInteractionTarget(Character character, LotGridTile targetTile)
+    {
+        LotGridTile characterTile = character.CurrentTile;
+        List<LotGridTile> neighborTiles = lotManager.GetNeighboringTiles(characterTile);
+        foreach(LotGridTile tile in neighborTiles)
+        {
+            if (tile == targetTile)
+                return true;
+        }
+        return false;
+    }
+
     //"other"(?) moving (When moving without tied interaction)
-    private void CharacterRoutingUpdate()
-    {
-        List<Character> charactersAtDest = new();
-        foreach (Character character in charactersRouting.Keys)
-        {
-            character.transform.position = Vector3.MoveTowards(character.transform.position,
-                    charactersRouting[character].position, character.characterSpeed * Time.deltaTime);
 
-            //IfAtDest?
-            if (Vector3.Distance(character.transform.position, charactersRouting[character].position) < routingMargin)
-            {
-                charactersAtDest.Add(character);
-            }
-
-        }
-        foreach (Character chara in charactersAtDest)
-        {
-            CharacerAtDestination(chara);
-            charactersRouting.Remove(chara);
-
-        }
-    }
-    //In interaction (moving for interaction purposes)
-    private void InteractionRoutingUpdate(float dt)
-    {
-        List<ActiveInteraction> charactersAtDest = new();
-        foreach (ActiveInteraction interaction in interactionsRouting.Keys)
-        {
-            Character character = interaction.ThisCharacter;
-            Vector3 frameDest = Vector3.MoveTowards(character.transform.position,
-                                interactionsRouting[interaction].position, character.characterSpeed * dt);
-            //character.transform.LookAt(frameDest);
-            character.transform.position = frameDest;
-            // character.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.x, 0); //Gummy
-
-            //IfAtDest?
-            if (Vector3.Distance(character.transform.position, interactionsRouting[interaction].position) < routingMargin)
-            {
-                charactersAtDest.Add(interaction);
-                if (IsDebug)
-                    Debug.Log($"{character.ItemName} reached destination ({interaction.InteractionSource})");
-            }
-
-            else if (IsDebug)
-                Debug.Log($"{character.ItemName} routes towards {interaction.InteractionSource}");
-        }
-        foreach (ActiveInteraction interaction in charactersAtDest)
-        {
-            CharacerAtDestination(interaction.ThisCharacter);
-            interaction.SetInteractionState(InteractionState.AtDestination);
-
-            interactionsRouting.Remove(interaction);
-
-        }
-    }
     public void CharacerAtDestination(Character chara)
     {
         //charactersAtDestination.Add(chara);
@@ -120,37 +92,74 @@ public class CharacterControl : ManagementCore
     }
     public void StandUpFromSlot(Character character, Character_Slot slot)
     {
-        character.transform.position = slot.ParentItem.transform.position;
         character.CharacterPhysicalState = CharacterPhysicalStateEnum.Standing;
         character.OccupiedSlot = null;
+
+        LotGridTile lgt = lotManager.GetNearbyFreeTile(lotManager.GetTileInteractableIsOn(character));
+        character.ChangeCurrentTile(lgt);
+        character.transform.position = character.CurrentTile.TilePos;
 
         slot.ClearSlot(character);
     }
 
+    public bool IsWithinInteractionRange(Character character, ItemBase target)
+    {
+        List<LotGridTile> neighborTiles = lotManager.GetNeighboringTiles(character.CurrentTile);
+        if (neighborTiles.Any(neighborTile => neighborTile.itemOnTile == target))
+            return true;
+        else
+            return false;
+    }
+    public bool IsOnTileWithinRange(Character character, ItemBase target)
+    {
+        List<LotGridTile> neighborTiles = lotManager.GetNeighboringTiles(character.CurrentTile);
+        foreach(LotGridTile lgt in neighborTiles)
+        {
+            if (lgt.itemOnTile)
+                if (lgt.itemOnTile.ItemSlotsByItem.ContainsKey(target))
+                    return true;
+        }
+            return false;
+    }
+
     //Inventory / Carrying
 
-    public void PickupItem(Character character, ItemBase item)
+    public void PickupItem(ActiveInteraction interaction, ItemBase item)
     {
+        Character character = interaction.ThisCharacter;
+
         if (character.CarriedItem == item)
             return;
         else if (character.CarriedItem == null)
         {
-            item.transform.position = character.CarrySlot.position;
-            itemManager.RegisterMovingItem(item, character.CarrySlot);
-            character.PickupItem(item);
+            if (IsWithinInteractionRange(character, item) || IsOnTileWithinRange(character, item))
+            {
+                item.transform.position = character.CarrySlot.position;
+                itemManager.RegisterMovingItem(item, character.CarrySlot);
+                itemManager.OnItemPickUp(item, character);
+                lotManager.PickItemUpFromLot(item);
+                character.PickupItem(item);
+            }
+            else
+            {
+                interaction.State.itemIndex--;
+                interaction.PushInteractionState(EInteractionState.Moving);
+                RouteToTile(character,lotManager.GetTileInteractableIsOn(item));
+            }
         }
         else
         {
             //Put item on hand down(to ground)
-            PutItemDownGround(character);
+            lotManager.PlaceItemOntoLot(character.ThisLot, character.CurrentTile, character.CarriedItem);
+            SeparateItemFromHand(character);
             //Pick the item up 
-            PickupItem(character, item);
+            PickupItem(interaction, item);
         }
 
 
     }
 
-    public void PutItemDownGround(Character character)
+    public void SeparateItemFromHand(Character character)
     {
         if (character.CarriedItem == null)
         {
@@ -159,9 +168,55 @@ public class CharacterControl : ManagementCore
         }
 
         ItemBase item = character.CarriedItem;
-        item.transform.position = character.transform.position; //Will be replaced with proper placement
+        itemManager.OnItemPutDown(item, character);
+        //item.transform.position = character.transform.position; //Will be replaced with proper placement
         itemManager.DeregisterMovingItem(item);
         character.PutItemDown();
+    }
+
+    //CHARACTER INSTRUCTIONS
+    public void HandleCharacterInstruction(Character_InstructionSO charaInstructionSO, ActiveInteraction interaction)
+    {
+        switch (charaInstructionSO.InstructionType)
+        {
+            case ECharacterInstruction.Default:
+                break;
+            case ECharacterInstruction.MoveCharacter:
+                MoveCharacter(charaInstructionSO, interaction);
+                break;
+            case ECharacterInstruction.SitCharacter:
+                SitCharacterToSlot(charaInstructionSO, interaction);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void MoveCharacter(Character_InstructionSO charaInstructionSO, ActiveInteraction interaction)
+    {
+        switch (charaInstructionSO.DestinationType)
+        {
+            case ECharacterInstructionDestination.Default:
+                break;
+            case ECharacterInstructionDestination.ThisItem:
+                interaction.PushInteractionState(EInteractionState.Moving);
+                characterControl.RouteToTile(interaction.ThisCharacter, lotManager.GetTileInteractableIsOn(interaction.InteractionSource));
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void SitCharacterToSlot(Character_InstructionSO charaInstructionSO, ActiveInteraction interaction)
+    {
+        ItemBase sitItem;
+        if (interaction.State.interactionSource != null)
+            sitItem = interaction.State.interactionSource as ItemBase;
+        else
+            sitItem = interaction.InteractionSource as ItemBase;
+
+        SitCharacterToSlot(interaction.ThisCharacter, sitItem.CharacterSlotsOnItem[0]);
     }
 }
 

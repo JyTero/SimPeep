@@ -16,14 +16,22 @@ MonoBehaviour:
   Description: 
   Reaction: 0
   IsSocial: 0
+  hiddenInteraction: 0
+  skipMovement: 0
+  interactionDestinationDifferentFromSource: 0
+  destinationItem: {fileID: 0}
+  invalidInteraction: 0
   interactionEndingType: 2
   interactionLenght: 4
   targetNeedType: 3
   targetNeedValue: 95
-  need_InteractionInstructions:
+  need_InteractionInstructionsOnInteractionTick:
   - {fileID: 11400000, guid: db3790b297fd71744bece2948df9c369, type: 2}
-  relationshipChangeInstructions: []
-  itemChangeInstructions: []
+  relationshipChangeInstructionsOnInteractionEnd: []
+  itemChangeInstructionSOsOnInteractionBegin: []
+  itemChangeInstructionSOsOnInteractionEnd: []
+  subInteractions: []
+  requiredItemCapabilities: 
   socialResponceInteractions: []
   scoringModifiers: []
   hasFollowup: 1

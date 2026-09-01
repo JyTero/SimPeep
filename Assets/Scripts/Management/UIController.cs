@@ -23,6 +23,9 @@ public class UIController : ManagementCore
     private InteractionQueue_UIPanel interactionQueue_UIPanel;
 
     [SerializeField]
+    private InteractionStates_UIPanel interactionStates_UIPanel;
+
+    [SerializeField]
     private GameObject buttonPrefab;
     private List<GameObject> buttonPool = new();
     private List<GameObject> activeButtons = new();
@@ -44,6 +47,7 @@ public class UIController : ManagementCore
         needsPanelButton.onClick.AddListener(delegate { NeedsPanelButtonClick(); });
         relationshipsPanelButton.onClick.AddListener(delegate { RelationshipsPanelButtonClick(); });
 
+        interactionStates_UIPanel = FindAnyObjectByType<InteractionStates_UIPanel>();
     }
 
     public void InitialiseUI()
@@ -145,7 +149,6 @@ public class UIController : ManagementCore
     public void RefreshInteractionQueueData(CharacterAI chara)
     {
         List<string> interactionQueue = MakeQueuedInteractionNamesList(chara);
-        MakeQueuedInteractionNamesList(chara);
         interactionQueue_UIPanel.RefreshQueueData(interactionQueue);
     }
     private List<string> MakeQueuedInteractionNamesList(CharacterAI chara)
@@ -172,5 +175,27 @@ public class UIController : ManagementCore
     public void RefreshCurrentInteractionData(string currentInteraction)
     {
         interactionQueue_UIPanel.RefreshCurrentInteractionData(currentInteraction);
+    }
+
+
+    //DEBUG
+    //InteractionStateQueue
+    public void RefreshInteractionStateData(ActiveInteraction interaction)
+    {
+
+        List<string> queuedStates = MakeQueuedInteractionStatesList(interaction);
+        interactionStates_UIPanel.RefreshQueueData(queuedStates);
+        interactionStates_UIPanel.RefreshCurrentInteractionData(interaction.State.thisState.ToString());
+    }
+
+    private List<string> MakeQueuedInteractionStatesList(ActiveInteraction interaction)
+    {
+        //UI (/DEBUG)
+        List<string> queuedStates = new();
+        foreach(ActiveInteractionState ais in interaction.previousInteractionStates)
+            queuedStates.Add(ais.thisState.ToString());
+
+        return queuedStates;
+
     }
 }

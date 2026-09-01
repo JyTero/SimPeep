@@ -1,6 +1,8 @@
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using UnityEngine;
 
 public class NeedsEngine : ManagementCore
@@ -71,6 +73,26 @@ public class NeedsEngine : ManagementCore
             activeNeedInstructions.Add(needInstruction);
         }
     }
+    public void NewInstructionSO(Need_InstructionSO needInstructionSO, Character character, string itemAndInteractionName)
+    {
+        Need_Instruction ni = new(needInstructionSO, character, itemAndInteractionName);
+        if (activeNeedInstructions.Any(ani => ani.sourceSO == needInstructionSO))
+        {
+            return;
+        }
+        activeNeedInstructions.Add(ni);
+    }
+    public void NewInstructionSO(Need_InstructionSO needInstructionSO, Character character, ActiveInteraction interaction)
+    {
+        Need_Instruction ni = new(needInstructionSO, character, interaction.InteractionSource.ItemName + interaction.InteractionName);
+        ni.InstructionLenght = interaction.InteractionTuningSO.InteractionLenght;
+
+        if (activeNeedInstructions.Any(ani => ani.sourceSO == needInstructionSO))
+        {
+            return;
+        }
+        activeNeedInstructions.Add(ni);
+    }
     //Useful template for elsewhere
     //private void InstructionsUpdate(float deltaTime)
     //{
@@ -103,16 +125,22 @@ public class NeedsEngine : ManagementCore
                 instruction.TimeSinceLastUse += dt;
 
 
+            //For implementation using instructionLength
 
-            //if (instruction.InstructionLenght > 0)
+            //if (instruction.TimeSinceLastUse > OneUnitOfTime)
             //{
-            //    if (instruction.InstructionLifetime >= instruction.InstructionLenght)
-            //        activeNeedInstructions.Remove(instruction);
+            //    if (instruction.InstructionLenght > 0)
+            //    {
+            //        if (instruction.InstructionLifetime >= instruction.InstructionLenght)
+            //            activeNeedInstructions.Remove(instruction);
+            //        else
+            //            instruction.InstructionLifetime += dt;
+            //    }
             //    else
-            //        instruction.InstructionLifetime += dt;
+            //        activeNeedInstructions.Remove(instruction);
             //}
             //else
-            //    activeNeedInstructions.Remove(instruction);
+            //    instruction.TimeSinceLastUse += dt;
         }
     }
 
