@@ -13,21 +13,17 @@ MonoBehaviour:
   m_Name: RunRoutineUseTableWithSeating_ItemSO
   m_EditorClassIdentifier: Assembly-CSharp::Item_InstructionSO
   Description: RunRoutineUseTableWithSeating
-  spawnItem: 0
+  instructionType: 6
   itemToSpawn: {fileID: 0}
   whereToSpawnItem: 0
   slotParentItemLocationSpwn: 0
   slotTypeSOSpwn: {fileID: 0}
-  destroyItem: 0
-  moveThisItem: 0
   whereToMoveItem: 0
   slotParentItemLocationMove: 0
   targetItemType: {fileID: 0}
   targetSlotType: {fileID: 0}
-  moveFromThisItemSlot: 0
   slotTypeToPickFrom: {fileID: 0}
-  replaceItem: 0
   thisInstructionTargetItem: 0
   newItemPrefab: {fileID: 0}
-  runRoutine: 1
   routine: 1
+  interactionToRunSO: {fileID: 0}

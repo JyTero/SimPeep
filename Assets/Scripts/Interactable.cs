@@ -14,6 +14,8 @@ public class Interactable : MonoBehaviour
     protected LotGridTile currentTile;
     public LotGridTile CurrentTile { get { return currentTile; } }
 
+    protected List<StoredInteraction> storedInteractions = new();
+
     protected virtual void Start()
     {
         //LateStartTimer();
@@ -33,7 +35,6 @@ public class Interactable : MonoBehaviour
     public List<InteractionSO> InteractionSOs { get { return interactionSOs; } }
 
 
-    protected List<StoredInteraction> storedInteractions = new();
     public List<StoredInteraction> StoredInteractions { get { return storedInteractions; } }
 
 

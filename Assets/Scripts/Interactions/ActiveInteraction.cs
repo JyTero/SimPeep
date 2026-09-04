@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ActiveInteraction
@@ -43,6 +44,9 @@ public class ActiveInteraction
 
     private List<InteractionSO> followupInteractionSOs;
     public List<InteractionSO> FollowupInteractionSOs { get { return followupInteractionSOs; } }
+
+    //InteractionGroup
+    public InteractionGroupSO InteractionGroupSO;
 
     //RuntimeData
     public List<SubInteraction> subInteractions = new();
@@ -197,6 +201,9 @@ public class StoredInteraction
 
     private Interactable interactionSource;
     public Interactable InteractionSource { get { return interactionSource; } }
+    private InteractionGroupSO groupSO;
+    public InteractionGroupSO GroupSO { get { return groupSO; } }
+
 
     //Invalid interactions will not be selectable by anyone (picking up already carried item)
     public bool InvalidInteraction;
@@ -206,6 +213,11 @@ public class StoredInteraction
         this.interactionTuningSO = interactionTuningSO;
         this.interactionSource = interactionSource;
         InvalidInteraction = interactionTuningSO.InvalidInteraction;
+    }
+
+    public void MakeIntoStoredInteractionGroup(InteractionGroupSO itgSO)
+    {
+        groupSO = itgSO;
     }
 }
 

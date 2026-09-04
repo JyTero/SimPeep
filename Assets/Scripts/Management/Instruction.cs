@@ -85,7 +85,7 @@ public class RelationshipChange_Instruction : Instruction
 public class Item_Instruction : Instruction
 {
     private Item_InstructionData itemInstructionData;
-    public Item_InstructionData ItemInstructionSO { get { return itemInstructionData; } }
+    public Item_InstructionData ItemInstructionData { get { return itemInstructionData; } }
 
     private Character thisCharacter;
     public Character ThisCharacter { get { return thisCharacter; } }

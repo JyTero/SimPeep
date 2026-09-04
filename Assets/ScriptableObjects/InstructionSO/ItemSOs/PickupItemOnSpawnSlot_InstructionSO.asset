@@ -13,19 +13,17 @@ MonoBehaviour:
   m_Name: PickupItemOnSpawnSlot_InstructionSO
   m_EditorClassIdentifier: Assembly-CSharp::Item_InstructionSO
   Description: Pick up item on this item's spawn slot
-  spawnItem: 0
+  instructionType: 4
   itemToSpawn: {fileID: 0}
   whereToSpawnItem: 0
   slotParentItemLocationSpwn: 0
   slotTypeSOSpwn: {fileID: 0}
-  destroyItem: 0
-  moveThisItem: 0
   whereToMoveItem: 4
   slotParentItemLocationMove: 0
   targetItemType: {fileID: 0}
   targetSlotType: {fileID: 0}
-  moveFromThisItemSlot: 1
   slotTypeToPickFrom: {fileID: 11400000, guid: 4fe0a69746068e046b94f97ddf92419a, type: 2}
-  replaceItem: 0
   thisInstructionTargetItem: 0
   newItemPrefab: {fileID: 0}
+  routine: 0
+  interactionToRunSO: {fileID: 0}

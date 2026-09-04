@@ -79,14 +79,27 @@ public class UIController : ManagementCore
             if (storedInteraction.InvalidInteraction)
                 continue;
 
-            GameObject buttonGO = buttonPool[i];
+            if (storedInteraction.GroupSO)
+            {
+                GameObject buttonGO = buttonPool[i];
 
-            buttonGO.GetComponentInChildren<TextMeshProUGUI>().text = storedInteraction.InteractionTuningSO.InteractionName;
-            buttonGO.SetActive(true);
-            buttonGO.GetComponent<Button>().onClick.AddListener(delegate { InteractionSelectButtonPress(storedInteraction); });
-            buttonPool.Remove(buttonGO);
-            activeButtons.Add(buttonGO);
-            //i++;
+                buttonGO.GetComponentInChildren<TextMeshProUGUI>().text = storedInteraction.GroupSO.InteractionName;
+                buttonGO.SetActive(true);
+                buttonGO.GetComponent<Button>().onClick.AddListener(delegate { InteractionSelectButtonPress(storedInteraction); });
+                buttonPool.Remove(buttonGO);
+                activeButtons.Add(buttonGO);
+            }
+            else
+            {
+                GameObject buttonGO = buttonPool[i];
+
+                buttonGO.GetComponentInChildren<TextMeshProUGUI>().text = storedInteraction.InteractionTuningSO.InteractionName;
+                buttonGO.SetActive(true);
+                buttonGO.GetComponent<Button>().onClick.AddListener(delegate { InteractionSelectButtonPress(storedInteraction); });
+                buttonPool.Remove(buttonGO);
+                activeButtons.Add(buttonGO);
+                //i++;
+            }
         }
     }
 
@@ -192,7 +205,7 @@ public class UIController : ManagementCore
     {
         //UI (/DEBUG)
         List<string> queuedStates = new();
-        foreach(ActiveInteractionState ais in interaction.previousInteractionStates)
+        foreach (ActiveInteractionState ais in interaction.previousInteractionStates)
             queuedStates.Add(ais.thisState.ToString());
 
         return queuedStates;

@@ -59,10 +59,11 @@ public class ItemManager : ManagementCore
 
         capabilityHandler.InitialiseItemCapabilities(item);
 
-        foreach (InteractionSO itso in item.InteractionSOs)
-        {
-            item.NewStoredInteraction(new StoredInteraction(itso, item));
-        }
+        BuildStoredInteractions(item);
+        //foreach (InteractionSO itso in item.InteractionSOs)
+        //{
+        //    item.NewStoredInteraction(new StoredInteraction(itso, item));
+        //}
 
         //IF(WithinLotGrid)
         //Place onto center of nearest tile
@@ -92,6 +93,13 @@ public class ItemManager : ManagementCore
         foreach (InteractionSO itso in item.InteractionSOs)
         {
             item.NewStoredInteraction(new StoredInteraction(itso, item));
+        }
+
+        foreach(InteractionGroupSO itgSO in item.ItemData.InteractionGroupSOs)
+        {
+            StoredInteraction si = new StoredInteraction(itgSO.GroupedInteractions[0].InteractionSO, item);
+            si.MakeIntoStoredInteractionGroup(itgSO);
+            item.NewStoredInteraction(si);
         }
     }
 
@@ -143,41 +151,69 @@ public class ItemManager : ManagementCore
     {
         Character thisCharacter = itemInstruction.ThisCharacter;
         ItemBase thisItem = itemInstruction.ThisItem;
-        Item_InstructionData instructionData = itemInstruction.ItemInstructionSO;
+        Item_InstructionData instructionData = itemInstruction.ItemInstructionData;
 
+        switch (itemInstruction.ItemInstructionData.InstructionType)
+        {
+            case EItem_InstructionType.Default:
+                Debug.LogError($"Unknown item instruction {instructionData.InstructionName}");
+                break;
+            case EItem_InstructionType.Spawn:
+                SpawnItem(instructionData, thisCharacter, thisItem);
+                break;
+            case EItem_InstructionType.Destroy:
+                DestroyItem(thisItem);
+                break;
+            case EItem_InstructionType.MoveThis:
+                MoveThisItem(instructionData, interaction);
+                break;
+            case EItem_InstructionType.MoveFromThis:
+                MoveFromThisItemSlot(itemInstruction, interaction);
+                break;
+            case EItem_InstructionType.Replace:
+                ReplaceItem(instructionData, thisCharacter, thisItem);
+                break;
+            case EItem_InstructionType.Routine:
+                RunRoutine(instructionData, interaction);
+                break;
+            case EItem_InstructionType.RunInteraction:
+                RunInteraction(instructionData, interaction);
+                break;
+            default:
+                break;
+        }
 
-        if (instructionData.SpawnItem)
-        {
-            //HandleItemSPawning
-            SpawnItem(instructionData, thisCharacter, thisItem);
-
-        }
-        else if (instructionData.DestroyItem)
-        {
-            DestroyItem(thisItem);
-        }
-        else if (instructionData.MoveThisItem)
-        {
-            MoveThisItem(instructionData, interaction);
-        }
-        else if (instructionData.MoveFromThisItemSlot)
-        {
-            MoveFromThisItemSlot(itemInstruction, interaction);
-        }
-        else if (instructionData.ReplaceItem)
-        {
-            ReplaceItem(instructionData, thisCharacter, thisItem);
-        }
-        else if (instructionData.RunRoutine)
-        {
-            RunRoutine(instructionData, interaction);
-        }
-        else if (instructionData.RunInteractionAsInstruction)
-        {
-            RunInteraction(instructionData, interaction);
-        }
-        else
-            Debug.LogError($"Unknown item instruction {instructionData.InstructionName}");
+        //if (instructionData.SpawnItem)
+        //{
+        //    //HandleItemSPawning
+        //    SpawnItem(instructionData, thisCharacter, thisItem);
+        //}
+        //else if (instructionData.DestroyItem)
+        //{
+        //    DestroyItem(thisItem);
+        //}
+        //else if (instructionData.MoveThisItem)
+        //{
+        //    MoveThisItem(instructionData, interaction);
+        //}
+        //else if (instructionData.MoveFromThisItemSlot)
+        //{
+        //    MoveFromThisItemSlot(itemInstruction, interaction);
+        //}
+        //else if (instructionData.ReplaceItem)
+        //{
+        //    ReplaceItem(instructionData, thisCharacter, thisItem);
+        //}
+        //else if (instructionData.RunRoutine)
+        //{
+        //    RunRoutine(instructionData, interaction);
+        //}
+        //else if (instructionData.RunInteractionAsInstruction)
+        //{
+        //    RunInteraction(instructionData, interaction);
+        //}
+        //else
+        //    Debug.LogError($"Unknown item instruction {instructionData.InstructionName}");
 
 
     }
@@ -283,7 +319,7 @@ public class ItemManager : ManagementCore
     {
         Character thisCharacter = itemInstruction.ThisCharacter;
         ItemBase thisItem = itemInstruction.ThisItem;
-        Item_InstructionData instructionData = itemInstruction.ItemInstructionSO;
+        Item_InstructionData instructionData = itemInstruction.ItemInstructionData;
 
         ItemBase movingItem = GetItemOnSlotTypeSlot(thisItem, instructionData.SlotTypeToPickFrom);
         Item_Slot slot = thisItem.ItemSlotsByType[instructionData.SlotTypeToPickFrom][0]; //TODO, Logic to select slot

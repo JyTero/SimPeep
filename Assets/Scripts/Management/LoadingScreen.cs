@@ -37,17 +37,6 @@ public class LoadingScreen : MonoBehaviour
         if (!runStartup)
         {
             //Lots & Items
-            foreach (WorldLot lot in lotManager.AllLots)
-            {
-                foreach (ItemBase item in lot.ItemsOnLot)
-                {
-                    foreach (InteractionSO itso in item.InteractionSOs)
-                    {
-                        item.NewStoredInteraction(new StoredInteraction(itso, item));
-                    }
-                }
-            }
-
             lotManager.LoadingScreen();
 
 

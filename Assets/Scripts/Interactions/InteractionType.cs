@@ -1,7 +1,7 @@
-using UnityEngine;
+//using UnityEngine;
 
-public enum InteractionType
-{
-    Default,
-    Play_ArcadeMachine
-}
+//public enum InteractionType
+//{
+//    Default,
+//    Play_ArcadeMachine
+//}

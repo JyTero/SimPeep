@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e1b85f48ee02364a9fd09876626f04d, type: 3}
+  m_Name: EatFood_InteractionGroupSO
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionGroupSO
+  interactionName: Eat
+  Description: Eat food
+  need_InteractionInstructionsOnInteractionBegin: []
+  need_InteractionInstructionsOnInteractionTick: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
+  relationshipChangeInstructionsOnInteractionEnd: []
+  itemInstructionSOsOnInteractionBegin: []
+  itemInstructionSOsOnInteractionEnd: []
+  characterInstructionSOsOnInteractionBegin: []
+  characterInstructionSOsOnInteractionEnd: []
+  groupedInteractions:
+  - interactionSO: {fileID: 11400000, guid: 48717f7bb45d8074dad323a9ec95dc56, type: 2}
+    basePreferenceScore: 10
+    requiredItemInstructionSOs:
+    - {fileID: 11400000, guid: a887caa0b527e4148a40347f5988efb0, type: 2}
+  - interactionSO: {fileID: 11400000, guid: dd003579824f4504494c14bb1b78c1b5, type: 2}
+    basePreferenceScore: 5
+    requiredItemInstructionSOs: []

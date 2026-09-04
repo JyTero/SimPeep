@@ -13,9 +13,17 @@ MonoBehaviour:
   m_Name: CarryItem_InstructionSO
   m_EditorClassIdentifier: Assembly-CSharp::Item_InstructionSO
   Description: Pick item up for carry
-  spawnItem: 0
-  item: {fileID: 0}
-  moveThisItem: 1
+  instructionType: 3
+  itemToSpawn: {fileID: 0}
+  whereToSpawnItem: 0
+  slotParentItemLocationSpwn: 0
+  slotTypeSOSpwn: {fileID: 0}
   whereToMoveItem: 4
-  lotToMoveIn: {fileID: 0}
-  destination: {x: 0, y: 0, z: 0}
+  slotParentItemLocationMove: 0
+  targetItemType: {fileID: 0}
+  targetSlotType: {fileID: 0}
+  slotTypeToPickFrom: {fileID: 0}
+  thisInstructionTargetItem: 0
+  newItemPrefab: {fileID: 0}
+  routine: 0
+  interactionToRunSO: {fileID: 0}

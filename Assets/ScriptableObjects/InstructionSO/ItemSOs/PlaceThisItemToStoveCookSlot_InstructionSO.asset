@@ -13,19 +13,17 @@ MonoBehaviour:
   m_Name: PlaceThisItemToStoveCookSlot_InstructionSO
   m_EditorClassIdentifier: Assembly-CSharp::Item_InstructionSO
   Description: Place this item to a cooking spot on Stove
-  spawnItem: 0
+  instructionType: 3
   itemToSpawn: {fileID: 0}
   whereToSpawnItem: 0
   slotParentItemLocationSpwn: 0
   slotTypeSOSpwn: {fileID: 0}
-  destroyItem: 0
-  moveThisItem: 1
   whereToMoveItem: 5
   slotParentItemLocationMove: 2
   targetItemType: {fileID: 11400000, guid: ce094440d2b4b614f875069d790d8ca0, type: 2}
   targetSlotType: {fileID: 11400000, guid: ed0c380a948946b408425ee31aa0502e, type: 2}
-  moveFromThisItemSlot: 0
   slotTypeToPickFrom: {fileID: 0}
-  replaceItem: 0
   thisInstructionTargetItem: 0
   newItemPrefab: {fileID: 0}
+  routine: 0
+  interactionToRunSO: {fileID: 0}

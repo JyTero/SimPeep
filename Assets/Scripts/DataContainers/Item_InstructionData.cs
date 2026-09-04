@@ -6,6 +6,9 @@ public class Item_InstructionData
     private string instructionName;
     public string InstructionName { get { return instructionName; } }
 
+    private EItem_InstructionType instructionType;
+    public EItem_InstructionType InstructionType { get { return instructionType; } }
+
     //Spawn
     private bool spawnItem;
     public bool SpawnItem { get { return spawnItem; } }
@@ -97,6 +100,7 @@ public class Item_InstructionData
     public Item_InstructionData(Item_InstructionSO so)
     {
         instructionName = so.name;
+        instructionType = so.InstructionType;
 
         spawnItem = so.SpawnItem;
         itemToSpawn = so.ItemToSpawn;
@@ -135,6 +139,7 @@ public class Item_InstructionData
     public Item_InstructionData(EItem_InstructionType instructionType, EItemDestination destination, EItemLocation destinationSource)
     {
         HandleEItem_InstructionType(instructionType);
+        this.instructionType = instructionType;
         whereToSpawnItem = destination;
         whereToMoveItem = destination;
         slotParentItemLocationSpwn = destinationSource;
@@ -144,6 +149,7 @@ public class Item_InstructionData
     public Item_InstructionData(EItem_InstructionType instructionType, StoredInteraction storedInteraction)
     {
         HandleEItem_InstructionType(instructionType);
+        this.instructionType = instructionType;
         interactionToRunStored = storedInteraction;
     }
 
@@ -151,7 +157,7 @@ public class Item_InstructionData
     {
         switch (type)
         {
-            case EItem_InstructionType.Defautl:
+            case EItem_InstructionType.Default:
                 break;
             case EItem_InstructionType.Spawn:
                 spawnItem = true;

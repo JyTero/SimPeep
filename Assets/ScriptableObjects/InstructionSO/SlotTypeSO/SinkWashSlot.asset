@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc25f5866b27ced42ac742f8a11b0679, type: 3}
-  m_Name: Stove_ItemSO
-  m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: Steve's Stove
-  itemDescription: 
-  itemPrice: 670
-  allInteractions: []
-  interactionGroupSOs: []
+  m_Script: {fileID: 11500000, guid: 8adebe0c175b66649b1bc72abe3a0204, type: 3}
+  m_Name: SinkWashSlot
+  m_EditorClassIdentifier: Assembly-CSharp::SlotTypeSO
+  typeName: SinkWashSlot
+  limitedSlot: 1
+  limitSlotToSpecificItemType: 0
+  validItemSO: []

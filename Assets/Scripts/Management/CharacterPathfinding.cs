@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CharacterPathfinding : ManagementCore
@@ -53,6 +54,16 @@ public class CharacterPathfinding : ManagementCore
         {
             CharacterFindingPath character = charactersFindingPath[i];
             int gridWidth = character.Character.ThisLot.LotSizeY;
+
+            //GUMMY
+            //If destination is neighbor, at destination
+            List<LotGridTile> neighbors = lotManager.GetNeighboringTiles(character.Character.CurrentTile);
+            if(neighbors.Contains(character.Destination))
+            {
+                characterAIHandler.AtDestination(character.Character);
+                charactersFindingPath.RemoveAt(i);
+                continue;
+            }
 
             //For now, find entire path at once, future "Look 20 tiles ahead"/"Look this room" or smth
             while (!character.HasPath)
@@ -117,6 +128,9 @@ public class CharacterPathfinding : ManagementCore
     {
         List<TileInScoring> path = new();
         bool pathDone = false;
+        if (destination.ShortestRouteTile.Tile == destination.Tile)
+            return path;
+
         path.Add(destination.ShortestRouteTile);
         TileInScoring nextTile = destination.ShortestRouteTile.ShortestRouteTile;
 
@@ -141,17 +155,20 @@ public class CharacterPathfinding : ManagementCore
             if(!character.HasPath)
                 continue;
 
-            character.Character.transform.position = character.Path[character.Path.Count - 1].Tile.TilePos;
-            character.Character.ChangeCurrentTile(character.Path[character.Path.Count - 1].Tile);
-            character.Path.RemoveAt(character.Path.Count - 1);
-
             if (character.Path.Count == 0)
             {
                 characterAIHandler.AtDestination(character.Character);
                 charactersFindingPath.RemoveAt(i);
+                continue;
             }
+
+            character.Character.transform.position = character.Path[character.Path.Count - 1].Tile.TilePos;
+            character.Character.ChangeCurrentTile(character.Path[character.Path.Count - 1].Tile);
+            character.Path.RemoveAt(character.Path.Count - 1);
+
         }
     }
+
 
 }
 class CharacterFindingPath

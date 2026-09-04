@@ -208,10 +208,50 @@ public class CharacterAIHandler : ManagementCore
 
     private void StartInteraction(ActiveInteraction interaction, CharacterAI charaAI)
     {
+        if (interaction.InteractionGroupSO)
+        {
+            List<GroupedInteraction> validInteractions = new();
+            //Choose among the grouped interactions
+            foreach (GroupedInteraction groupedInteraction in interaction.InteractionGroupSO.GroupedInteractions)
+            {
+                if (groupedInteraction.RequiredItemInstructionSOs.Count == 0)
+                {
+                    validInteractions.Add(groupedInteraction);
+                    continue;
+                }
+                foreach (Item_InstructionSO itemInstructionSO in groupedInteraction.RequiredItemInstructionSOs)
+                {
+                    if(instructionEngine.CanItemInstructionRun(itemInstructionSO, charaAI.chara))
+                    {
+                        validInteractions.Add(groupedInteraction);
+                        continue;
+                    }
+
+                }
+            }
+            List<int> scores = new();
+            foreach(GroupedInteraction groupedInteraction in validInteractions)
+            {
+                scores.Add(groupedInteraction.BasePreferenceScore);
+            }
+            int highestValue = scores.Max();
+            int maxIndex = scores.IndexOf(highestValue);
+
+            GroupedInteraction chosenG = validInteractions[maxIndex];
+
+            ActiveInteraction chosen = NewActiveInteraction(charaAI.chara, new StoredInteraction(chosenG.InteractionSO, interaction.InteractionSource));
+            charaAI.NewCurrentInteraction(chosen);
+            interactionEngine.StartNewInteraction(chosen);
+        }
+        else
+        {
         charaAI.NewCurrentInteraction(interaction);
         interactionEngine.StartNewInteraction(interaction);
-        activeCharacters.Add(charaAI.chara, charaAI);
+        }
 
+
+
+        activeCharacters.Add(charaAI.chara, charaAI);
         UIController.RefreshCurrentInteractionData(charaAI.CurrentInteraction.InteractionName);
 
     }
@@ -338,7 +378,7 @@ public class CharacterAIHandler : ManagementCore
         }
         //AllFound!
         //table, chairSlot, onTableSlot
-       return new SeatingWithTableData(rTable, rChair, rSlot);
+        return new SeatingWithTableData(rTable, rChair, rSlot);
 
 
     }

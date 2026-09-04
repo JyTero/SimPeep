@@ -7,8 +7,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Item_InstructionSO", menuName = "Scriptable Objects/Instruction/Item_InstructionSO")]
 public class Item_InstructionSO : InstructionSO
 {
+    [SerializeField]
+    private EItem_InstructionType instructionType;
+    public EItem_InstructionType InstructionType { get { return  instructionType; } }
+
     //Spawn
-    [SerializeField, InfoBox("Choose only one of top level booleans", EInfoBoxType.Warning)]
+    //[SerializeField, InfoBox("Choose only one of top level booleans", EInfoBoxType.Warning)]
     private bool spawnItem;
     public bool SpawnItem { get { return spawnItem; } }
 
@@ -30,12 +34,12 @@ public class Item_InstructionSO : InstructionSO
 
 
     //Destroy
-    [SerializeField]
+    //[SerializeField]
     private bool destroyItem;
     public bool DestroyItem { get { return destroyItem; } }
 
     //MoveThis
-    [SerializeField]
+    //[SerializeField]
     private bool moveThisItem;
     public bool MoveThisItem { get { return moveThisItem; } }
 
@@ -56,7 +60,7 @@ public class Item_InstructionSO : InstructionSO
     public SlotTypeSO TargetSlotType { get { return targetSlotType; } }
 
     //MoveFromThisItem's Slot
-    [SerializeField]
+    //[SerializeField]
     private bool moveFromThisItemSlot;
     public bool MoveFromThisItemSlot { get { return moveFromThisItemSlot; } }
 
@@ -66,7 +70,7 @@ public class Item_InstructionSO : InstructionSO
     //USES ItemDestination whereToMoveItem
 
     //Replace with
-    [SerializeField]
+    //[SerializeField]
     private bool replaceItem;
     public bool ReplaceItem { get { return replaceItem; } }
 
@@ -79,7 +83,7 @@ public class Item_InstructionSO : InstructionSO
 
 
     //Call Routine
-    [SerializeField]
+    //[SerializeField]
     private bool runRoutine;
     public bool RunRoutine { get { return runRoutine; } }
 
@@ -88,7 +92,7 @@ public class Item_InstructionSO : InstructionSO
     public ERoutine Routine {  get { return routine; } }
 
     //RunInteractionAsInstruction
-    [SerializeField]
+    //[SerializeField]
     private bool runInteractionAsInstruction;
     public bool RunInteractionAsInstruction {  get { return runInteractionAsInstruction; } }
 
@@ -109,8 +113,64 @@ public class Item_InstructionSO : InstructionSO
 
     private bool spawnItemToSlot, moveItemToSlot, moveItemToSlotOnCertainItemType = false;
 
+    private List<bool> interactionTypes = new List<bool>() { };
+
     private void OnValidate()
     {
+   
+        switch (instructionType)
+        {
+            case EItem_InstructionType.Default:
+                break;
+            case EItem_InstructionType.Spawn:
+                spawnItem = true;
+                destroyItem = false;
+                runRoutine = false;
+                runInteractionAsInstruction = false;
+                break;
+            case EItem_InstructionType.Destroy:
+                spawnItem = false;
+                destroyItem = true;
+                runRoutine = false;
+                runInteractionAsInstruction = false;
+                break;
+            case EItem_InstructionType.MoveThis:
+                spawnItem = false;
+                destroyItem = false;
+                moveThisItem = true;
+                runRoutine = false;
+                runInteractionAsInstruction = false;
+                break;
+            case EItem_InstructionType.MoveFromThis:
+                spawnItem = false;
+                destroyItem = false;
+                moveFromThisItemSlot = true;
+                runRoutine = false;
+                runInteractionAsInstruction = false;
+                break;
+            case EItem_InstructionType.Replace:
+                spawnItem = false;
+                destroyItem = false;
+                replaceItem = true;
+                runRoutine = false;
+                runInteractionAsInstruction = false;
+                break;
+            case EItem_InstructionType.Routine:
+                spawnItem = false;
+                destroyItem = false;
+                runRoutine = true;
+                runInteractionAsInstruction = false;
+                break;
+            case EItem_InstructionType.RunInteraction:
+                spawnItem = false;
+                destroyItem = false;
+                runRoutine = false;
+                runInteractionAsInstruction = true;
+                break;
+            default:
+                break;
+        }
+
         switch (WhereToSpawnItem)
         {
             case EItemDestination.Default:

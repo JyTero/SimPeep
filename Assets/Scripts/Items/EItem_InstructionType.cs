@@ -2,7 +2,7 @@ using UnityEngine;
 
 public enum EItem_InstructionType
 {
-    Defautl,
+    Default,
     Spawn,
     Destroy,
     MoveThis,

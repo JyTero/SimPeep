@@ -14,14 +14,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
   interactionName: Nap
   Description: 
+  Reaction: 0
+  IsSocial: 0
+  hiddenInteraction: 0
+  skipMovement: 0
+  interactionDestinationDifferentFromSource: 0
+  destinationItem: {fileID: 0}
+  invalidInteraction: 0
   interactionEndingType: 1
   interactionLenght: 4
   targetNeedType: 0
   targetNeedValue: 0
-  need_InteractionInstructions:
+  need_InteractionInstructionsOnInteractionBegin: []
+  need_InteractionInstructionsOnInteractionTick:
   - {fileID: 11400000, guid: 002e01bc5f8da5f49bba32766da25f1f, type: 2}
-  relationshipChangeInstructions: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
+  relationshipChangeInstructionsOnInteractionEnd: []
+  itemChangeInstructionSOsOnInteractionBegin: []
+  itemChangeInstructionSOsOnInteractionEnd: []
+  characterInstructionSOsOnInteractionBegin:
+  - {fileID: 11400000, guid: 7b6baa559ce995c4c86b7268d4b79a2a, type: 2}
+  characterInstructionSOsOnInteractionEnd: []
+  requiredItemCapabilities: 
   socialResponceInteractions: []
-  Reaction: 0
   scoringModifiers: []
-  IsSocial: 0
+  hasFollowup: 0
+  followupInteractionSOs: []

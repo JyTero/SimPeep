@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
-  m_Name: Play_ArcadeMachine_InteractionSO
-  m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
-  interactionName: Play Arcade Machine Game 2000
-  Description: Play on "Pixel Plasting" arcade machine
+  m_Name: EatFood_Standing_InteractionSO
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
+  interactionName: Eat the Food on Cooked Plate
+  Description: 
   Reaction: 0
   IsSocial: 0
   hiddenInteraction: 0
@@ -22,18 +22,20 @@ MonoBehaviour:
   destinationItem: {fileID: 0}
   invalidInteraction: 0
   interactionEndingType: 1
-  interactionLenght: 8
+  interactionLenght: 6
   targetNeedType: 0
   targetNeedValue: 0
   need_InteractionInstructionsOnInteractionBegin: []
-  need_InteractionInstructionsOnInteractionTick: []
+  need_InteractionInstructionsOnInteractionTick:
+  - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}
+  - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}
   need_InteractionInstructionsOnInteractionEnd: []
   relationshipChangeInstructionsOnInteractionBegin: []
   relationshipChangeInstructionsOnInteractionEnd: []
-  itemChangeInstructionSOsOnInteractionBegin: []
+  itemChangeInstructionSOsOnInteractionBegin:
+  - {fileID: 11400000, guid: c3cbf80d9dea0b34aa2d5cc673eda76a, type: 2}
   itemChangeInstructionSOsOnInteractionEnd: []
-  characterInstructionSOsOnInteractionBegin:
-  - {fileID: 11400000, guid: 7b6baa559ce995c4c86b7268d4b79a2a, type: 2}
+  characterInstructionSOsOnInteractionBegin: []
   characterInstructionSOsOnInteractionEnd: []
   requiredItemCapabilities: 
   socialResponceInteractions: []

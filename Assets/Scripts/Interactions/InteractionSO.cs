@@ -13,6 +13,8 @@ public class InteractionSO : ScriptableObject
     [SerializeField, Tooltip("Use this to leave notes about the interaction, such as what are its planned owner items")]
     private string Description;
 
+
+    
     public bool Reaction;
 
 
@@ -100,7 +102,7 @@ public class InteractionSO : ScriptableObject
     //public List<InstructionData> ItemInstructionDatas { get { return itemInstructionDatas; } }
 
 
-    [SerializeField, Tooltip("TBH KINDA DEPRICATED NGL! Way to use pre-existing interactions to build new ones. Example: Fridge spawns Food. Food has Pick Up interaction, which can be plased here to automatically  pick up the food on creation")]
+    [Tooltip("TBH KINDA DEPRICATED NGL! Way to use pre-existing interactions to build new ones. Example: Fridge spawns Food. Food has Pick Up interaction, which can be plased here to automatically  pick up the food on creation")]
     private List<SubInteraction> subInteractions = new();
     public List<SubInteraction> SubInteractions { get { return subInteractions; } }
 
