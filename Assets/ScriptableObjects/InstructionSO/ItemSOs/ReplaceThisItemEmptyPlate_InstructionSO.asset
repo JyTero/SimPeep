@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10d175a152defbc45b9a8506e2c9e0a4, type: 3}
-  m_Name: DestroyThisItem_InstructionSO
+  m_Name: ReplaceThisItemEmptyPlate_InstructionSO
   m_EditorClassIdentifier: Assembly-CSharp::Item_InstructionSO
-  Description: Destroy the source item
-  instructionType: 2
+  Description: ReplaceTargetItem with another
+  instructionType: 5
   itemToSpawn: {fileID: 0}
   whereToSpawnItem: 0
   slotParentItemLocationSpwn: 0
@@ -24,6 +24,6 @@ MonoBehaviour:
   targetSlotType: {fileID: 0}
   slotTypeToPickFrom: {fileID: 0}
   thisInstructionTargetItem: 0
-  newItemPrefab: {fileID: 0}
+  newItemPrefab: {fileID: 6491236442190121975, guid: d7a602b81efbf474f89c3d0781a5aabe, type: 3}
   routine: 0
   interactionToRunSO: {fileID: 0}

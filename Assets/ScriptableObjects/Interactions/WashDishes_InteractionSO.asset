@@ -10,32 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
-  m_Name: EatFood_Standing_InteractionSO
+  m_Name: WashDishes_InteractionSO
   m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
-  interactionName: Eat the Food on Cooked Plate
-  Description: 
+  interactionName: Wash dishes
+  Description: Wash the dish, making it go away
   Reaction: 0
   IsSocial: 0
   hiddenInteraction: 0
   skipMovement: 0
-  interactionDestinationDifferentFromSource: 0
-  destinationItem: {fileID: 0}
+  interactionDestinationDifferentFromSource: 1
+  destinationItem: {fileID: 11400000, guid: 37d87efd7c0acc94c8bd2002b23597b1, type: 2}
   invalidInteraction: 0
   interactionEndingType: 1
-  interactionLenght: 6
+  interactionLenght: 2
   targetNeedType: 0
   targetNeedValue: 0
   need_InteractionInstructionsOnInteractionBegin: []
-  need_InteractionInstructionsOnInteractionTick:
-  - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}
-  - {fileID: 11400000, guid: c123d60f443896a4aaa772c10df5e392, type: 2}
+  need_InteractionInstructionsOnInteractionTick: []
   need_InteractionInstructionsOnInteractionEnd: []
   relationshipChangeInstructionsOnInteractionBegin: []
   relationshipChangeInstructionsOnInteractionEnd: []
   itemChangeInstructionSOsOnInteractionBegin:
   - {fileID: 11400000, guid: c3cbf80d9dea0b34aa2d5cc673eda76a, type: 2}
+  - {fileID: 11400000, guid: c8539c19323f9d7449d86f1c1360a542, type: 2}
   itemChangeInstructionSOsOnInteractionEnd:
-  - {fileID: 11400000, guid: e3775e471abfd5a41b8fcf62ec398786, type: 2}
+  - {fileID: 11400000, guid: de06b8b9c038b694bae43ee53ffdac1d, type: 2}
   characterInstructionSOsOnInteractionBegin: []
   characterInstructionSOsOnInteractionEnd: []
   requiredItemCapabilities: 

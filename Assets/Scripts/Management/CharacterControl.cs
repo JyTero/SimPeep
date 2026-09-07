@@ -110,7 +110,7 @@ public class CharacterControl : ManagementCore
         else
             return false;
     }
-    public bool IsOnTileWithinRange(Character character, ItemBase target)
+    public bool IsOnItemWithinRange(Character character, ItemBase target)
     {
         List<LotGridTile> neighborTiles = lotManager.GetNeighboringTiles(character.CurrentTile);
         foreach(LotGridTile lgt in neighborTiles)
@@ -132,7 +132,7 @@ public class CharacterControl : ManagementCore
             return;
         else if (character.CarriedItem == null)
         {
-            if (IsWithinInteractionRange(character, item) || IsOnTileWithinRange(character, item))
+            if (IsWithinInteractionRange(character, item))
             {
                 item.transform.position = character.CarrySlot.position;
                 itemManager.RegisterMovingItem(item, character.CarrySlot);
@@ -140,11 +140,24 @@ public class CharacterControl : ManagementCore
                 lotManager.PickItemUpFromLot(item);
                 character.PickupItem(item);
             }
+            else if (IsOnItemWithinRange(character, item))
+            {
+                Item_Slot currentSlot = item.OccupiedSlot;
+
+                currentSlot.ParentItem.RemoveItemFromSlot(currentSlot); 
+                currentSlot.ClearSlot();
+
+                item.transform.position = character.CarrySlot.position;
+                item.RemoveThisItemFromSlot();
+                itemManager.RegisterMovingItem(item, character.CarrySlot);
+                itemManager.OnItemPickUp(item, character);
+                character.PickupItem(item);
+            }
             else
             {
                 interaction.State.itemIndex--;
                 interaction.PushInteractionState(EInteractionState.Moving);
-                RouteToTile(character,lotManager.GetTileInteractableIsOn(item));
+                RouteToTile(character, lotManager.GetTileInteractableIsOn(item));
             }
         }
         else

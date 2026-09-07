@@ -34,10 +34,10 @@ MonoBehaviour:
   relationshipChangeInstructionsOnInteractionEnd: []
   itemChangeInstructionSOsOnInteractionBegin:
   - {fileID: 11400000, guid: a887caa0b527e4148a40347f5988efb0, type: 2}
-  itemChangeInstructionSOsOnInteractionEnd: []
+  itemChangeInstructionSOsOnInteractionEnd:
+  - {fileID: 11400000, guid: e3775e471abfd5a41b8fcf62ec398786, type: 2}
   characterInstructionSOsOnInteractionBegin: []
   characterInstructionSOsOnInteractionEnd: []
-  subInteractions: []
   requiredItemCapabilities: 
   socialResponceInteractions: []
   scoringModifiers: []

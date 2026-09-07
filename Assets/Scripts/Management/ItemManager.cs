@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
-using static Item_InstructionSO;
 
 public class ItemManager : ManagementCore
 {
@@ -335,7 +334,7 @@ public class ItemManager : ManagementCore
                 break;
             case EItemDestination.OnCharacter:
                 characterControl.PickupItem(interaction, movingItem);
-                RemoveItemFromSlot(slot, movingItem);
+                //RemoveItemFromSlot(slot, movingItem);
                 break;
             case EItemDestination.ItemSlot:
                 Item_Slot dSlot = GetSlotOnItemByType(instructionData.SlotTypeSOSpwn, movingItem);
@@ -356,6 +355,21 @@ public class ItemManager : ManagementCore
             RemoveItemFromSlot(slot, thisItem);
             DestroyItem(thisItem);
             PlaceItemToSlot(newItem, slot);
+        }
+        else if (thisCharacter.CarriedItem == thisItem)
+        {
+            ItemBase newItem = SpawnNewItem(instructionData.NewItemPrefab, thisItem.ThisLot, NegSpawnPos);
+            
+
+            itemManager.DeregisterMovingItem(thisItem);
+
+            itemManager.RegisterMovingItem(newItem, thisCharacter.CarrySlot);
+            itemManager.OnItemPickUp(newItem, thisCharacter);
+            thisCharacter.PickupItem(newItem);
+            newItem.transform.position = thisCharacter.CarrySlot.position;
+
+            DestroyItem(thisItem);
+            ItemBase oldItem = thisCharacter.CarriedItem;
         }
         else
         {

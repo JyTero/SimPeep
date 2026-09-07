@@ -80,7 +80,9 @@ public class ItemBase : Interactable
         if (itemSlotsByItem.ContainsKey(item))
             itemSlotsByItem[item].Add(slot);
         else
+        {
             itemSlotsByItem.Add(item, new List<Item_Slot> { slot });
+        }
     }
     public void RemoveItemFromSlot(Item_Slot slot)
     {

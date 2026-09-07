@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10d175a152defbc45b9a8506e2c9e0a4, type: 3}
-  m_Name: DestroyThisItem_InstructionSO
+  m_Name: PlaceThisItemToSinkWashSlot_InstructionSO
   m_EditorClassIdentifier: Assembly-CSharp::Item_InstructionSO
-  Description: Destroy the source item
-  instructionType: 2
+  Description: PlaceThisItemToSinkWashSlot_InstructionSO
+  instructionType: 3
   itemToSpawn: {fileID: 0}
   whereToSpawnItem: 0
   slotParentItemLocationSpwn: 0
   slotTypeSOSpwn: {fileID: 0}
-  whereToMoveItem: 0
-  slotParentItemLocationMove: 0
-  targetItemType: {fileID: 0}
-  targetSlotType: {fileID: 0}
+  whereToMoveItem: 5
+  slotParentItemLocationMove: 2
+  targetItemType: {fileID: 11400000, guid: 37d87efd7c0acc94c8bd2002b23597b1, type: 2}
+  targetSlotType: {fileID: 11400000, guid: cd87dff081a3bc4409ada031b3030eee, type: 2}
   slotTypeToPickFrom: {fileID: 0}
   thisInstructionTargetItem: 0
   newItemPrefab: {fileID: 0}
