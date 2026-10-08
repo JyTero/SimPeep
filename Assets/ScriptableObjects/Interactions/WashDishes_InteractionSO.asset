@@ -37,6 +37,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: de06b8b9c038b694bae43ee53ffdac1d, type: 2}
   characterInstructionSOsOnInteractionBegin: []
   characterInstructionSOsOnInteractionEnd: []
+  specificItemInstructionSOsOnInteractionBegin: []
+  specificItemInstructionSOsOnInteractionEnd: []
   requiredItemCapabilities: 
   socialResponceInteractions: []
   scoringModifiers: []

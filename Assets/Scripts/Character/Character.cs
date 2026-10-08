@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class Character : Interactable
 {
@@ -16,6 +17,9 @@ public class Character : Interactable
     private Dictionary<NeedType, Need> needs = new();
     public Dictionary<NeedType, Need> Needs { get { return needs; } }
 
+    private CharacterAI characterAI;
+    public CharacterAI CharacterAI { get { return characterAI; } }
+
     [SerializeField]
     private List<TraitSO> traits = new();
     public List<TraitSO> Traits { get { return traits; } }
@@ -24,11 +28,8 @@ public class Character : Interactable
 
     public CharacterPhysicalStateEnum CharacterPhysicalState;
 
-    public Character_Slot OccupiedSlot ; 
+    public Character_Slot OccupiedSlot;
 
-    //DEBUG
-    [SerializeField]
-    private List<NeedSO> needSOs = new();
 
     [SerializeField]
     private Transform carrySlot;
@@ -37,10 +38,16 @@ public class Character : Interactable
     private ItemBase carriedItem;
     public ItemBase CarriedItem { get { return carriedItem; } }
 
+    //DEBUG implementation, will (probably) evolve into a proper state system
+    public bool IsIdle = true; 
+
+    //DEBUG
+    [SerializeField]
+    private List<NeedSO> needSOs = new();
     private void Awake()
     {
         MakeNeedSOsToObjects();
-        
+
     }
     protected override void Start()
     {
@@ -51,7 +58,7 @@ public class Character : Interactable
         //DEBUG
         thisLot = FindAnyObjectByType<WorldLot>();
         CharacterPhysicalState = CharacterPhysicalStateEnum.Standing;
-      //  GenerateStoredInteractions();
+        //  GenerateStoredInteractions();
     }
 
     //DEBUG
@@ -64,10 +71,15 @@ public class Character : Interactable
         }
     }
 
+    public void SetCharacterAI(CharacterAI cai)
+    {
+        characterAI = cai;
+    }
+
     public void PickupItem(ItemBase item)
     {
         carriedItem = item;
-        
+
     }
 
     public void PutItemDown()

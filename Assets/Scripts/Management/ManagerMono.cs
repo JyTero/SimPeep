@@ -14,12 +14,15 @@ public class ManagerMono : MonoBehaviour
     protected CapabilityHandler capabilityHandler;
     protected CharacterPathfinding characterPathfinding;
     protected InstructionEngine instructionEngine;
+
+    protected ItemSpecificInstructionHandler specificInstructionHandler;
    
     private int oneUnitOfTime = 1;
-    protected int OneUnitOfTime { get { return oneUnitOfTime; } }
+    public int OneUnitOfTime { get { return oneUnitOfTime; } }
     
     private Vector3 negSpawnPos= new Vector3(-1,-1,-1);
     protected Vector3 NegSpawnPos { get { return negSpawnPos; } }
+
 
     [SerializeField]
     protected bool debugLog;
@@ -40,5 +43,7 @@ public class ManagerMono : MonoBehaviour
         characterPathfinding = FindAnyObjectByType<CharacterPathfinding>();
 
         instructionEngine = FindAnyObjectByType<InstructionEngine>();
+
+        specificInstructionHandler = FindAnyObjectByType<ItemSpecificInstructionHandler>();
     }
 }

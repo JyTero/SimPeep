@@ -56,16 +56,10 @@ public class ItemManager : ManagementCore
             item.InteractionSOs.Add(iso);
         }
 
+        BuildStoredInteractions(item);
+
         capabilityHandler.InitialiseItemCapabilities(item);
 
-        BuildStoredInteractions(item);
-        //foreach (InteractionSO itso in item.InteractionSOs)
-        //{
-        //    item.NewStoredInteraction(new StoredInteraction(itso, item));
-        //}
-
-        //IF(WithinLotGrid)
-        //Place onto center of nearest tile
 
         //Slot
         foreach (Item_Slot slot in item.ItemSlotsOnItem)
@@ -77,11 +71,25 @@ public class ItemManager : ManagementCore
         item.itemInitialised = true;
     }
 
+    public void OnInteractionBegin(ActiveInteraction interaction, ItemBase item)
+    {
+
+    }
+    public void OnInteractionEnd(ActiveInteraction interaction, ItemBase item)
+    {
+        if (waitedItems.Contains(item))
+        {
+            throw new NotImplementedException();
+            characterAIHandler.WaitedInteractableDeclaredAvailable(item);
+            waitedItems.Remove(item);
+        }
+    }
+
     public StoredInteraction GetInteractionOnInteractable(InteractionSO itsoTemplate, Interactable interactable)
     {
         foreach (StoredInteraction storedInteraction in interactable.StoredInteractions)
         {
-            if (storedInteraction.InteractionTuningSO == itsoTemplate)
+            if (storedInteraction.InteractionSO == itsoTemplate)
                 return storedInteraction;
         }
         return null;
@@ -94,7 +102,7 @@ public class ItemManager : ManagementCore
             item.NewStoredInteraction(new StoredInteraction(itso, item));
         }
 
-        foreach(InteractionGroupSO itgSO in item.ItemData.InteractionGroupSOs)
+        foreach (InteractionGroupSO itgSO in item.ItemData.InteractionGroupSOs)
         {
             StoredInteraction si = new StoredInteraction(itgSO.GroupedInteractions[0].InteractionSO, item);
             si.MakeIntoStoredInteractionGroup(itgSO);
@@ -137,10 +145,6 @@ public class ItemManager : ManagementCore
         }
     }
 
-    //public void HandleItemInstructionSO(Item_InstructionSO instructionSO, ActiveInteraction interaction)
-    //{
-    //    HandleItemInstruction(new Item_Instruction(instructionSO, interaction.ThisCharacter, interaction.InteractionSource as ItemBase), interaction);
-    //}
     public void HandleItemInstructionData(Item_InstructionData instructionData, ActiveInteraction interaction)
     {
         HandleItemInstruction(new Item_Instruction(instructionData, interaction.ThisCharacter, interaction.InteractionSource as ItemBase), interaction);
@@ -182,39 +186,6 @@ public class ItemManager : ManagementCore
                 break;
         }
 
-        //if (instructionData.SpawnItem)
-        //{
-        //    //HandleItemSPawning
-        //    SpawnItem(instructionData, thisCharacter, thisItem);
-        //}
-        //else if (instructionData.DestroyItem)
-        //{
-        //    DestroyItem(thisItem);
-        //}
-        //else if (instructionData.MoveThisItem)
-        //{
-        //    MoveThisItem(instructionData, interaction);
-        //}
-        //else if (instructionData.MoveFromThisItemSlot)
-        //{
-        //    MoveFromThisItemSlot(itemInstruction, interaction);
-        //}
-        //else if (instructionData.ReplaceItem)
-        //{
-        //    ReplaceItem(instructionData, thisCharacter, thisItem);
-        //}
-        //else if (instructionData.RunRoutine)
-        //{
-        //    RunRoutine(instructionData, interaction);
-        //}
-        //else if (instructionData.RunInteractionAsInstruction)
-        //{
-        //    RunInteraction(instructionData, interaction);
-        //}
-        //else
-        //    Debug.LogError($"Unknown item instruction {instructionData.InstructionName}");
-
-
     }
 
     public void HandleItemInstructions(List<Item_Instruction> itemInstructions, ActiveInteraction interaction)
@@ -232,14 +203,19 @@ public class ItemManager : ManagementCore
         switch (instructionData.WhereToSpawnItem)
         {
             case EItemDestination.Default:
+                Debug.LogError($"Default enum value in instructionData.WhereToSpawnItem of {characterAIHandler.CharactersAIsByCharacter[character].CurrentInteraction.InteractionName}");
                 break;
             case EItemDestination.LotSpace:
+                throw new NotImplementedException();
                 break;
             case EItemDestination.WorldSpace:
+                throw new NotImplementedException();
                 break;
             case EItemDestination.InCharactacter:
+                throw new NotImplementedException();
                 break;
             case EItemDestination.OnCharacter:
+                throw new NotImplementedException();
                 break;
             case EItemDestination.ItemSlot:
                 Item_Slot slot = GetSlotOnItemByType(instructionData.SlotTypeSOSpwn, item);
@@ -266,7 +242,7 @@ public class ItemManager : ManagementCore
                 lotManager.PlaceItemOntoLot(thisCharacter.ThisLot, thisCharacter.CurrentTile, thisItem);
                 break;
             case EItemDestination.WorldSpace:
-
+                throw new NotImplementedException();
                 break;
             case EItemDestination.InCharactacter:
                 break;
@@ -325,12 +301,16 @@ public class ItemManager : ManagementCore
         switch (instructionData.WhereToMoveItem)
         {
             case EItemDestination.Default:
+                throw new NotImplementedException();
                 break;
             case EItemDestination.LotSpace:
+                throw new NotImplementedException();
                 break;
             case EItemDestination.WorldSpace:
+                throw new NotImplementedException();
                 break;
             case EItemDestination.InCharactacter:
+                throw new NotImplementedException();
                 break;
             case EItemDestination.OnCharacter:
                 characterControl.PickupItem(interaction, movingItem);
@@ -359,7 +339,7 @@ public class ItemManager : ManagementCore
         else if (thisCharacter.CarriedItem == thisItem)
         {
             ItemBase newItem = SpawnNewItem(instructionData.NewItemPrefab, thisItem.ThisLot, NegSpawnPos);
-            
+
 
             itemManager.DeregisterMovingItem(thisItem);
 
@@ -374,7 +354,7 @@ public class ItemManager : ManagementCore
         else
         {
             LotGridTile itemTile = lotManager.GetTileInteractableIsOn(thisItem);
-            if (itemTile.itemOnTile == thisItem)
+            if (itemTile.ItemOnTile == thisItem)
             {
                 ItemBase newItem = SpawnNewItem(instructionData.NewItemPrefab, thisItem.ThisLot, NegSpawnPos);
 
@@ -388,14 +368,14 @@ public class ItemManager : ManagementCore
     private void MoveForSlot(ActiveInteraction interaction, Item_Slot slot)
     {
         interaction.State.itemIndex--;
-        interaction.PushInteractionState(EInteractionState.Moving);
-        characterControl.RouteToTile(interaction.ThisCharacter, slot.ParentItem.CurrentTile);
+        List<LotGridTile> neighborTiles = lotManager.GetNeighboringTiles(slot.ParentItem.CurrentTile);
+        characterControl.RouteToTile(interaction.ThisCharacter, neighborTiles[0]);
 
     }
 
     private void RunRoutine(Item_InstructionData instructionData, ActiveInteraction interaction)
     {
-        interaction.PushInteractionState(EInteractionState.Routine);
+        interaction.PushInteractionState(interaction,new Routine_interactionState(characterAIHandler, interactionEngine));
 
         switch (instructionData.Routine)
         {
@@ -409,15 +389,18 @@ public class ItemManager : ManagementCore
     }
     private void RunInteraction(Item_InstructionData instructionData, ActiveInteraction interaction)
     {
-       // interaction.PushInteractionState(EInteractionState.Instruction);
+        // interaction.PushInteractionState(EInteractionState.Instruction);
         if (instructionData.InteractionToRunSO != null)
         {
             StoredInteraction si = lotManager.FindSuitableStoredInteractionOnLot(instructionData.InteractionToRunSO, interaction.ThisCharacter.ThisLot);
-            interactionEngine.PrepareInstructionInteraction(interaction, si.InteractionTuningSO, si.InteractionSource);
+            interactionEngine.PrepareInstructionInteraction(interaction, si.InteractionData, si.InteractionSource);
         }
         else
         {
-            interactionEngine.PrepareInstructionInteraction(interaction, instructionData.InteractionToRunStored.InteractionTuningSO, instructionData.InteractionToRunStored.InteractionSource);
+            Debug.LogError($"Couldn't find stored interaction on lot for {instructionData.InstructionName} (Instruction interaction on {interaction.InteractionName}");
+            return;
+            //TBH Unsure of the idea behind thos
+            //interactionEngine.PrepareInstructionInteraction(interaction, instructionData.InteractionToRunStored.InteractionData, instructionData.InteractionToRunStored.InteractionSource);
         }
     }
 
@@ -429,8 +412,8 @@ public class ItemManager : ManagementCore
         interaction.knownItem = swtd.Chair;
         interaction.knownSlot = swtd.OnTableSlot;
 
-        StoredInteraction pickUpStored = interaction.InteractionSource.StoredInteractions.First(si => si.InteractionTuningSO.name == "PickUp_InteractionSO"); //Food, PickUP 
-        StoredInteraction sitStored = interaction.knownItem.StoredInteractions.First(si => si.InteractionTuningSO.name == "Sit_InteractionSO"); //Chair, SitSO
+        StoredInteraction pickUpStored = interaction.InteractionSource.StoredInteractions.First(si => si.InteractionSO.name == "PickUp_InteractionSO"); //Food, PickUP 
+        StoredInteraction sitStored = interaction.knownItem.StoredInteractions.First(si => si.InteractionSO.name == "Sit_InteractionSO"); //Chair, SitSO
 
 
         //Build&queue routineInteractions
@@ -442,7 +425,7 @@ public class ItemManager : ManagementCore
         // Eat and EatSitting will be the first splitting interaction, TBD)
         //Item_InstructionData eatSittingOnDiningChair = instructionEngine.BuildItemInstructionData(EItem_InstructionType.RunInteraction, INTERACTIONSO);
 
-        List<Item_InstructionData> itemInstructionDatas = new() { pickUp, placeToSlot,sitOnChair };
+        List<Item_InstructionData> itemInstructionDatas = new() { pickUp, placeToSlot, sitOnChair };
 
         //DEBUG
         interactionEngine.ReceiveStateInstructions(interaction, itemInstructionDatas);
@@ -453,31 +436,31 @@ public class ItemManager : ManagementCore
     //These two are to be replaced with proper interaction requirements system, which evaluates each interaction as needed instead of this syste
     public void OnItemPickUp(ItemBase item, Character character)
     {
-        StoredInteraction si = item.StoredInteractions.Find(x => x.InteractionTuningSO.InteractionName == "Put Down To Lot"); //PutItemDown_InteractionSO
+        StoredInteraction si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Put Down To Lot"); //PutItemDown_InteractionSO
         if (si != null)
             si.InvalidInteraction = false;
 
-        si = item.StoredInteractions.Find(x => x.InteractionTuningSO.InteractionName == "Put Down To Any Slot");
+        si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Put Down To Any Slot");
         if (si != null)
             si.InvalidInteraction = false;
 
-        si = item.StoredInteractions.Find(x => x.InteractionTuningSO.InteractionName == "Pick Up");
+        si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Pick Up");
         if (si != null)
             si.InvalidInteraction = true;
 
     }
     public void OnItemPutDown(ItemBase item, Character character)
     {
-        StoredInteraction si = item.StoredInteractions.Find(x => x.InteractionTuningSO.InteractionName == "Put Down To Lot"); //PutItemDown_InteractionSO
+        StoredInteraction si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Put Down To Lot"); //PutItemDown_InteractionSO
         if (si != null)
             si.InvalidInteraction = true;
 
-        si = item.StoredInteractions.Find(x => x.InteractionTuningSO.InteractionName == "Put Down To Any Slot");
+        si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Put Down To Any Slot");
         if (si != null)
             si.InvalidInteraction = false;
 
 
-        si = item.StoredInteractions.Find(x => x.InteractionTuningSO.InteractionName == "Pick Up");
+        si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Pick Up");
         if (si != null)
             si.InvalidInteraction = false;
     }
@@ -573,7 +556,16 @@ public class ItemManager : ManagementCore
         else
             return false;
     }
+
+    //
+    private List<ItemBase> waitedItems = new();
+    public void SubscribeToKnowWhenItemAvailable(ItemBase item)
+    {
+        waitedItems.Add(item);
+    }
 }
+
+
 
 
 

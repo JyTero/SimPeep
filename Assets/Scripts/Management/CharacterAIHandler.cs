@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.TextCore.Text;
+using static UnityEngine.GraphicsBuffer;
 
 public class CharacterAIHandler : ManagementCore
 {
@@ -38,6 +39,8 @@ public class CharacterAIHandler : ManagementCore
     public void AddNewCharacter(Character character)
     {
         CharacterAI cai = new CharacterAI(character);
+        character.SetCharacterAI(cai);
+
         idleCharacters.Add(cai);
         charactersAIsByCharacter.Add(character, cai);
 
@@ -74,7 +77,15 @@ public class CharacterAIHandler : ManagementCore
 
 
             if (queueInteraction == null)
+            {
+                //Waited Characters
+                if (waitedCharacters.Contains(character.chara))
+                {
+                    WaitedInteractableDeclaredAvailable(character.chara);
+                    waitedCharacters.Remove(character.chara);
+                }
                 continue;
+            }
             else
             {
                 StartInteraction(queueInteraction, character);
@@ -92,9 +103,9 @@ public class CharacterAIHandler : ManagementCore
             List<ActiveInteraction> interactions = new();
             foreach (StoredInteraction storedInteraction in storedInteractions)
             {
-                if (storedInteraction.InteractionTuningSO.HiddenInteraction)
+                if (storedInteraction.InteractionData.HiddenInteraction)
                     continue;
-                if (storedInteraction.InteractionTuningSO.InvalidInteraction)
+                if (storedInteraction.InteractionData.InvalidInteraction)
                     continue;
 
                 interactions.Add(NewActiveInteraction(characterAI.chara, storedInteraction));
@@ -193,17 +204,6 @@ public class CharacterAIHandler : ManagementCore
     {
         CharacterAI cai = activeCharacters[character];
         cai.CurrentInteraction.PopInteractionState();
-
-        //OLD
-        //if (cai != null)
-        //{
-        //    if (cai.CurrentSubInteraction != null)
-        //        cai.CurrentSubInteraction.SetInteractionStateOLD(EInteractionState.AtDestination); //Refere to current interaction, even if sub (cant use CAI.CurrentInteraction for subs)
-        //    else
-        //        cai.CurrentInteraction.SetInteractionStateOLD(EInteractionState.AtDestination);
-        //}
-        //else
-        //    Debug.LogError("Unhandeled AtDestination");
     }
 
     private void StartInteraction(ActiveInteraction interaction, CharacterAI charaAI)
@@ -221,7 +221,7 @@ public class CharacterAIHandler : ManagementCore
                 }
                 foreach (Item_InstructionSO itemInstructionSO in groupedInteraction.RequiredItemInstructionSOs)
                 {
-                    if(instructionEngine.CanItemInstructionRun(itemInstructionSO, charaAI.chara))
+                    if (instructionEngine.CanItemInstructionRun(itemInstructionSO, charaAI.chara))
                     {
                         validInteractions.Add(groupedInteraction);
                         continue;
@@ -230,8 +230,9 @@ public class CharacterAIHandler : ManagementCore
                 }
             }
             List<int> scores = new();
-            foreach(GroupedInteraction groupedInteraction in validInteractions)
+            foreach (GroupedInteraction groupedInteraction in validInteractions)
             {
+                //Scoring
                 scores.Add(groupedInteraction.BasePreferenceScore);
             }
             int highestValue = scores.Max();
@@ -245,15 +246,20 @@ public class CharacterAIHandler : ManagementCore
         }
         else
         {
-        charaAI.NewCurrentInteraction(interaction);
-        interactionEngine.StartNewInteraction(interaction);
+            charaAI.NewCurrentInteraction(interaction);
+            interactionEngine.StartNewInteraction(interaction);
         }
 
 
-
+        charaAI.chara.IsIdle = false;
         activeCharacters.Add(charaAI.chara, charaAI);
-        UIController.RefreshCurrentInteractionData(charaAI.CurrentInteraction.InteractionName);
+        UIController.RefreshCurrentInteractionData(charaAI.CurrentInteraction.InteractionName, interaction);
 
+    }
+
+    public void CancelInteraction(Character character)
+    {
+        interactionEngine.CancelInteraction(activeCharacters[character]);
     }
 
     private void PrintInteractionScoring(List<ActiveInteraction> interactions)
@@ -285,7 +291,7 @@ public class CharacterAIHandler : ManagementCore
                 {
                     foreach (StoredInteraction storedInteraction in character.CarriedItem.StoredInteractions)
                     {
-                        if (storedInteraction.InteractionTuningSO == intso)
+                        if (storedInteraction.InteractionSO == intso)
                         {
                             si = storedInteraction;
                             break;
@@ -301,11 +307,31 @@ public class CharacterAIHandler : ManagementCore
 
             }
         }
-        if (charactersAIsByCharacter[character].InteractionQueue.Count == 1)    //1, bc List<QueuedInteraction> interactionQueue doesn't 
-            UIController.RefreshCurrentInteractionData("");                     //know when interaction has ended
-
+        if (charactersAIsByCharacter[character].InteractionQueue.Count == 1)
+        {                                                                           //1, bc List<QueuedInteraction> interactionQueue doesn't 
+            UIController.RefreshCurrentInteractionData("", interaction);            //know when interaction has ended
+            charaAI.NewCurrentInteraction(null);
+            character.IsIdle = true;
+        }
     }
 
+    public void SubscribeToKnowWhenItemAvailable(Character character)
+    {
+        waitedCharacters.Add(character);
+    }
+    private List<Character> waitedCharacters = new();
+
+
+    public void ContinueSocialResponse(Character socialResponder)
+    {
+        //Pop two states to get to running state
+        CharacterAI responderAI = charactersAIsByCharacter[socialResponder];
+        ActiveInteraction responseInteraction = responderAI.CurrentInteraction;
+
+        responseInteraction.PopInteractionState();
+        responseInteraction.PopInteractionState();
+
+    }
 
     //MISC
     public void FindAvailableChairAtTable(Character character)
@@ -379,7 +405,115 @@ public class CharacterAIHandler : ManagementCore
         //AllFound!
         //table, chairSlot, onTableSlot
         return new SeatingWithTableData(rTable, rChair, rSlot);
-
-
     }
+
+    //WAITING SYSTEM
+
+    private Dictionary<Interactable, WaitingCharacter> waitingCharactersByTargets = new();
+    private Dictionary<Character, WaitingCharacter> waitingCharactersByCharacter = new();
+
+    public void RegisterToWait(Character character, EWaitReason reason, Interactable target)
+    {
+        WaitingCharacter waitingCharacter = new(character, reason, target);
+
+        if (waitingCharactersByTargets.ContainsKey(target))
+        {
+            WaitingCharacter targetWaitingCharacter = waitingCharactersByTargets[target];
+            HandleWaitCircle(waitingCharacter, targetWaitingCharacter);
+            waitingCharactersByTargets.Remove(target);
+            return;
+        }
+
+        switch (reason)
+        {
+            case EWaitReason.Default:
+                Debug.LogError($"Character waiting with unexpected cicumstances {character.ItemName} | {reason} | {target.ItemName}");
+                break;
+            case EWaitReason.WaitForSocialInteractionPartner:
+                break;
+            case EWaitReason.WaitForItemToBeAvailable:
+                RegisterToWaitForItemToBeAvailable(target);
+                break;
+            default:
+                Debug.LogError($"Character waiting with unexpected cicumstances {character.ItemName} | {reason} | {target.ItemName}");
+                break;
+        }
+
+
+        waitingCharactersByTargets.Add(target, waitingCharacter);
+        waitingCharactersByCharacter.Add(character, waitingCharacter);
+    }
+
+    private void RegisterToWaitForItemToBeAvailable(Interactable target)
+    {
+        if (target is ItemBase) //Currently no checks, always subscibes the same method, unsubscibing is ??
+            itemManager.SubscribeToKnowWhenItemAvailable(target as ItemBase);
+        else if (target is Character)
+            SubscribeToKnowWhenItemAvailable(target as Character);
+    }
+
+    private void HandleWaitCircle(WaitingCharacter waitingCharacter, WaitingCharacter targetWaitingCharacter)
+    {
+        //Two characters are waiting for eachother.
+
+        if (waitingCharacter.WaitReason == EWaitReason.WaitForSocialInteractionPartner
+            && targetWaitingCharacter.WaitReason == EWaitReason.WaitForSocialInteractionPartner)
+        {
+            //Verify next to eachtoer
+            if (!lotManager.NeighboringTileContainsInteractable(waitingCharacter.Character.CurrentTile, targetWaitingCharacter.Character))
+            {
+                //IF not, move route waitingCharacter
+                //Stop waiting, all that stuff
+                QuitWaiting(waitingCharacter);
+                characterControl.RouteToTile(waitingCharacter.Character, lotManager.GetLotTile(targetWaitingCharacter.Character.InteractionSlot.SlotTransform.position));
+                return;
+
+            }
+            else
+            {
+                //Begin social interaction
+                QuitWaiting(waitingCharacter);
+                QuitWaiting(targetWaitingCharacter);
+            }
+        }
+        Debug.LogError("Two character wait on eachother with different reasons! (Not implemented)");
+        //If one waits to get in pos, other waits for target to be free
+        // InteractionPrio, player chosen interaction wins
+        // Otherwise the one waiting target to get in pos wins (Furhter in the process).
+
+        //ProcedeWithInteraction(WinningWaitingCharacter);
+    }
+
+    public void WaitedInteractableDeclaredAvailable(Interactable availableInteractable)
+    {
+        //When an earlier subscribed to item becomes available this is called
+
+        WaitingCharacter waitingCharacter = waitingCharactersByTargets[availableInteractable];
+
+        ProcedeWithInteraction(waitingCharacter);
+    }
+
+    private void ProcedeWithInteraction(WaitingCharacter waitingCharacter)
+    {
+        charactersAIsByCharacter[waitingCharacter.Character].CurrentInteraction.PopInteractionState();
+        //throw new NotImplementedException();
+    }
+
+
+    public void QuitWaiting(WaitingCharacter wCharacter)
+    {
+        QuitWaiting(wCharacter.Character);
+    }
+    public void QuitWaiting(Character character)
+    {
+        //TBD
+        // throw new NotImplementedException();
+
+        WaitingCharacter wCharacter = waitingCharactersByTargets[character];
+        waitingCharactersByTargets.Remove(wCharacter.WaitTarget);
+        waitingCharactersByCharacter.Remove(character);
+    }
+
 }
+
+

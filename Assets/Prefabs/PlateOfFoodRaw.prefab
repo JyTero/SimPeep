@@ -48,9 +48,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
   itemName: Plate
+  footprint: {x: 1, y: 1}
+  DebugDrawFootprintGrid: 0
+  debugDrawForwardLine: 1
   interactionSOs: []
   itemData: {fileID: 11400000, guid: cd5fc85aa20ada546b94ac3f13c6ba8e, type: 2}
   itemDescription: 
+  capabilites: 
+  capabilityComponents: []
+  itemSlotsOnItem: []
+  characterSlotsOnItem: []
+  interactionSlot: {fileID: 0}
   itemInitialised: 0
 --- !u!33 &290930702303372338
 MeshFilter:

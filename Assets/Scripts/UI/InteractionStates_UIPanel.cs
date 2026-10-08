@@ -16,13 +16,14 @@ public class InteractionStates_UIPanel : UIPanel
     protected override void Start()
     {
         base.Start();
+        ActivatePanel();
         RefreshPanel();
 
     }
 
     protected override void OSCC()
     {
-        ActivatePanel();
+        RefreshPanelData();
         // UpdatePanel();
 
     }
@@ -54,6 +55,14 @@ public class InteractionStates_UIPanel : UIPanel
     {
         this.currentState = currentState;
         RefreshPanel();
+    }
+    private void RefreshPanelData()
+    {
+        //if (uiController.SelectedCharacter.CharacterAI.CurrentInteraction != null)
+        //    currentState = uiController.SelectedCharacter.CharacterAI.CurrentInteraction.State.ToString();
+        //else
+        //    currentState = "";
+        uiController.RefreshInteractionStateData(uiController.SelectedCharacter.CharacterAI.CurrentInteraction, uiController.SelectedCharacter);
     }
 
     public override void DisablePanel()

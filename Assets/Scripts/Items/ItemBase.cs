@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ItemBase : Interactable
 {
+    [Header("ItemBase")]
     [SerializeField]
     private ItemSO itemData;
     public ItemSO ItemData {  get { return itemData; } }
@@ -13,6 +14,9 @@ public class ItemBase : Interactable
     [SerializeField]
     private string itemDescription;
     public string ItemDescription { get { return itemDescription; } set { itemDescription = value; } }
+
+    private int itemPrice;
+    public int ItemPrice { get { return itemPrice; } set { itemPrice = value; } }
 
     [SerializeField]
     private List<ItemCapabilites> capabilites;
@@ -23,9 +27,6 @@ public class ItemBase : Interactable
     public List<ItemCapability> CapabilityComponents { get { return capabilityComponents; } }
 
    
-
-    private int itemPrice;
-    public int ItemPrice { get { return itemPrice; } set { itemPrice = value; } }
 
     private Item_Slot occupiedSlot;
     public Item_Slot OccupiedSlot { get { return occupiedSlot; } }
@@ -47,8 +48,22 @@ public class ItemBase : Interactable
     private Dictionary<ItemCapabilites, ItemCapability> capabilitiesByEnum = new();
     public Dictionary<ItemCapabilites, ItemCapability> CapabilitiesByEnum { get { return capabilitiesByEnum; } }
 
+
+    //DEBUG implementation, in the future fancy system to handle items with multiple users (sofa)
+    public bool AvailableForUse = true;
+
+    
     [HideInInspector]
     public bool itemInitialised = false;
+
+    //[SerializeField]
+    //private int footprintX;
+    //public int FootprintX { get { return footprintX; }}
+    //[SerializeField]
+    //private int footprintY;
+    //public int FootprintY { get { return footprintY; }}
+
+
 
     protected override void Start()
     {
@@ -102,4 +117,15 @@ public class ItemBase : Interactable
     {
         occupiedSlot = null;
     }
+
+
+    public void OnInteractionBegin(ActiveInteraction interaction)
+    {
+        AvailableForUse = false;
+    }
+    public void OnInteractionEnd(ActiveInteraction interaction)
+    {
+        AvailableForUse = true;
+    }
+    
 }

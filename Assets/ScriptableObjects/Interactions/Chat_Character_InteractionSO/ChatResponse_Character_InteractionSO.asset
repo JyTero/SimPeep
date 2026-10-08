@@ -14,16 +14,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
   interactionName: Be Chatted With
   Description: 
-  Reaction: 1
-  IsSocial: 0
+  Reaction: 0
+  IsSocial: 1
+  socialInteractionType: 0
+  isSocialResponse: 1
+  socialResponceInteractions: []
+  hiddenInteraction: 0
+  skipMovement: 0
+  interactionDestinationDifferentFromSource: 0
+  destinationItem: {fileID: 0}
+  invalidInteraction: 0
   interactionEndingType: 1
-  interactionLenght: 7
+  interactionLenght: 6
   targetNeedType: 0
   targetNeedValue: 0
-  need_InteractionInstructions: []
-  relationshipChangeInstructions:
+  need_InteractionInstructionsOnInteractionBegin: []
+  need_InteractionInstructionsOnInteractionTick: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
+  relationshipChangeInstructionsOnInteractionEnd:
   - {fileID: 11400000, guid: 7b4974f8d293c534ab7543ca11734b08, type: 2}
-  socialResponceInteractions: []
+  itemChangeInstructionSOsOnInteractionBegin: []
+  itemChangeInstructionSOsOnInteractionEnd: []
+  characterInstructionSOsOnInteractionBegin: []
+  characterInstructionSOsOnInteractionEnd: []
+  specificItemInstructionSOsOnInteractionBegin: []
+  specificItemInstructionSOsOnInteractionEnd: []
+  requiredItemCapabilities: 
   scoringModifiers: []
   hasFollowup: 0
-  followupInteractionSO: {fileID: 0}
+  followupInteractionSOs: []

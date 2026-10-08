@@ -74,7 +74,7 @@ public class UIController : ManagementCore
         int i = 0;
         foreach (StoredInteraction storedInteraction in storedInteractions)
         {
-            if (storedInteraction.InteractionTuningSO.HiddenInteraction)
+            if (storedInteraction.InteractionData.HiddenInteraction)
                 continue;
             if (storedInteraction.InvalidInteraction)
                 continue;
@@ -93,7 +93,7 @@ public class UIController : ManagementCore
             {
                 GameObject buttonGO = buttonPool[i];
 
-                buttonGO.GetComponentInChildren<TextMeshProUGUI>().text = storedInteraction.InteractionTuningSO.InteractionName;
+                buttonGO.GetComponentInChildren<TextMeshProUGUI>().text = storedInteraction.InteractionData.InteractionName;
                 buttonGO.SetActive(true);
                 buttonGO.GetComponent<Button>().onClick.AddListener(delegate { InteractionSelectButtonPress(storedInteraction); });
                 buttonPool.Remove(buttonGO);
@@ -124,6 +124,11 @@ public class UIController : ManagementCore
         }
     }
 
+    public void InteractionCancelButtonPress()
+    {
+        characterAIHandler.CancelInteraction(selectedCharacter);
+    }
+
     public void ChangeSelectCharacter(Character character)
     {
         selectedCharacter = character;
@@ -131,13 +136,9 @@ public class UIController : ManagementCore
 
         needsUIPanel.OnSelectCharacterChange();
         relationshipsUIPanel.OnSelectCharacterChange();
+        interactionQueue_UIPanel.OnSelectCharacterChange();
+        interactionStates_UIPanel.OnSelectCharacterChange();
 
-
-    }
-
-    public CharacterAI GetCharacterAIByCharacter(Character character)
-    {
-        return characterAIHandler.CharactersAIsByCharacter[character];
     }
 
 
@@ -185,28 +186,42 @@ public class UIController : ManagementCore
 
     }
 
-    public void RefreshCurrentInteractionData(string currentInteraction)
+    public void RefreshCurrentInteractionData(string currentInteraction, ActiveInteraction interaction)
     {
-        interactionQueue_UIPanel.RefreshCurrentInteractionData(currentInteraction);
+        interactionQueue_UIPanel.RefreshCurrentInteractionData(currentInteraction, interaction);
     }
 
 
     //DEBUG
     //InteractionStateQueue
-    public void RefreshInteractionStateData(ActiveInteraction interaction)
+    public void RefreshInteractionStateData(ActiveInteraction interaction, Character character)
     {
 
-        List<string> queuedStates = MakeQueuedInteractionStatesList(interaction);
-        interactionStates_UIPanel.RefreshQueueData(queuedStates);
-        interactionStates_UIPanel.RefreshCurrentInteractionData(interaction.State.thisState.ToString());
+        if (interaction == null)
+        {
+            if (character != selectedCharacter)
+                return;
+            List<string> queuedStates = new(){""};
+            interactionStates_UIPanel.RefreshQueueData(queuedStates);
+            interactionStates_UIPanel.RefreshCurrentInteractionData("");
+        }
+        else
+        {
+            if (character != selectedCharacter)
+                return;
+            List<string> queuedStates = MakeQueuedInteractionStatesList(interaction);
+            interactionStates_UIPanel.RefreshQueueData(queuedStates);
+            interactionStates_UIPanel.RefreshCurrentInteractionData(interaction.State.ToString());
+
+        }
     }
 
     private List<string> MakeQueuedInteractionStatesList(ActiveInteraction interaction)
     {
         //UI (/DEBUG)
         List<string> queuedStates = new();
-        foreach (ActiveInteractionState ais in interaction.previousInteractionStates)
-            queuedStates.Add(ais.thisState.ToString());
+        foreach (InteractionState interactionState in interaction.interactionStateStack)
+            queuedStates.Add(interactionState.ToString());
 
         return queuedStates;
 

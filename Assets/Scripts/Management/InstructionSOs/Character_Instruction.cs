@@ -48,5 +48,6 @@ public enum ECharacterInstructionDestination
 {
     Default,
     ThisItem,
+    ThisItemInteractionSlot
 }
 

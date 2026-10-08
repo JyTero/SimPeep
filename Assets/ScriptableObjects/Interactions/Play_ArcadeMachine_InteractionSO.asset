@@ -16,6 +16,9 @@ MonoBehaviour:
   Description: Play on "Pixel Plasting" arcade machine
   Reaction: 0
   IsSocial: 0
+  socialInteractionType: 0
+  isSocialResponse: 0
+  socialResponceInteractions: []
   hiddenInteraction: 0
   skipMovement: 0
   interactionDestinationDifferentFromSource: 0
@@ -26,17 +29,19 @@ MonoBehaviour:
   targetNeedType: 0
   targetNeedValue: 0
   need_InteractionInstructionsOnInteractionBegin: []
-  need_InteractionInstructionsOnInteractionTick: []
+  need_InteractionInstructionsOnInteractionTick:
+  - {fileID: 11400000, guid: d07fb72740cc32249a1443c40b6e6bd8, type: 2}
   need_InteractionInstructionsOnInteractionEnd: []
   relationshipChangeInstructionsOnInteractionBegin: []
   relationshipChangeInstructionsOnInteractionEnd: []
   itemChangeInstructionSOsOnInteractionBegin: []
   itemChangeInstructionSOsOnInteractionEnd: []
   characterInstructionSOsOnInteractionBegin:
-  - {fileID: 11400000, guid: 7b6baa559ce995c4c86b7268d4b79a2a, type: 2}
+  - {fileID: 11400000, guid: 7b6c3c07353a9874fa84ace647ebb95d, type: 2}
   characterInstructionSOsOnInteractionEnd: []
+  specificItemInstructionSOsOnInteractionBegin: []
+  specificItemInstructionSOsOnInteractionEnd: []
   requiredItemCapabilities: 
-  socialResponceInteractions: []
   scoringModifiers: []
   hasFollowup: 0
   followupInteractionSOs: []

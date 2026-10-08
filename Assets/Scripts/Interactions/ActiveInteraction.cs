@@ -9,8 +9,11 @@ using UnityEngine;
 public class ActiveInteraction
 {
 
-    private InteractionSO interactionTuningSO;
-    public InteractionSO InteractionTuningSO { get { return interactionTuningSO; } }
+    private InteractionSO interactionSO;
+    public InteractionSO InteractionSO { get { return interactionSO; } }
+
+    private InteractionData interactionData;
+    public InteractionData InteractionData { get { return interactionData; } }
 
     private string interactionName;
     public string InteractionName { get { return interactionName; } }
@@ -54,14 +57,13 @@ public class ActiveInteraction
     public bool subInteractionsHaveRan = false;
     public ActiveInteraction parentInteraction;
 
+    public bool socialInteractionInitialised = false;
+
     //public List<Interactable> InteractablesCreatedByThisInteraction = new();
     //public List<Interactable> InteractablesCreatedByThisInteraction { get { return  InteractablesCreatedByThisInteraction; } }
 
     public float interactionLenghtAccumulation;
-    private EInteractionState opreviousNonMoveState;
-    public EInteractionState OPreviousNonMoveState { get { return opreviousNonMoveState; } }
-    private EInteractionState OinteractionState;
-    public EInteractionState OInteractionState { get { return OinteractionState; } }
+
     public bool allStateInteractionsSent = false;
     public InstructionSO currentInstruction = null;
 
@@ -73,48 +75,44 @@ public class ActiveInteraction
     public bool isAction = false;
     public List<ActiveInteraction> actions = new();
 
-
-    public void SetInteractionStateOLD(EInteractionState newState)
-    {
-        //Debug.Log($"InteractionStateChange: {InteractionName} had state {interactionState}, new state: {intrctState}");
-        if (OinteractionState != EInteractionState.Moving)
-            opreviousNonMoveState = OinteractionState;
-        OinteractionState = newState;
-    }
-
-    //NewStates
-    private ActiveInteractionState state; //Push, peak, pop
-    public ActiveInteractionState State { get { return state; } }
-    public ActiveInteractionState previousNonMoveState;
-    public Stack<ActiveInteractionState> previousInteractionStates = new();
-
-
+    // States
+    private InteractionState state;
+    public InteractionState State { get { return state; } }
+    public Stack<InteractionState> interactionStateStack = new();
 
     private UIController uiController;
-    public void PushInteractionState(EInteractionState newState)
-    {
-        previousInteractionStates.Push(state);
-        state = new(newState);
 
-        uiController.RefreshInteractionStateData(this);
+    public bool InteractionCancelled = false;
+
+
+    public void PushInteractionState(ActiveInteraction interaction, InteractionState newState)
+    {
+        if (state != null)
+            interactionStateStack.Push(state);
+
+        state = newState;
+        state.OnStateEnter(interaction);
+
+        uiController.RefreshInteractionStateData(this, ThisCharacter);
 
     }
     public void PopInteractionState()
     {
-       ActiveInteractionState ais = previousInteractionStates.Pop();
-        if (ais != null)
-            state = ais;
+        InteractionState interactionState = interactionStateStack.Pop();
+        if (interactionState != null)
+            ChangeCurrentState(interactionState);
         else
             Debug.LogError($"Null interaction state on {thisCharacter.ItemName} ({InteractionName})");
 
-        uiController.RefreshInteractionStateData(this);
+        uiController.RefreshInteractionStateData(this, ThisCharacter);
     }
-
-    //public void ChangeToPreviousState()
-    //{
-    //    interactionState = previousNonMoveState;
-
-    //}
+    private void ChangeCurrentState(InteractionState newState)
+    {
+        if (state != null)
+            state.OnStateExit(this);
+        state = newState;
+        state.OnStateEnter(this);
+    }
 
 
     public List<Item_Instruction> ItemChangeInstructionSOsOnInteractionBegin = new();
@@ -127,13 +125,12 @@ public class ActiveInteraction
 
     public ActiveInteraction(Character chara, StoredInteraction storedInteraction)
     {
-        interactionTuningSO = storedInteraction.InteractionTuningSO;
+        interactionSO = storedInteraction.InteractionSO;
+        interactionData = storedInteraction.InteractionData;
         interactionSource = storedInteraction.InteractionSource;
         thisCharacter = chara;
 
-        uiController= GameObject.FindAnyObjectByType<UIController>();
-
-        state = new(EInteractionState.Default);
+        uiController = GameObject.FindAnyObjectByType<UIController>();
 
 
         CommonConstruct();
@@ -141,35 +138,22 @@ public class ActiveInteraction
 
     private void CommonConstruct()
     {
-        interactionName = interactionTuningSO.InteractionName;
+        interactionName = interactionData.InteractionName;
         BuildInteractionEnding();
         interactionLenghtAccumulation = 0;
-        OinteractionState = EInteractionState.Default;
         interactionScore = 0;
-        isReaction = interactionTuningSO.Reaction;
+        isReaction = interactionData.Reaction;
 
-        scoringModifiers = interactionTuningSO.ScoringModifiers;
+        scoringModifiers = interactionData.ScoringModifiers;
 
-        foreach (Need_InstructionSO needInstructionSO in interactionTuningSO.Need_InteractionInstructionsOnInteractionTick)
+        foreach (Need_InstructionSO needInstructionSO in interactionData.Need_InteractionInstructionsOnInteractionTick)
         {
             needsToWeight.Add(needInstructionSO.NeedToAdjust);
         }
         TimeSinceLastInstructionsSent = 0;
-        followupInteractionSOs = InteractionTuningSO.FollowupInteractionSOs;
+        followupInteractionSOs = interactionData.FollowupInteractionSOs;
     }
 
-    public void PrepareSubInteractions(LotManager lotManager, WorldLot thisLot)
-    {
-        foreach (SubInteraction subInteraction in interactionTuningSO.SubInteractions)
-        {
-            //if(subInteraction.InteractionOnCreatedObject)
-            //  continue;
-
-            //SubInteraction subSi = lotManager.FindSuitableStoredInteractionOnLot(subInteraction.StoredInteractionSO, thisLot);
-            //subInteractions.Add(subSi);
-            subInteractions.Add(subInteraction);
-        }
-    }
     public void MakeIntoSubInteraction(ActiveInteraction pi)
     {
         isSubinteraction = true;
@@ -178,17 +162,17 @@ public class ActiveInteraction
 
     private void BuildInteractionEnding()
     {
-        interactionEndingType = interactionTuningSO.InteractionEndingType;
-        switch (InteractionTuningSO.InteractionEndingType)
+        interactionEndingType = interactionData.InteractionEndingType;
+        switch (interactionData.InteractionEndingType)
         {
             case InteractionEndingType.Default:
                 return;
             case InteractionEndingType.SetTime:
-                interactionLength = InteractionTuningSO.InteractionLenght;
+                interactionLength = interactionData.InteractionLenght;
                 return;
             case InteractionEndingType.UntillNeedAtValue:
-                interactionEndingTargetNeedType = InteractionTuningSO.TargetNeedType;
-                interactionEndingTargetNeedValue = InteractionTuningSO.TargetNeedValue;
+                interactionEndingTargetNeedType = interactionData.TargetNeedType;
+                interactionEndingTargetNeedValue = interactionData.TargetNeedValue;
                 return;
         }
     }
@@ -196,8 +180,11 @@ public class ActiveInteraction
 
 public class StoredInteraction
 {
-    private InteractionSO interactionTuningSO;
-    public InteractionSO InteractionTuningSO { get { return interactionTuningSO; } }
+    private InteractionSO interactionSO;
+    public InteractionSO InteractionSO { get { return interactionSO; } }
+
+    private InteractionData interactionData;
+    public InteractionData InteractionData { get { return interactionData; } }
 
     private Interactable interactionSource;
     public Interactable InteractionSource { get { return interactionSource; } }
@@ -210,7 +197,8 @@ public class StoredInteraction
 
     public StoredInteraction(InteractionSO interactionTuningSO, Interactable interactionSource)
     {
-        this.interactionTuningSO = interactionTuningSO;
+        interactionSO = interactionTuningSO;
+        interactionData = new(interactionTuningSO);
         this.interactionSource = interactionSource;
         InvalidInteraction = interactionTuningSO.InvalidInteraction;
     }
@@ -236,14 +224,3 @@ public enum EInteractionState
 
 
 }
-//NEXT UP:
-// Implement Destroy Item       Done
-// Destroy Raw food             Done
-// Spawn Cooked food
-// Place onto stove
-// Pick up cooked food
-// (
-//      Implement Dining Table and Chairs
-//      Use them to eat.
-// )
-// Eat.

@@ -30,6 +30,8 @@ public class WorldLot : MonoBehaviour
     }
     public void AddItemToLot(ItemBase item)
     {
+        if (ItemsOnLot.Contains(item))
+            return;
         itemsOnLot.Add(item);
     }
     public void RemoveItemFromLot(ItemBase item)

@@ -66,19 +66,19 @@ public class RelationshipChange_Instruction : Instruction
     private Relationship_InstructionSO relInstructionSO;
     public Relationship_InstructionSO RelInstructionSO { get { return relInstructionSO; } }
 
-    private Character sourceCharacter;
-    public Character SourceCharacter { get { return sourceCharacter; } }
+    private Character initiatorCharacter;
+    public Character InitiatorCharacter { get { return initiatorCharacter; } }
 
     private Character targetCharacter;
     public Character TargetCharacter { get { return targetCharacter; } }
 
-    public RelationshipChange_Instruction(Relationship_InstructionSO relInstructionSO, Character sourceCharacter, Character targetCharacter)
+    public RelationshipChange_Instruction(Relationship_InstructionSO relInstructionSO, Character initiatorChara, Character targetCharacter)
     {
         this.relInstructionSO = relInstructionSO;
-        this.sourceCharacter = sourceCharacter;
+        this.initiatorCharacter = initiatorChara;
         this.targetCharacter = targetCharacter;
 
-        string n = sourceCharacter.ItemName + targetCharacter; //Not as relevant (for now) hence lackluster implementation
+        string n = initiatorChara.ItemName + targetCharacter; //Not as relevant (for now) hence lackluster implementation
         InstructName(n);
     }
 }
@@ -104,6 +104,26 @@ public class Item_Instruction : Instruction
         this.itemInstructionData = itemInstructionData;
         this.thisCharacter = thisCharacter;
         this.thisItem = thisItem;
+    }
+}
+
+public class Character_Instruction : Instruction
+{
+    private ECharacterInstruction instructionType;
+    public ECharacterInstruction InstructionType { get { return instructionType; } }
+
+    private ECharacterInstructionDestination destinationType;
+    public ECharacterInstructionDestination DestinationType { get { return destinationType; } }
+
+    public Character_Instruction(ECharacterInstruction instructionType, ECharacterInstructionDestination destinationType)
+    {
+        this.instructionType = instructionType;
+        this.destinationType = destinationType;
+    }
+    public Character_Instruction(Character_InstructionSO charInstructionSO)
+    {
+        instructionType = charInstructionSO.InstructionType;
+        destinationType = charInstructionSO.DestinationType;
     }
 }
 

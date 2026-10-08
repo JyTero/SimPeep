@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1674437192730537679
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8874323055436224517}
+  - component: {fileID: 920536068749516908}
+  m_Layer: 0
+  m_Name: InteractionSlot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8874323055436224517
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674437192730537679}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 158690243205893505}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &920536068749516908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674437192730537679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a076484f50f2fdf4199a84a00f88150f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Character_Slot
+  slotTransform: {fileID: 8874323055436224517}
+  slotType: {fileID: 11400000, guid: 45557a29195f7834ab62912faea30bee, type: 2}
 --- !u!1 &4821625198751853988
 GameObject:
   m_ObjectHideFlags: 0
@@ -56,7 +102,6 @@ GameObject:
   m_Component:
   - component: {fileID: 158690243205893505}
   - component: {fileID: 6478263757543225806}
-  - component: {fileID: 8193744452690017048}
   - component: {fileID: 4051895236254469951}
   - component: {fileID: 2397405130614818504}
   - component: {fileID: 5291131605902163020}
@@ -76,10 +121,11 @@ Transform:
   m_GameObject: {fileID: 7910699575505835471}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.94, y: 1.08, z: 4.65}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8874323055436224517}
   - {fileID: 6677374733486984202}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -96,6 +142,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
   itemName: Matter Exciter
+  footprint: {x: 1, y: 1}
+  DebugDrawFootprintGrid: 0
+  debugDrawForwardLine: 1
   interactionSOs: []
   itemData: {fileID: 11400000, guid: ce094440d2b4b614f875069d790d8ca0, type: 2}
   itemDescription: 
@@ -104,31 +153,8 @@ MonoBehaviour:
   itemSlotsOnItem:
   - {fileID: 113425654867969759}
   characterSlotsOnItem: []
+  interactionSlot: {fileID: 920536068749516908}
   itemInitialised: 0
---- !u!114 &8193744452690017048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7910699575505835471}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15f3e35f3b2553c4dbdb2ac327696887, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StoveCapability
-  thisCapability: 0
-  CapabilityName: 
-  onBeginNeed_InteractionInstructions: []
-  onBeginRelationshipChangeInstructions: []
-  onBeginItemChangeInstructions: []
-  onBeginSubInteractionSOs: []
-  onEndNeed_InteractionInstructions: []
-  onEndRelationshipChangeInstructions: []
-  onEndItemChangeInstructions:
-  - {fileID: 11400000, guid: 136c4f6e0efdb1e448d0b229f34fccdd, type: 2}
-  onEndSubInteractionSOs: []
-  stoveCookSlot: {fileID: 113425654867969759}
 --- !u!33 &4051895236254469951
 MeshFilter:
   m_ObjectHideFlags: 0

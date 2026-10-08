@@ -1,6 +1,7 @@
 using NaughtyAttributes;
 using NUnit.Framework;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "InteractionSO", menuName = "Scriptable Objects/InteractionSO")]
@@ -18,8 +19,22 @@ public class InteractionSO : ScriptableObject
     public bool Reaction;
 
 
-    [HideIf("Reaction")]
+
     public bool IsSocial;
+    [SerializeField, ShowIf("IsSocial")]
+    private ESocialInteractionType socialInteractionType;
+    public ESocialInteractionType SocialInteractionType { get { return socialInteractionType; } }
+    [SerializeField, ShowIf("IsSocial")]
+    private bool isSocialResponse;
+    public bool IsSocialResponse { get { return isSocialResponse; } }
+
+    private bool socialResponse = false;
+    //List to make "choose one based on traits possible"?
+    [SerializeField, HideIf("socialResponse")]
+    private List<InteractionSO> socialResponceInteractions = new();
+    public List<InteractionSO> SocialResponceInteractions { get { return socialResponceInteractions; } }
+
+
 
     [SerializeField, Tooltip("Hidden interactions alern't selectable by user or normal interaction selection")]
     private bool hiddenInteraction;
@@ -63,8 +78,13 @@ public class InteractionSO : ScriptableObject
     private int targetNeedValue;
     public int TargetNeedValue { get { return targetNeedValue; } }
 
+    [SerializeField, Tooltip("Wheter a character looking to interact with either the character running the interaction or the interaction source should wait for the interaction to end or regard the character and the item as unavailable")]
+    private bool waitForInteractionEnd;
+    public bool WaitForInteractionEnd { get { return waitForInteractionEnd; } }
+
 
     //Each instruction variant has its own list 
+    //Need
     [SerializeField, Foldout("ON INTERACTION BEGIN")]
     private List<Need_InstructionSO> need_InteractionInstructionsOnInteractionBegin = new();
     public List<Need_InstructionSO> Need_InteractionInstructionsOnInteractionBegin { get { return need_InteractionInstructionsOnInteractionBegin; } }
@@ -75,13 +95,15 @@ public class InteractionSO : ScriptableObject
     private List<Need_InstructionSO> need_InteractionInstructionsOnInteractionEnd = new();
     public List<Need_InstructionSO> Need_InteractionInstructionsOnInteractionEnd { get { return need_InteractionInstructionsOnInteractionEnd; } }
 
+    //Relationship
     [SerializeField, Foldout("ON INTERACTION BEGIN")]
     private List<Relationship_InstructionSO> relationshipChangeInstructionsOnInteractionBegin = new();
-    public List<Relationship_InstructionSO> RelationshipChangeInstructionsOnInteraction { get { return relationshipChangeInstructionsOnInteractionBegin; } }
+    public List<Relationship_InstructionSO> RelationshipChangeInstructionsOnInteractionBegin { get { return relationshipChangeInstructionsOnInteractionBegin; } }
     [SerializeField, Foldout("ON INTERACTION END")]
     private List<Relationship_InstructionSO> relationshipChangeInstructionsOnInteractionEnd = new();
     public List<Relationship_InstructionSO> RelationshipChangeInstructionsOnInteractionEnd { get { return relationshipChangeInstructionsOnInteractionEnd; } }
 
+    //Item
     [SerializeField, Foldout("ON INTERACTION BEGIN")] 
     private List<Item_InstructionSO> itemChangeInstructionSOsOnInteractionBegin = new();
     public List<Item_InstructionSO> ItemChangeInstructionSOsOnInteractionBegin { get { return itemChangeInstructionSOsOnInteractionBegin; } }
@@ -89,6 +111,7 @@ public class InteractionSO : ScriptableObject
     private List<Item_InstructionSO> itemChangeInstructionSOsOnInteractionEnd = new();
     public List<Item_InstructionSO> ItemChangeInstructionSOsOnInteractionEnd { get { return itemChangeInstructionSOsOnInteractionEnd; } }
 
+    //Character
     [SerializeField, Foldout("ON INTERACTION BEGIN")]
     private List<Character_InstructionSO> characterInstructionSOsOnInteractionBegin = new();
     public List<Character_InstructionSO> CharacterInstructionSOsOnInteractionBegin { get { return characterInstructionSOsOnInteractionBegin; } }
@@ -96,27 +119,33 @@ public class InteractionSO : ScriptableObject
     private List<Character_InstructionSO> characterInstructionSOsOnInteractionEnd = new();
     public List<Character_InstructionSO> CharacterInstructionSOsOnInteractionEnd { get { return characterInstructionSOsOnInteractionEnd; } }
 
+    //SpecificItem
+    [SerializeField, Foldout("ON INTERACTION BEGIN")]
+    private List<ItemSpecific_InstructionSO> specificItemInstructionSOsOnInteractionBegin = new();
+    public List<ItemSpecific_InstructionSO> SpecificItemInstructionSOsOnInteractionBegin { get { return specificItemInstructionSOsOnInteractionBegin; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<ItemSpecific_InstructionSO> specificItemInstructionSOsOnInteractionEnd = new();
+    public List<ItemSpecific_InstructionSO> SpecificItemInstructionSOsOnInteractionEnd { get { return specificItemInstructionSOsOnInteractionEnd; } }
+
+
 
     //[SerializeField]
     //private List<InstructionData> itemInstructionDatas = new();
     //public List<InstructionData> ItemInstructionDatas { get { return itemInstructionDatas; } }
 
 
-    [Tooltip("TBH KINDA DEPRICATED NGL! Way to use pre-existing interactions to build new ones. Example: Fridge spawns Food. Food has Pick Up interaction, which can be plased here to automatically  pick up the food on creation")]
-    private List<SubInteraction> subInteractions = new();
-    public List<SubInteraction> SubInteractions { get { return subInteractions; } }
+    //[Tooltip("TBH KINDA DEPRICATED NGL! Way to use pre-existing interactions to build new ones. Example: Fridge spawns Food. Food has Pick Up interaction, which can be plased here to automatically  pick up the food on creation")]
+    //private List<SubInteraction> subInteractions = new();
+    //public List<SubInteraction> SubInteractions { get { return subInteractions; } }
 
     [SerializeField, Tooltip("Capabilities the interaction utilises")]
     private List<ItemCapabilites> requiredItemCapabilities = new();
     public List<ItemCapabilites> RequiredItemCapabilities { get { return requiredItemCapabilities; } }
 
-    //List to make "choose one based on traits possible"?
-    [SerializeField, ShowIf("IsSocial")]
-    private List<InteractionSO> socialResponceInteractions = new();
-    public List<InteractionSO> SocialResponceInteractions { get { return socialResponceInteractions; } }
 
 
-    [SerializeField, HideIf("Reaction")]
+
+    [SerializeField, HideIf(EConditionOperator.Or, "Reaction", "isSocialResponse")] 
     private List<InteractionScoringModifier> scoringModifiers = new();
     public List<InteractionScoringModifier> ScoringModifiers { get { return scoringModifiers; } }
 
@@ -148,8 +177,13 @@ public class InteractionSO : ScriptableObject
                 setTime = false;
                 break;
         }
+        if (IsSocial && IsSocialResponse)
+            socialResponse = true;
+        else if (IsSocial && !IsSocialResponse)
+            socialResponse = false;
+        else if(!IsSocial)
+            socialResponse = false;
     }
-
 
 }
 

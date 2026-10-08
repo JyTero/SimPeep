@@ -52,7 +52,7 @@ public class ClickHandler : ManagementCore
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                var chara = hit.collider.transform.parent.GetComponent<Character>();
+                var chara = hit.collider.gameObject.GetComponent<Character>();
                 if (chara != null)
                 {
                     if (debugLog)

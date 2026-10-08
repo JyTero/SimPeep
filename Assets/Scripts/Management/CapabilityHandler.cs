@@ -47,6 +47,9 @@ public class CapabilityHandler : ManagementCore
             case SpawnItem_Capability spawnItem:
                 InitialiseSpawnCapability(spawnItem, item);
                 break;
+            case TV_Capability tv:
+                InitialiseTVCapability(tv, item);
+                break;
         }
     }
     private void InitialiseStoveCapability(StoveCapability stoveCapability, ItemBase item)
@@ -83,6 +86,18 @@ public class CapabilityHandler : ManagementCore
             i++;
         }
     }
+    private void InitialiseTVCapability(TV_Capability tv, ItemBase item)
+    {
+        foreach (TVItem_InstructionSO changeChannelInstructionSO in tv.ChangeChannelInstructionSOs)
+        {
+            StoredInteraction cc = new StoredInteraction(tv.TVChangeChannelSO, item);
+            cc.InteractionData.SpecificItemInstructionSOsOnInteractionEnd.Add(changeChannelInstructionSO);
+            //TODO: Rename the interaction
+
+            item.NewStoredInteraction(cc);
+        }
+    }
+
     private void InitialiseTuckableChairCapability(TuckableChair_Capability tc, ItemBase item)
     {
         tc.CapabilityName = "TuckableChair_Capability";

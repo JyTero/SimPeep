@@ -14,14 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
   interactionName: Sleep
   Description: 
+  Reaction: 0
+  IsSocial: 0
+  hiddenInteraction: 0
+  skipMovement: 0
+  interactionDestinationDifferentFromSource: 0
+  destinationItem: {fileID: 0}
+  invalidInteraction: 0
   interactionEndingType: 2
   interactionLenght: 0
   targetNeedType: 1
   targetNeedValue: 95
-  need_InteractionInstructions:
+  need_InteractionInstructionsOnInteractionBegin: []
+  need_InteractionInstructionsOnInteractionTick:
   - {fileID: 11400000, guid: ab793b87daafd664b8999fb3c2fa298f, type: 2}
-  relationshipChangeInstructions: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
+  relationshipChangeInstructionsOnInteractionEnd: []
+  itemChangeInstructionSOsOnInteractionBegin: []
+  itemChangeInstructionSOsOnInteractionEnd: []
+  characterInstructionSOsOnInteractionBegin:
+  - {fileID: 11400000, guid: 7b6c3c07353a9874fa84ace647ebb95d, type: 2}
+  characterInstructionSOsOnInteractionEnd: []
+  specificItemInstructionSOsOnInteractionBegin: []
+  specificItemInstructionSOsOnInteractionEnd: []
+  requiredItemCapabilities: 
   socialResponceInteractions: []
-  Reaction: 0
   scoringModifiers: []
-  IsSocial: 0
+  hasFollowup: 0
+  followupInteractionSOs: []

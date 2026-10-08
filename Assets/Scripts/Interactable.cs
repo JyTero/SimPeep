@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Interactable : MonoBehaviour
@@ -14,29 +15,32 @@ public class Interactable : MonoBehaviour
     protected LotGridTile currentTile;
     public LotGridTile CurrentTile { get { return currentTile; } }
 
-    protected List<StoredInteraction> storedInteractions = new();
+    [SerializeField]
+    protected Vector2Int footprint = new(1, 1);
+    public Vector2Int Footprint { get { return footprint; } }
 
-    protected virtual void Start()
-    {
-        //LateStartTimer();
-    }
-    private IEnumerator LateStartTimer()
-    {
-        yield return new WaitForSecondsRealtime(0.2f);
-        LateStart();
-    }
-    public void LateStart()
-    {
-       // thisLot = FindAnyObjectByType<WorldLot>();
-    }
+
+    protected List<StoredInteraction> storedInteractions = new();
+    public List<StoredInteraction> StoredInteractions { get { return storedInteractions; } }
 
     [SerializeField]
     protected List<InteractionSO> interactionSOs = new();
     public List<InteractionSO> InteractionSOs { get { return interactionSOs; } }
+  
+    [SerializeField]
+    protected Character_Slot interactionSlot;
+    public Character_Slot InteractionSlot { get { return interactionSlot; } }
 
+    protected virtual void Start()
+    {
 
-    public List<StoredInteraction> StoredInteractions { get { return storedInteractions; } }
+    }
 
+    [Header("DEBUG")]
+    [SerializeField]
+    private bool DebugDrawFootprintGrid;
+    [SerializeField]
+    private bool debugDrawForwardLine;
 
     public void NewStoredInteraction(StoredInteraction sInteraction)
     {
@@ -52,6 +56,13 @@ public class Interactable : MonoBehaviour
         currentTile = tile;
     }
 
+
+    //public void ChangeCurrentTiles(List<LotGridTile> tiles)
+    //{
+    //    currentTile.Clear();
+    //    currentTile = tiles;
+    //}
+
     //protected void GenerateStoredInteractions()
     //{
     //    foreach(InteractionSO itso in interactionSOs)
@@ -59,4 +70,41 @@ public class Interactable : MonoBehaviour
     //        allInteractions.Add(new StoredInteraction(itso, this));
     //    }
     //}
+
+    private void OnDrawGizmos()
+    {
+        if (DebugDrawFootprintGrid)
+        {
+            for (int x = 0; x <= footprint.x; x++)
+            {
+                Vector3 start = transform.position +
+                                new Vector3(x * 1, 0, 0);
+
+                Vector3 end = transform.position +
+                              new Vector3(x * 1, 0, footprint.y * 1);
+
+                Gizmos.DrawLine(start, end);
+            }
+
+            for (int y = 0; y <= footprint.y; y++)
+            {
+                Vector3 start = transform.position +
+                                new Vector3(0, 0, y * 1);
+
+                Vector3 end = transform.position +
+                              new Vector3(footprint.x * 1, 0, y * 1);
+
+                Gizmos.DrawLine(start, end);
+            }
+        }
+        if (debugDrawForwardLine)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(
+            transform.position + transform.up * 0.5f,
+            transform.position + transform.forward * 0.8f + transform.up * 0.5f);
+        }
+
+    }
 }
+

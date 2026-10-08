@@ -85,7 +85,7 @@ public class NeedsEngine : ManagementCore
     public void NewInstructionSO(Need_InstructionSO needInstructionSO, Character character, ActiveInteraction interaction)
     {
         Need_Instruction ni = new(needInstructionSO, character, interaction.InteractionSource.ItemName + interaction.InteractionName);
-        ni.InstructionLenght = interaction.InteractionTuningSO.InteractionLenght;
+        ni.InstructionLenght = interaction.InteractionData.InteractionLenght;
 
         if (activeNeedInstructions.Any(ani => ani.sourceSO == needInstructionSO))
         {

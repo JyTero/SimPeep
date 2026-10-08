@@ -25,12 +25,19 @@ MonoBehaviour:
   interactionLenght: 4
   targetNeedType: 3
   targetNeedValue: 95
+  need_InteractionInstructionsOnInteractionBegin: []
   need_InteractionInstructionsOnInteractionTick:
   - {fileID: 11400000, guid: db3790b297fd71744bece2948df9c369, type: 2}
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
   relationshipChangeInstructionsOnInteractionEnd: []
   itemChangeInstructionSOsOnInteractionBegin: []
   itemChangeInstructionSOsOnInteractionEnd: []
-  subInteractions: []
+  characterInstructionSOsOnInteractionBegin:
+  - {fileID: 11400000, guid: 7b6c3c07353a9874fa84ace647ebb95d, type: 2}
+  characterInstructionSOsOnInteractionEnd: []
+  specificItemInstructionSOsOnInteractionBegin: []
+  specificItemInstructionSOsOnInteractionEnd: []
   requiredItemCapabilities: 
   socialResponceInteractions: []
   scoringModifiers: []

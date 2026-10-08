@@ -29,10 +29,11 @@ Transform:
   m_GameObject: {fileID: 1105236602175668827}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.76, y: -1.22, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7774749519914583072}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6206810241917417346
@@ -48,7 +49,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
   itemName: Seat of Relief
+  footprint: {x: 1, y: 1}
+  DebugDrawFootprintGrid: 0
+  debugDrawForwardLine: 1
+  interactionSOs: []
   itemData: {fileID: 11400000, guid: cb2e42bad1ca9194e929f34d0f7220e8, type: 2}
+  itemDescription: 
+  capabilites: 
+  capabilityComponents: []
+  itemSlotsOnItem: []
+  characterSlotsOnItem: []
+  interactionSlot: {fileID: 432267340047956026}
+  itemInitialised: 0
 --- !u!33 &1191512325784902825
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -127,3 +139,49 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &5568169031699211960
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7774749519914583072}
+  - component: {fileID: 432267340047956026}
+  m_Layer: 0
+  m_Name: InteractionSlot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7774749519914583072
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5568169031699211960}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8302745345674757699}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &432267340047956026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5568169031699211960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a076484f50f2fdf4199a84a00f88150f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Character_Slot
+  slotTransform: {fileID: 7774749519914583072}
+  slotType: {fileID: 11400000, guid: 45557a29195f7834ab62912faea30bee, type: 2}

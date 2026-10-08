@@ -10,7 +10,7 @@ public class LotGrid
     public WorldLot ThisLot { get; }
 
     private LotGridTile[] tiles;
-    public LotGridTile[] Tiles() { return tiles; }
+    public LotGridTile[] Tiles{get { return tiles; }}
     public LotGrid(int width, int height, float tileSize, WorldLot lot)
     {
         Width = width;

@@ -25,6 +25,11 @@ public class CharacterAI
     private List<ActiveInteraction> subInteractionQueue = new();
     public List<ActiveInteraction> SubInteractionQueue { get { return subInteractionQueue; } }
 
+    //"Resources"
+    public bool CanMinorSocialise = true;         //Availability for talk only social interactions (sit n talk)
+    public bool CanMajorSocialise = true;    //Availability for complex social interactions (Hug, play games, talk that requires standing)
+
+
     public CharacterAI()
     {
         interactionQueuesByPriority.Add(InteractionQueuePriority.UrgentReaction, new List<QueuedInteraction>());

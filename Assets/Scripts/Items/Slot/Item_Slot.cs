@@ -5,9 +5,6 @@ using UnityEngine;
 [Serializable]
 public class Item_Slot : Slot
 {
-    [SerializeField]
-    private SlotTypeSO slotType;
-    public SlotTypeSO SlotType { get { return slotType; } }
 
     protected ItemBase itemInSlot;
     public ItemBase ItemInSlot { get { return itemInSlot; } }

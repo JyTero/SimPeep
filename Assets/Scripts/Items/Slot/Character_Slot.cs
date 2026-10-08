@@ -14,4 +14,20 @@ public class Character_Slot : Slot
     {
         characterInSlot = null;
     }
+
+    private void OnDrawGizmos()
+    {
+        if (characterInSlot == null)
+            Gizmos.color = Color.green;
+        else
+            Gizmos.color = Color.red;
+
+        Gizmos.DrawWireSphere(transform.position, 0.15f);
+
+        // Optional: show orientation
+        Gizmos.DrawLine(
+            transform.position,
+            transform.position + transform.forward * 0.4f
+        );
+    }
 }

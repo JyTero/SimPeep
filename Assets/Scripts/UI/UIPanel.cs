@@ -27,6 +27,7 @@ public class UIPanel : ManagerMono
     protected virtual void OSCC()
     {
         //PUT NOTHING HERE, USE OnSelectCharacterChange() for common functionality at this step
+        //OSCC contains panel specific logic within each class
     }
 
     public virtual void ActivatePanel()

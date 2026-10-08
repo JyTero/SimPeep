@@ -1,0 +1,196 @@
+using JetBrains.Annotations;
+using NaughtyAttributes;
+using NUnit.Framework;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class InteractionData
+{
+    [SerializeField]
+    private string interactionName;
+    public string InteractionName { get { return interactionName; } }
+
+    [SerializeField, Tooltip("Use this to leave notes about the interaction, such as what are its planned owner items")]
+    private string Description;
+
+
+
+    public bool Reaction;
+
+
+    public bool IsSocial;
+    [SerializeField, ShowIf("IsSocial")]
+    private ESocialInteractionType socialInteractionType;
+    public ESocialInteractionType SocialInteractionType { get { return socialInteractionType; } }
+    [SerializeField, ShowIf("IsSocial")]
+    private bool isSocialResponse;
+    public bool IsSocialResponse { get { return isSocialResponse; } }
+
+    private bool socialResponse = false;
+    //List to make "choose one based on traits possible"?
+    [SerializeField, HideIf("socialResponse")]
+    private List<InteractionSO> socialResponceInteractions = new();
+    public List<InteractionSO> SocialResponceInteractions { get { return socialResponceInteractions; } }
+
+
+    [SerializeField, Tooltip("Hidden interactions alern't selectable by user or normal interaction selection")]
+    private bool hiddenInteraction;
+    public bool HiddenInteraction { get { return hiddenInteraction; } }
+
+    [SerializeField, HideIf("interactionDestinationDifferentFromSource"),
+        Tooltip("Skip moving stage on interaction execution, runs interaction immediately instead")]
+    private bool skipMovement;
+    public bool SkipMovement { get { return skipMovement; } }
+
+    //InteractionDestination differ form Item (Cooking RawPlate should be done at stove, not at plate)
+    [SerializeField, HideIf("skipMovement")]
+    private bool interactionDestinationDifferentFromSource;
+    public bool InteractionDestinationDifferentFromSource { get { return interactionDestinationDifferentFromSource; } }
+
+    [SerializeField, ShowIf("interactionDestinationDifferentFromSource")]
+    private ItemSO destinationItem;
+    public ItemSO DestinationItem { get { return destinationItem; } }
+
+    [SerializeField, Tooltip("Invalid interactions will not be selectable by anyone/thing (picking up already carried item).\nThis is the start state")]
+    private bool invalidInteraction;
+    public bool InvalidInteraction { get { return invalidInteraction; } }
+
+
+    //Interaction Ending Data    
+    [SerializeField]
+    private InteractionEndingType interactionEndingType;
+    public InteractionEndingType InteractionEndingType { get { return interactionEndingType; } }
+
+    private bool setTime = false;
+    private bool untillNeedAtValue = false;
+
+    [SerializeField, ShowIf("setTime")]
+    private float interactionLenght;
+    public float InteractionLenght { get { return interactionLenght; } }
+
+    [SerializeField, ShowIf("untillNeedAtValue")]
+    private NeedType targetNeedType;
+    public NeedType TargetNeedType { get { return targetNeedType; } }
+    [SerializeField, ShowIf("untillNeedAtValue")]
+    private int targetNeedValue;
+    public int TargetNeedValue { get { return targetNeedValue; } }
+
+    private bool waitForInteractionEnd;
+    public bool WaitForInteractionEnd { get { return waitForInteractionEnd; } }
+
+    //Each instruction variant has its own list 
+    //Need
+    [SerializeField, Foldout("ON INTERACTION BEGIN")]
+    private List<Need_InstructionSO> need_InteractionInstructionsOnInteractionBegin = new();
+    public List<Need_InstructionSO> Need_InteractionInstructionsOnInteractionBegin { get { return need_InteractionInstructionsOnInteractionBegin; } }
+    [SerializeField, Foldout("ON INTERACTION TICK")]
+    private List<Need_InstructionSO> need_InteractionInstructionsOnInteractionTick = new();
+    public List<Need_InstructionSO> Need_InteractionInstructionsOnInteractionTick { get { return need_InteractionInstructionsOnInteractionTick; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<Need_InstructionSO> need_InteractionInstructionsOnInteractionEnd = new();
+    public List<Need_InstructionSO> Need_InteractionInstructionsOnInteractionEnd { get { return need_InteractionInstructionsOnInteractionEnd; } }
+
+    //Relationship
+    [SerializeField, Foldout("ON INTERACTION BEGIN")]
+    private List<Relationship_InstructionSO> relationshipChangeInstructionsOnInteractionBegin = new();
+    public List<Relationship_InstructionSO> RelationshipChangeInstructionsOnInteractionBegin { get { return relationshipChangeInstructionsOnInteractionBegin; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<Relationship_InstructionSO> relationshipChangeInstructionsOnInteractionEnd = new();
+    public List<Relationship_InstructionSO> RelationshipChangeInstructionsOnInteractionEnd { get { return relationshipChangeInstructionsOnInteractionEnd; } }
+
+    //Item
+    [SerializeField, Foldout("ON INTERACTION BEGIN")]
+    private List<Item_InstructionSO> itemChangeInstructionSOsOnInteractionBegin = new();
+    public List<Item_InstructionSO> ItemChangeInstructionSOsOnInteractionBegin { get { return itemChangeInstructionSOsOnInteractionBegin; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<Item_InstructionSO> itemChangeInstructionSOsOnInteractionEnd = new();
+    public List<Item_InstructionSO> ItemChangeInstructionSOsOnInteractionEnd { get { return itemChangeInstructionSOsOnInteractionEnd; } }
+
+    //Character
+    [SerializeField, Foldout("ON INTERACTION BEGIN")]
+    private List<Character_InstructionSO> characterInstructionSOsOnInteractionBegin = new();
+    public List<Character_InstructionSO> CharacterInstructionSOsOnInteractionBegin { get { return characterInstructionSOsOnInteractionBegin; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<Character_InstructionSO> characterInstructionSOsOnInteractionEnd = new();
+    public List<Character_InstructionSO> CharacterInstructionSOsOnInteractionEnd { get { return characterInstructionSOsOnInteractionEnd; } }
+
+    //SpecificItem
+    [SerializeField, Foldout("ON INTERACTION BEGIN")]
+    private List<ItemSpecific_InstructionSO> specificItemInstructionSOsOnInteractionBegin = new();
+    public List<ItemSpecific_InstructionSO> SpecificItemInstructionSOsOnInteractionBegin { get { return specificItemInstructionSOsOnInteractionBegin; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<ItemSpecific_InstructionSO> specificItemInstructionSOsOnInteractionEnd = new();
+    public List<ItemSpecific_InstructionSO> SpecificItemInstructionSOsOnInteractionEnd { get { return specificItemInstructionSOsOnInteractionEnd; } }
+
+
+    [SerializeField, Tooltip("Capabilities the interaction utilises")]
+    private List<ItemCapabilites> requiredItemCapabilities = new();
+    public List<ItemCapabilites> RequiredItemCapabilities { get { return requiredItemCapabilities; } }
+
+
+    [SerializeField, HideIf("Reaction")]
+    private List<InteractionScoringModifier> scoringModifiers = new();
+    public List<InteractionScoringModifier> ScoringModifiers { get { return scoringModifiers; } }
+
+    //Suggested Follow-Up Interaction
+    [SerializeField, Tooltip("Wheter this interactions is designed to be followed by another. Example: Make Dinner -> Cook Dinner -> Eat Dinner")]
+    private bool hasFollowup = false;
+    public bool HasFollowup { get { return hasFollowup; } }
+
+    [SerializeField, ShowIf("hasFollowup")]
+    private List<InteractionSO> followupInteractionSOs;
+    public List<InteractionSO> FollowupInteractionSOs { get { return followupInteractionSOs; } }
+
+    public InteractionData(InteractionSO interactionSO)
+    {
+        interactionName = interactionSO.InteractionName;
+
+        Reaction = interactionSO.Reaction;
+
+        IsSocial = interactionSO.IsSocial;
+        socialInteractionType = interactionSO.SocialInteractionType;
+        isSocialResponse = interactionSO.IsSocialResponse;
+
+        hiddenInteraction = interactionSO.HiddenInteraction;
+
+        skipMovement = interactionSO.SkipMovement;
+
+        interactionDestinationDifferentFromSource = interactionSO.InteractionDestinationDifferentFromSource;
+        destinationItem = interactionSO.DestinationItem;
+
+        invalidInteraction = interactionSO.InvalidInteraction;
+
+        interactionEndingType = interactionSO.InteractionEndingType;
+        interactionLenght = interactionSO.InteractionLenght;
+        targetNeedType = interactionSO.TargetNeedType;
+        targetNeedValue = interactionSO.TargetNeedValue;
+
+        waitForInteractionEnd = interactionSO.WaitForInteractionEnd;
+
+        need_InteractionInstructionsOnInteractionBegin = new List<Need_InstructionSO>(interactionSO.Need_InteractionInstructionsOnInteractionBegin);
+        need_InteractionInstructionsOnInteractionTick = new List<Need_InstructionSO>(interactionSO.Need_InteractionInstructionsOnInteractionTick);
+        need_InteractionInstructionsOnInteractionEnd = new List<Need_InstructionSO>(interactionSO.Need_InteractionInstructionsOnInteractionEnd);
+
+        relationshipChangeInstructionsOnInteractionBegin = new List<Relationship_InstructionSO>(interactionSO.RelationshipChangeInstructionsOnInteractionBegin);
+        relationshipChangeInstructionsOnInteractionEnd = new List<Relationship_InstructionSO>(interactionSO.RelationshipChangeInstructionsOnInteractionEnd);
+
+        itemChangeInstructionSOsOnInteractionBegin = new List<Item_InstructionSO>(interactionSO.ItemChangeInstructionSOsOnInteractionBegin);
+        itemChangeInstructionSOsOnInteractionEnd = new List<Item_InstructionSO>(interactionSO.ItemChangeInstructionSOsOnInteractionEnd);
+
+        characterInstructionSOsOnInteractionBegin = new List<Character_InstructionSO>(interactionSO.CharacterInstructionSOsOnInteractionBegin);
+        characterInstructionSOsOnInteractionEnd = new List<Character_InstructionSO>(interactionSO.CharacterInstructionSOsOnInteractionEnd);
+
+        specificItemInstructionSOsOnInteractionBegin = new List<ItemSpecific_InstructionSO>(interactionSO.SpecificItemInstructionSOsOnInteractionBegin);
+        specificItemInstructionSOsOnInteractionEnd = new List<ItemSpecific_InstructionSO>(interactionSO.SpecificItemInstructionSOsOnInteractionEnd);
+
+        requiredItemCapabilities = new List<ItemCapabilites>(interactionSO.RequiredItemCapabilities);
+
+        socialResponceInteractions = interactionSO.SocialResponceInteractions;
+
+        scoringModifiers = new List<InteractionScoringModifier>(interactionSO.ScoringModifiers);
+
+        hasFollowup = interactionSO.HasFollowup;
+        followupInteractionSOs = (interactionSO.FollowupInteractionSOs);
+
+    }
+}

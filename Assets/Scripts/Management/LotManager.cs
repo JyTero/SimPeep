@@ -1,20 +1,23 @@
 using NaughtyAttributes;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 
 public class LotManager : ManagementCore
 {
     [SerializeField]
     private float lotTileSize;
+    protected float LotTileSize { get { return lotTileSize; } }
     [SerializeField]
     private int tileDefaultTravelCost;
+    protected int TileDefaultTravelCost { get { return tileDefaultTravelCost; } }
+
 
     [SerializeField]
     private List<WorldLot> allLots = new();
@@ -22,6 +25,12 @@ public class LotManager : ManagementCore
 
     private List<StoredInteraction> allStoredInteractions = new();
     private WorldLot lot;
+
+    [Header("Tuning Values")]
+    [SerializeField]
+    private int maxForwardDistanceForInfrontOfItem;
+    [SerializeField]
+    private int maxSideDistanceForInfrontOfItem;
 
     protected override void Start()
     {
@@ -43,9 +52,22 @@ public class LotManager : ManagementCore
             //Gridding
             LotGridTile lgt = GetTileInteractableIsOn(item);
             if (lgt != null)
-                PlaceItemToCenterOfTile(item, lgt);
+                PlaceItemToTile(item, lgt);
 
             item.ChangeCurrentTile(lgt);
+
+            if (item.Footprint != new Vector2(1, 1))
+            {
+                int i = Array.IndexOf(lot.LotGrid.Tiles, item.CurrentTile);
+                List<LotGridTile> footprintTiles = GetTilesInFootprint(lgt, item.Footprint);
+                foreach(LotGridTile tile in footprintTiles)
+                {
+                    tile.PlaceItemToTile(item);
+                }
+            }
+            else
+
+
             if (debugLog)
                 Debug.Log($"Initialising: {item.ItemName}");
             itemManager.InitialiseItem(item);
@@ -58,10 +80,10 @@ public class LotManager : ManagementCore
         foreach (WorldLot lot in allLots)
         {
             //Generate Lot Grid
-            lot.GenerateLotGrid(lotTileSize);
-            foreach (LotGridTile tile in lot.LotGrid.Tiles())
+            lot.GenerateLotGrid(LotTileSize);
+            foreach (LotGridTile tile in lot.LotGrid.Tiles)
             {
-                tile.InitialiseTile(GetTileCenterInPosition(tile), tileDefaultTravelCost);
+                tile.InitialiseTile(GetTileCenterInPosition(tile), TileDefaultTravelCost);
             }
         }
     }
@@ -131,7 +153,7 @@ public class LotManager : ManagementCore
     {
         foreach (StoredInteraction si in allStoredInteractions)
         {
-            if (si.InteractionTuningSO == itso)
+            if (si.InteractionSO == itso)
                 return si;
         }
         return null;
@@ -180,9 +202,9 @@ public class LotManager : ManagementCore
     {
         List<LotGridTile> neighborTiles = new();
 
-        for (int neighborX = centerTile.X - 1; neighborX <= centerTile.X + 1; neighborX++)
+        for (int neighborX = centerTile.Coordinates.x - 1; neighborX <= centerTile.Coordinates.x + 1; neighborX++)
         {
-            for (int neighborY = centerTile.Y - 1; neighborY <= centerTile.Y + 1; neighborY++)
+            for (int neighborY = centerTile.Coordinates.y - 1; neighborY <= centerTile.Coordinates.y + 1; neighborY++)
             {
                 LotGridTile neighborLgt = lotManager.GetLotTile(neighborX, neighborY);
                 if (neighborLgt == null)
@@ -194,13 +216,23 @@ public class LotManager : ManagementCore
         }
         return neighborTiles;
     }
+    public bool NeighboringTileContainsInteractable(LotGridTile centerTile, Interactable interactable)
+    {
+        List<LotGridTile> neighborTiles = GetNeighboringTiles(centerTile);
+
+        LotGridTile lgt = neighborTiles.Where(tile => tile.ItemOnTile ==  interactable).FirstOrDefault();
+        if (lgt == null)
+            return false;
+        else
+            return true;
+    }
     public LotGridTile GetNearbyFreeTile(LotGridTile center)
     {
-        if (!center.itemOnTile)
+        if (!center.ItemOnTile)
             return center;
         List<LotGridTile> neighbors = GetNeighboringTiles(center);
         foreach (LotGridTile neighbor in neighbors)
-            if (!neighbor.itemOnTile)
+            if (!neighbor.ItemOnTile)
                 return neighbor;
         return null;
     }
@@ -222,16 +254,40 @@ public class LotManager : ManagementCore
         return lot.LotGrid.GetTile(x, y);
     }
 
-    public void PlaceItemToCenterOfTile(ItemBase item, LotGridTile lotTile)
+    private void PlaceItemToCenterOfTile(ItemBase item, LotGridTile lotTile)
     {
         Vector3 centerPos = GetTileCenterInPosition(lotTile);
         item.transform.position = centerPos;
-        lotTile.PlaceItemToTile(item);
+        //lotTile.PlaceItemToTile(item);
     }
     public Vector3 GetTileCenterInPosition(LotGridTile lotTile)
     {
-        return lotTile.PartOfLot.transform.position + new Vector3((lotTile.X + 0.5f) * lotTileSize, 0f, (lotTile.Y + 0.5f) * lotTileSize);
+        return lotTile.PartOfLot.transform.position + new Vector3((lotTile.Coordinates.x + 0.5f) * LotTileSize, 0f, (lotTile.Coordinates.y + 0.5f) * LotTileSize);
     }
+
+    public List<LotGridTile> GetTilesInFootprint(LotGridTile origin, Vector2Int footprint)
+    {
+        List<LotGridTile> tiles = new();
+
+        for (int y = 0; y < footprint.y; y++)
+        {
+            for (int x = 0; x < footprint.x; x++)
+            {
+                int tileX = origin.Coordinates.x + x;
+                int tileY = origin.Coordinates.y + y;
+
+                LotGridTile tile = GetLotTile(tileX, tileY);
+
+                if (tile == null)
+                    return null;
+
+                tiles.Add(tile);
+            }
+        }
+
+        return tiles;
+    }
+
     public void PlaceItemToTile(ItemBase item, LotGridTile tile)
     {
         tile.PlaceItemToTile(item);
@@ -241,6 +297,50 @@ public class LotManager : ManagementCore
     {
         tile.RemoveItemFromTile(removedItem);
     }
+
+    public LotGridTile GetTileInFrontOfInteractable(Interactable interactable)
+    {
+        Vector2Int interactableForward = new(Mathf.RoundToInt(interactable.transform.forward.x), Mathf.RoundToInt(interactable.transform.forward.z));
+        LotGrid grid = interactable.ThisLot.LotGrid;
+        foreach (LotGridTile tile in grid.Tiles)
+        {
+            Vector2Int offset = tile.Coordinates - interactable.CurrentTile.Coordinates;
+            int forwardDistance = (int)Vector2.Dot(offset, interactableForward);
+            if (forwardDistance < 0)
+                continue;
+            if (forwardDistance > 1)
+                continue;
+
+            return tile;
+        }
+        return null;
+    }
+
+    //public List<LotGridTile> GetTilesInfrontItem(ItemBase item)
+    //{
+    //    List<LotGridTile> tilesInFront = new();
+
+    //    Vector2Int tvForward = new(Mathf.RoundToInt(item.transform.forward.x), Mathf.RoundToInt(item.transform.forward.z));
+    //    Vector2Int tvRight = new(-tvForward.y, tvForward.x);
+
+    //    LotGrid grid = item.ThisLot.LotGrid;
+    //    foreach (LotGridTile tile in grid.Tiles)
+    //    {
+    //        Vector2Int offset = tile.Coordinates - item.CurrentTile.Coordinates;
+    //        int forwardDistance = (int)Vector2.Dot(offset, tvForward);
+    //        if (forwardDistance < 0)
+    //            continue;
+    //        if (forwardDistance > maxForwardDistanceForInfrontOfItem)
+    //            continue;
+
+    //        int sideDistance = (int)Vector2.Dot(offset, tvRight);
+    //        if (Mathf.Abs(sideDistance) > maxSideDistanceForInfrontOfItem)
+    //            continue;
+
+
+    //    }
+    //}
+
 
 
     //DEBUG
@@ -280,7 +380,7 @@ public class LotManager : ManagementCore
             DebugVisualiseTileWalkability();
 
             //GridTileLines
-            //DebugDrawLotGrid();
+            DebugDrawLotGrid();
         }
     }
 
@@ -302,9 +402,9 @@ public class LotManager : ManagementCore
                 Gizmos.DrawCube(
                     center,
                     new Vector3(
-                        lotTileSize,
+                        LotTileSize,
                         0.05f,
-                        lotTileSize
+                        LotTileSize
                     )
                 );
             }
@@ -336,18 +436,18 @@ public class LotManager : ManagementCore
     }
     private void DebugHighlightTile(int x, int y)
     {
-        foreach (LotGridTile tile in lot.LotGrid.Tiles())
+        foreach (LotGridTile tile in lot.LotGrid.Tiles)
         {
-            if (tile.X == x && tile.Y == y)
+            if (tile.Coordinates.x == x && tile.Coordinates.y == y)
             {
                 Vector3 center = GetTileCenterInPosition(tile);
 
                 Gizmos.DrawCube(
                     center,
                     new Vector3(
-                        lotTileSize,
+                        LotTileSize,
                         0.05f,
-                        lotTileSize
+                        LotTileSize
                     )
                 );
             }

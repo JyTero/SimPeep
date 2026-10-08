@@ -16,18 +16,6 @@ public class CharacterPathfinding : ManagementCore
         base.Start();
     }
 
-    public void NewCharacterFindingPath(Character character, Vector3 destinationPos)
-    {
-        LotGridTile destination = lotManager.GetLotTile(destinationPos);
-        if (destination == null)
-            Debug.LogError("Destination out of grid!");
-        else if (character.CurrentTile == destination)
-            characterAIHandler.AtDestination(character);
-        else
-            charactersFindingPath.Add(new CharacterFindingPath(character, destination));
-
-    }
-
     public void NewCharacterFindingPath(Character character, LotGridTile destinationTile)
     {
         if (character.CurrentTile == destinationTile)
@@ -57,13 +45,13 @@ public class CharacterPathfinding : ManagementCore
 
             //GUMMY
             //If destination is neighbor, at destination
-            List<LotGridTile> neighbors = lotManager.GetNeighboringTiles(character.Character.CurrentTile);
-            if(neighbors.Contains(character.Destination))
-            {
-                characterAIHandler.AtDestination(character.Character);
-                charactersFindingPath.RemoveAt(i);
-                continue;
-            }
+            //List<LotGridTile> neighbors = lotManager.GetNeighboringTiles(character.Character.CurrentTile);
+            //if(neighbors.Contains(character.Destination))
+            //{
+            //    characterAIHandler.AtDestination(character.Character);
+            //    charactersFindingPath.RemoveAt(i);
+            //    continue;
+            //}
 
             //For now, find entire path at once, future "Look 20 tiles ahead"/"Look this room" or smth
             while (!character.HasPath)
@@ -81,9 +69,9 @@ public class CharacterPathfinding : ManagementCore
                     //Get all neighbors
                     List<TileInScoring> neighborTiles = new();
 
-                    for (int neighborX = tis.Tile.X - 1; neighborX <= tis.Tile.X + 1; neighborX++)
+                    for (int neighborX = tis.Tile.Coordinates.x - 1; neighborX <= tis.Tile.Coordinates.x + 1; neighborX++)
                     {
-                        for (int neighborY = tis.Tile.Y - 1; neighborY <= tis.Tile.Y + 1; neighborY++)
+                        for (int neighborY = tis.Tile.Coordinates.y - 1; neighborY <= tis.Tile.Coordinates.y + 1; neighborY++)
                         {
                             LotGridTile neighborLgt = lotManager.GetLotTile(neighborX, neighborY);
                             if (neighborLgt == null)
@@ -92,6 +80,10 @@ public class CharacterPathfinding : ManagementCore
                                 continue;
                             if (character.PathfindingVisitedTiles.Exists(x => x.Tile == neighborLgt))
                                 continue;
+                            if (!neighborLgt.walkable)
+                            {
+                                continue;
+                            }
 
                             neighborTiles.Add(new TileInScoring(neighborLgt, character.Destination));
                         }
@@ -130,7 +122,7 @@ public class CharacterPathfinding : ManagementCore
         bool pathDone = false;
         if (destination.ShortestRouteTile.Tile == destination.Tile)
             return path;
-
+        path.Add(destination);
         path.Add(destination.ShortestRouteTile);
         TileInScoring nextTile = destination.ShortestRouteTile.ShortestRouteTile;
 

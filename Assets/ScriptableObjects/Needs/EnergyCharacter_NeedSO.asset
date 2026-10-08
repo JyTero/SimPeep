@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EnergyCharacter_NeedSO
   m_EditorClassIdentifier: Assembly-CSharp::NeedSO
   needType: 1
-  needValue: 85
+  needValue: 53
   needMaxValue: 100
   needDecay: 0.06
   needWeightOnInteractionScoring:

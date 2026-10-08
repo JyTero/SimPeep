@@ -14,16 +14,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractionLogicSO
   interactionName: Read
   Description: Read Book
+  Reaction: 0
+  IsSocial: 0
+  hiddenInteraction: 0
+  skipMovement: 0
+  interactionDestinationDifferentFromSource: 0
+  destinationItem: {fileID: 0}
+  invalidInteraction: 0
   interactionEndingType: 1
   interactionLenght: 8
   targetNeedType: 0
   targetNeedValue: 0
-  need_InteractionInstructions:
-  - {fileID: 11400000, guid: e66cd6ff0d4ea66439f0d8287166cca1, type: 2}
-  relationshipChangeInstructions: []
+  need_InteractionInstructionsOnInteractionBegin: []
+  need_InteractionInstructionsOnInteractionTick: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
+  relationshipChangeInstructionsOnInteractionEnd: []
+  itemChangeInstructionSOsOnInteractionBegin: []
+  itemChangeInstructionSOsOnInteractionEnd: []
+  characterInstructionSOsOnInteractionBegin:
+  - {fileID: 11400000, guid: 7b6c3c07353a9874fa84ace647ebb95d, type: 2}
+  characterInstructionSOsOnInteractionEnd: []
+  specificItemInstructionSOsOnInteractionBegin: []
+  specificItemInstructionSOsOnInteractionEnd: []
+  requiredItemCapabilities: 
   socialResponceInteractions: []
-  Reaction: 0
   scoringModifiers:
   - traitSO: {fileID: 11400000, guid: 76a5f66927af64d4c9d21d5523dba07e, type: 2}
     traitBonus: 10
-  IsSocial: 0
+  hasFollowup: 0
+  followupInteractionSOs: []
