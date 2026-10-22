@@ -9,6 +9,20 @@ public class Running_InteractionState : InteractionState
     public override void OnStateEnter(ActiveInteraction interaction)
     {
         base.OnStateEnter(interaction);
+
+        //SocialInteractions
+        if (interaction.InteractionData.IsSocial)
+        {
+            if (interaction.InteractionData.IsSocialResponse)
+            {
+                
+            }
+            else
+            {
+                characterAIHandler.InitiatorReady(interaction.ThisCharacter);
+            }
+        }
+
     }
 
     public override void OnStateUpdate(ActiveInteraction interaction, float dt)

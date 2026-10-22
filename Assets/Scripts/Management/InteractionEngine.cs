@@ -18,32 +18,47 @@ public class InteractionEngine : ManagementCore
         base.Start();
     }
 
+    protected override void TimedUpdate(float dt)
+    {
+        base.TimedUpdate(dt);
+        timeSinceLastUdate += deltaTime;
+
+        if (TooEarlyForNextTick(updateInterval))
+            return;
+
+        //InteractionUpdate(deltaTime);
+        InteractionStateUpdate(dt);
+    }
+
     public void StartNewInteraction(ActiveInteraction interaction)
     {
 
         if (debugLog)
             Debug.Log($"{interaction.ThisCharacter.ItemName} started interaction {interaction.InteractionName} (of {interaction.InteractionSource.ItemName})");
-        interaction.PushInteractionState(interaction, new Default_InteractionState(characterAIHandler, this));
+        interaction.PushInitialisationState(interaction, new Default_InteractionState(characterAIHandler, this));
         activeInteractions.Add(interaction);
         PrepareInteractionInstructions(interaction);
+        interaction.InitialiseState();
         return;
 
     }
     private void PrepareInteractionInstructions(ActiveInteraction interaction)
     {
-        interaction.PushInteractionState(interaction, new Ending_InteractionState(characterAIHandler, this));
-        SetStateInstructions(interaction, interaction.InteractionData.Need_InteractionInstructionsOnInteractionEnd,
+        InteractionState state = new Ending_InteractionState(characterAIHandler, this);
+        interaction.PushInitialisationState(interaction, state);
+        SetStateInstructions(state, interaction.InteractionData.Need_InteractionInstructionsOnInteractionEnd,
      interaction.InteractionData.RelationshipChangeInstructionsOnInteractionEnd,
      interaction.InteractionData.ItemChangeInstructionSOsOnInteractionEnd,
      interaction.InteractionData.CharacterInstructionSOsOnInteractionEnd,
      interaction.InteractionData.SpecificItemInstructionSOsOnInteractionEnd);
 
+        state = new Running_InteractionState(characterAIHandler, this);
+        interaction.PushInitialisationState(interaction, state);
+        state.stateNeedInstructionSOs = interaction.InteractionData.Need_InteractionInstructionsOnInteractionTick;
 
-        interaction.PushInteractionState(interaction, new Running_InteractionState(characterAIHandler, this));
-        interaction.State.stateNeedInstructionSOs = interaction.InteractionData.Need_InteractionInstructionsOnInteractionTick;
-
-        interaction.PushInteractionState(interaction, new Starting_InteractionState(characterAIHandler, this));
-        SetStateInstructions(interaction, interaction.InteractionData.Need_InteractionInstructionsOnInteractionBegin,
+        state = new Starting_InteractionState(characterAIHandler, this);
+        interaction.PushInitialisationState(interaction, state);
+        SetStateInstructions(state, interaction.InteractionData.Need_InteractionInstructionsOnInteractionBegin,
     interaction.InteractionData.RelationshipChangeInstructionsOnInteractionBegin,
     interaction.InteractionData.ItemChangeInstructionSOsOnInteractionBegin,
     interaction.InteractionData.CharacterInstructionSOsOnInteractionBegin,
@@ -55,26 +70,26 @@ public class InteractionEngine : ManagementCore
     {
         //TODO: timeout if waiting for too long
     }
-    private void SetStateInstructions(ActiveInteraction interaction, List<Need_InstructionSO> needInstructionSOs,
+    private void SetStateInstructions(InteractionState state, List<Need_InstructionSO> needInstructionSOs,
     List<Relationship_InstructionSO> relationshipInstructionSOs, List<Item_InstructionSO> itemInstructionSOs,
     List<Character_InstructionSO> characterInstructionSOs, List<ItemSpecific_InstructionSO> itemSpecificInstructionSOs)
     {
         //NeedInstructions
-        interaction.State.stateNeedInstructionSOs = needInstructionSOs;
+        state.stateNeedInstructionSOs = needInstructionSOs;
         //RelationInstructions
-        interaction.State.stateRelationshipInstructionSOs = relationshipInstructionSOs;
+        state.stateRelationshipInstructionSOs = relationshipInstructionSOs;
         //ItemInstructions
         List<Item_InstructionData> item_InstructionDatas = new();
         foreach (Item_InstructionSO iiSO in itemInstructionSOs)
             item_InstructionDatas.Add(ItemInstructionSOToData(iiSO));
-        interaction.State.stateItemInstructionDatas = item_InstructionDatas;
+        state.stateItemInstructionDatas = item_InstructionDatas;
         //Character
-        interaction.State.stateCharacterInstructionSOs = characterInstructionSOs;
+        state.stateCharacterInstructionSOs = characterInstructionSOs;
 
         //ItemSpecific
-        interaction.State.stateItemSpecificInstructionSOs = itemSpecificInstructionSOs;
+        state.stateItemSpecificInstructionSOs = itemSpecificInstructionSOs;
 
-        interaction.State.ReceivedInstructions();
+        state.ReceivedInstructions();
     }
 
     public void ReceiveStateInstructions(ActiveInteraction interaction, List<Item_InstructionData> itemInstructionDatas)
@@ -150,41 +165,24 @@ public class InteractionEngine : ManagementCore
         }
 
     }
-    //public void PrepareInstructionInteraction(ActiveInteraction interaction, InteractionSO interSO, Interactable interactionSource)
-    //{
-    //    interaction.PushInteractionState(EInteractionState.Ending);
-    //    SetStateInstructions(interaction, interSO.Need_InteractionInstructionsOnInteractionEnd,
-    // interSO.RelationshipChangeInstructionsOnInteractionEnd,
-    // interSO.ItemChangeInstructionSOsOnInteractionEnd,
-    // interSO.CharacterInstructionSOsOnInteractionEnd);
-    //    interaction.State.interactionSource = interactionSource;
-
-    //    //interaction.PushInteractionState(EInteractionState.Running);
-    //    //interaction.State.stateNeedInstructionSOs = interaction.InteractionTuningSO.Need_InteractionInstructionsOnInteractionTick;
-
-    //    interaction.PushInteractionState(EInteractionState.Starting);
-    //    SetStateInstructions(interaction, interSO.Need_InteractionInstructionsOnInteractionBegin,
-    //interSO.RelationshipChangeInstructionsOnInteraction,
-    //interSO.ItemChangeInstructionSOsOnInteractionBegin,
-    //interSO.CharacterInstructionSOsOnInteractionBegin);
-    //    interaction.State.interactionSource = interactionSource;
-    //}
 
     public void PrepareInstructionInteraction(ActiveInteraction interaction, InteractionData instructionInteractionData, Interactable instructionInteractionSource)
     {
-        interaction.PushInteractionState(interaction, new Ending_InteractionState(characterAIHandler, this));
-        SetStateInstructions(interaction, instructionInteractionData.Need_InteractionInstructionsOnInteractionEnd,
+        InteractionState state = new Ending_InteractionState(characterAIHandler, this);
+        interaction.PushInteractionState(interaction, state);
+        SetStateInstructions(state, instructionInteractionData.Need_InteractionInstructionsOnInteractionEnd,
      instructionInteractionData.RelationshipChangeInstructionsOnInteractionEnd,
      instructionInteractionData.ItemChangeInstructionSOsOnInteractionEnd,
      instructionInteractionData.CharacterInstructionSOsOnInteractionEnd,
      instructionInteractionData.SpecificItemInstructionSOsOnInteractionEnd);
 
-
-        interaction.PushInteractionState(interaction, new Running_InteractionState(characterAIHandler, this));
+        state = new Running_InteractionState(characterAIHandler, this);
+        interaction.PushInteractionState(interaction, state);
         interaction.State.stateNeedInstructionSOs = instructionInteractionData.Need_InteractionInstructionsOnInteractionTick;
 
-        interaction.PushInteractionState(interaction, new Starting_InteractionState(characterAIHandler, this));
-        SetStateInstructions(interaction, instructionInteractionData.Need_InteractionInstructionsOnInteractionBegin,
+        state = new Starting_InteractionState(characterAIHandler, this);
+        interaction.PushInteractionState(interaction, state);
+        SetStateInstructions(state, instructionInteractionData.Need_InteractionInstructionsOnInteractionBegin,
     instructionInteractionData.RelationshipChangeInstructionsOnInteractionBegin,
     instructionInteractionData.ItemChangeInstructionSOsOnInteractionBegin,
     instructionInteractionData.CharacterInstructionSOsOnInteractionBegin,
@@ -212,17 +210,7 @@ public class InteractionEngine : ManagementCore
         interaction.PushInteractionState(interaction, new Waiting_InteractionState(characterAIHandler, this));
     }
 
-    protected override void TimedUpdate(float dt)
-    {
-        base.TimedUpdate(dt);
-        timeSinceLastUdate += deltaTime;
 
-        if (TooEarlyForNextTick(updateInterval))
-            return;
-
-        //InteractionUpdate(deltaTime);
-        InteractionStateUpdate(dt);
-    }
 
     private void InteractionStateUpdate(float dt)
     {
@@ -291,4 +279,6 @@ public class InteractionEngine : ManagementCore
     {
         return new Item_InstructionData(itemInstructionSO);
     }
+
+
 }

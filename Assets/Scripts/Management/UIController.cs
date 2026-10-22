@@ -162,6 +162,8 @@ public class UIController : ManagementCore
     //INTERACTIONQUEUE
     public void RefreshInteractionQueueData(CharacterAI chara)
     {
+        if (chara.chara != selectedCharacter)
+            return;
         List<string> interactionQueue = MakeQueuedInteractionNamesList(chara);
         interactionQueue_UIPanel.RefreshQueueData(interactionQueue);
     }

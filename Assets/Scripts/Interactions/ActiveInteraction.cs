@@ -84,6 +84,21 @@ public class ActiveInteraction
 
     public bool InteractionCancelled = false;
 
+    public void PushInitialisationState(ActiveInteraction interaction, InteractionState newState)
+    {
+
+        interactionStateStack.Push(newState);
+
+        //state = newState;
+        //state.OnStateEnter(interaction);
+
+    }
+
+    public void InitialiseState()
+    {
+        PopInteractionState();
+        uiController.RefreshInteractionStateData(this, ThisCharacter);
+    }
 
     public void PushInteractionState(ActiveInteraction interaction, InteractionState newState)
     {

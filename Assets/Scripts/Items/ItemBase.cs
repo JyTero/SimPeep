@@ -76,8 +76,6 @@ public class ItemBase : Interactable
     {
         SlotTypeSO type = slot.SlotType;
 
-        if (itemName == "Matter Exciter")
-            Debug.Log($"Stovin'");
         if (itemSlotsByType.ContainsKey(type))
             itemSlotsByType[type].Add(slot);
         else

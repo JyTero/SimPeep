@@ -419,7 +419,7 @@ public class CharacterAIHandler : ManagementCore
         if (waitingCharactersByTargets.ContainsKey(target))
         {
             WaitingCharacter targetWaitingCharacter = waitingCharactersByTargets[target];
-            HandleWaitCircle(waitingCharacter, targetWaitingCharacter);
+            //HandleWaitCircle(waitingCharacter, targetWaitingCharacter);
             waitingCharactersByTargets.Remove(target);
             return;
         }
@@ -432,7 +432,9 @@ public class CharacterAIHandler : ManagementCore
             case EWaitReason.WaitForSocialInteractionPartner:
                 break;
             case EWaitReason.WaitForItemToBeAvailable:
-                RegisterToWaitForItemToBeAvailable(target);
+                //RegisterToWaitForItemToBeAvailable(target);
+                break;
+            case EWaitReason.WaitForSocialResponder:
                 break;
             default:
                 Debug.LogError($"Character waiting with unexpected cicumstances {character.ItemName} | {reason} | {target.ItemName}");
@@ -512,8 +514,55 @@ public class CharacterAIHandler : ManagementCore
         WaitingCharacter wCharacter = waitingCharactersByTargets[character];
         waitingCharactersByTargets.Remove(wCharacter.WaitTarget);
         waitingCharactersByCharacter.Remove(character);
+        charactersAIsByCharacter[character].CurrentInteraction.PopInteractionState();
     }
 
+    //SOCIAL SITUATIONS
+    private List<SocialSituation> socialSituations = new();
+
+    private Dictionary<Character, SocialSituation> socialSituationsByInitiator = new();
+    public Dictionary<Character, SocialSituation> SocialSituationsByInitiator { get { return socialSituationsByInitiator; } }
+
+    private Dictionary<Character, SocialSituation> socialSituationsByResponder = new();
+    public Dictionary<Character, SocialSituation> SocialSituationsByResponder { get { return socialSituationsByResponder; } }
+
+    public void NewSocialSituation(ActiveInteraction initiatorInteraction, ActiveInteraction responderInteraction)
+    {
+        SocialSituation socialSituation = new(initiatorInteraction.ThisCharacter, initiatorInteraction.InteractionSource as Character);
+
+        socialSituations.Add(socialSituation);
+        socialSituationsByInitiator.Add(initiatorInteraction.ThisCharacter, socialSituation);
+        socialSituationsByResponder.Add(responderInteraction.ThisCharacter, socialSituation);
+
+        socialSituation.OnResponderReady += ResponderReady;
+        //socialSituation.OnInitiatorReady += InitiatorReady;
+    }
+
+
+    public void ResponderReady(Character responder)
+    {
+        SocialSituation socialSituation = socialSituationsByResponder[responder];
+        characterAIHandler.QuitWaiting(socialSituation.Initiator);
+    }
+
+    public void InitiatorReady(Character initiator)
+    {
+        SocialSituation socialSituation = socialSituationsByInitiator[initiator];
+        socialSituation.InitiatorIsReady();
+
+        if(socialSituation.BothReady())
+        {
+            //Pop to continue
+            charactersAIsByCharacter[socialSituation.Responder].CurrentInteraction.PopInteractionState();
+
+        }
+        else
+        {
+            Debug.LogError($"Social Interaction initiator tried to start interaction, both were not ready! " +
+                $"I:{socialSituation.Initiator.ItemName} | {socialSituation.Initiator} " +
+                $"R:{socialSituation.Responder.ItemName} | {socialSituation.ResponderReady} ");
+        }
+    }
 }
 
 

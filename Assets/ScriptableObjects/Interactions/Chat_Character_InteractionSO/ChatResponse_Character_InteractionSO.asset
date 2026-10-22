@@ -25,9 +25,10 @@ MonoBehaviour:
   destinationItem: {fileID: 0}
   invalidInteraction: 0
   interactionEndingType: 1
-  interactionLenght: 6
+  interactionLenght: 3
   targetNeedType: 0
   targetNeedValue: 0
+  waitForInteractionEnd: 0
   need_InteractionInstructionsOnInteractionBegin: []
   need_InteractionInstructionsOnInteractionTick: []
   need_InteractionInstructionsOnInteractionEnd: []

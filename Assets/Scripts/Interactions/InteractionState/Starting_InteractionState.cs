@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class Starting_InteractionState : InteractionState
 {
@@ -10,62 +11,91 @@ public class Starting_InteractionState : InteractionState
     {
         base.OnStateEnter(interaction);
 
-
-
-        //Social interaction specifics
+        //Social Specifics
         if (interaction.InteractionData.IsSocial && !interaction.socialInteractionInitialised)
         {
-            CharacterAI target = characterAIHandler.CharactersAIsByCharacter[(Character)interaction.InteractionSource];
-            if (target.CanMajorSocialise)
+            if (interaction.InteractionData.IsSocialResponse)
             {
-                //Continue with interaction
-            }
-            else if (target.CanMinorSocialise)
-            {
-                if (interaction.InteractionData.SocialInteractionType == ESocialInteractionType.Major)
-                {
-                    if (interaction.InteractionData.WaitForInteractionEnd)
-                    {
-                        //WAIT
-                    }
-                    else
-                    {
-                        Debug.LogError($"Target of a social interaction is not available!");
-                        return;
+                characterAIHandler.RegisterToWait(interaction.ThisCharacter, EWaitReason.WaitForSocialInteractionPartner, interaction.InteractionSource);
+                characterAIHandler.SocialSituationsByResponder[interaction.ThisCharacter].ResponderIsReady();
+                interaction.PushInteractionState(interaction, new Waiting_InteractionState(characterAIHandler, interactionEngine));
+                //characterAIHandler.
 
-                    }
-                }
-                else
-                {
-                    //Continue with interaction
-                }
             }
             else
             {
-                if (interaction.InteractionData.WaitForInteractionEnd)
-                {
-                    //WAIT
-                }
-                else
-                {
-                    Debug.LogError($"Target of a social interaction is not available!");
-                    return;
+                characterAIHandler.RegisterToWait(interaction.ThisCharacter, EWaitReason.WaitForItemToBeAvailable, interaction.InteractionSource);
 
-                }
-            }
-            if (interaction.InteractionData.IsSocialResponse)
-            {
-                interactionEngine.RegisterToWait(interaction, EWaitReason.WaitForSocialInteractionPartner);
-                interaction.socialInteractionInitialised = true;
-                return;
+                //Push interaction on responder
+                ActiveInteraction responederInteraction = new(interaction.InteractionSource as Character,
+                    new(interaction.InteractionData.SocialResponceInteractions[0], interaction.ThisCharacter));
+
+                characterAIHandler.NewSocialSituation(interaction, responederInteraction);
+                
+                characterAIHandler.QueueInteraction(responederInteraction,InteractionQueuePriority.UserSelectNPCReaction);
+                interaction.PushInteractionState(interaction, new Waiting_InteractionState(characterAIHandler, interactionEngine));
+
+                
             }
 
-            //Send Social Response to target
-            characterAIHandler.QueueInteraction(new(interaction.InteractionSource as Character,
-                new(interaction.InteractionData.SocialResponceInteractions[0], interaction.ThisCharacter)), InteractionQueuePriority.UserSelectNPCReaction);
             interaction.socialInteractionInitialised = true;
-
         }
+
+        //OLD
+        //Social interaction specifics
+        //if (interaction.InteractionData.IsSocial && !interaction.socialInteractionInitialised)
+        //{
+        //    CharacterAI target = characterAIHandler.CharactersAIsByCharacter[(Character)interaction.InteractionSource];
+        //    if (target.CanMajorSocialise)
+        //    {
+        //        //Continue with interaction
+        //    }
+        //    else if (target.CanMinorSocialise)
+        //    {
+        //        if (interaction.InteractionData.SocialInteractionType == ESocialInteractionType.Major)
+        //        {
+        //            if (interaction.InteractionData.WaitForInteractionEnd)
+        //            {
+        //                //WAIT
+        //            }
+        //            else
+        //            {
+        //                Debug.LogError($"Target of a social interaction is not available!");
+        //                return;
+
+        //            }
+        //        }
+        //        else
+        //        {
+        //            //Continue with interaction
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (interaction.InteractionData.WaitForInteractionEnd)
+        //        {
+        //            //WAIT
+        //        }
+        //        else
+        //        {
+        //            Debug.LogError($"Target of a social interaction is not available!");
+        //            return;
+
+        //        }
+        //    }
+        //    if (interaction.InteractionData.IsSocialResponse)
+        //    {
+        //        interactionEngine.RegisterToWait(interaction, EWaitReason.WaitForSocialInteractionPartner);
+        //        interaction.socialInteractionInitialised = true;
+        //        return;
+        //    }
+
+        //    //Send Social Response to target
+        //    characterAIHandler.QueueInteraction(new(interaction.InteractionSource as Character,
+        //        new(interaction.InteractionData.SocialResponceInteractions[0], interaction.ThisCharacter)), InteractionQueuePriority.UserSelectNPCReaction);
+        //    interaction.socialInteractionInitialised = true;
+
+        //}
     }
 
     public override void OnStateUpdate(ActiveInteraction interaction, float dt)
@@ -80,8 +110,8 @@ public class Starting_InteractionState : InteractionState
     {
         base.OnStateExit(interaction);
 
-        if (interaction.InteractionData.IsSocial && !interaction.InteractionData.IsSocialResponse)
-            characterAIHandler.ContinueSocialResponse(interaction.InteractionSource as Character); 
+        //if (interaction.InteractionData.IsSocial && !interaction.InteractionData.IsSocialResponse)
+        //    characterAIHandler.ContinueSocialResponse(interaction.InteractionSource as Character);
     }
 }
 
