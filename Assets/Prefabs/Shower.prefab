@@ -96,16 +96,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
   itemName: Water Closet
   footprint: {x: 1, y: 1}
+  interactionSOs: []
+  interactionSlot: {fileID: 5072334878194706505}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 1
-  interactionSOs: []
   itemData: {fileID: 11400000, guid: 89e14a508c174ef44ab849fb83a919ec, type: 2}
   itemDescription: 
   capabilites: 
   capabilityComponents: []
+  itemTileWalkability: 4
   itemSlotsOnItem: []
   characterSlotsOnItem: []
-  interactionSlot: {fileID: 5072334878194706505}
+  AvailableForUse: 1
   itemInitialised: 0
 --- !u!33 &5973632551999275730
 MeshFilter:

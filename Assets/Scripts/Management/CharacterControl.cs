@@ -31,10 +31,17 @@ public class CharacterControl : ManagementCore
         if (character.CharacterPhysicalState != CharacterPhysicalStateEnum.Standing)
             StandUpFromSlot(character, character.OccupiedSlot);
 
-        characterPathfinding.NewCharacterFindingPath(character, destinationTile);
-
+        PathfindingResult pathfindingResult = characterPathfinding.NewCharacterFindingPath(character, destinationTile);
+        //Handle Result
+        characterAIHandler.CharacterRoutingResult(pathfindingResult, character);
     }
 
+    public void TurnTowardsTile(Character character, LotGridTile tile)
+    {
+        Vector3 targetPosition = tile.TilePos;
+        targetPosition.y = character.transform.position.y;
+        character.transform.LookAt(targetPosition);
+    }
 
     protected override void TimedUpdate(float dt)
     {
@@ -55,12 +62,7 @@ public class CharacterControl : ManagementCore
         return false;
     }
 
-    //"other"(?) moving (When moving without tied interaction)
 
-    public void CharacerAtDestination(Character chara)
-    {
-        //charactersAtDestination.Add(chara);
-    }
 
     public void SitCharacterToSlot(Character character, Character_Slot slot)
     {
@@ -85,7 +87,7 @@ public class CharacterControl : ManagementCore
     public bool IsWithinInteractionRange(Character character, ItemBase target)
     {
         List<LotGridTile> neighborTiles = lotManager.GetNeighboringTiles(character.CurrentTile);
-        if (neighborTiles.Any(neighborTile => neighborTile.ItemOnTile == target))
+        if (neighborTiles.Any(neighborTile => neighborTile.InteractableOnTile == target))
             return true;
         else
             return false;
@@ -95,8 +97,8 @@ public class CharacterControl : ManagementCore
         List<LotGridTile> neighborTiles = lotManager.GetNeighboringTiles(character.CurrentTile);
         foreach (LotGridTile lgt in neighborTiles)
         {
-            if (lgt.ItemOnTile)
-                if (((ItemBase)lgt.ItemOnTile).ItemSlotsByItem.ContainsKey(target)) //Never called, no items on tiles?
+            if (lgt.InteractableOnTile)
+                if (((ItemBase)lgt.InteractableOnTile).ItemSlotsByItem.ContainsKey(target)) //Never called, no items on tiles?
                     return true;
         }
         return false;

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 
 public class LotManager : ManagementCore
@@ -60,7 +61,7 @@ public class LotManager : ManagementCore
             {
                 int i = Array.IndexOf(lot.LotGrid.Tiles, item.CurrentTile);
                 List<LotGridTile> footprintTiles = GetTilesInFootprint(lgt, item.Footprint);
-                foreach(LotGridTile tile in footprintTiles)
+                foreach (LotGridTile tile in footprintTiles)
                 {
                     tile.PlaceItemToTile(item);
                 }
@@ -220,7 +221,7 @@ public class LotManager : ManagementCore
     {
         List<LotGridTile> neighborTiles = GetNeighboringTiles(centerTile);
 
-        LotGridTile lgt = neighborTiles.Where(tile => tile.ItemOnTile ==  interactable).FirstOrDefault();
+        LotGridTile lgt = neighborTiles.Where(tile => tile.InteractableOnTile == interactable).FirstOrDefault();
         if (lgt == null)
             return false;
         else
@@ -228,11 +229,11 @@ public class LotManager : ManagementCore
     }
     public LotGridTile GetNearbyFreeTile(LotGridTile center)
     {
-        if (!center.ItemOnTile)
+        if (!center.InteractableOnTile)
             return center;
         List<LotGridTile> neighbors = GetNeighboringTiles(center);
         foreach (LotGridTile neighbor in neighbors)
-            if (!neighbor.ItemOnTile)
+            if (!neighbor.InteractableOnTile)
                 return neighbor;
         return null;
     }
@@ -247,6 +248,10 @@ public class LotManager : ManagementCore
         Vector2Int gridPos = lot.LotGrid.WorldToTile(pos);
         return lot.LotGrid.GetTile(gridPos.x, gridPos.y);
 
+    }
+    public LotGridTile GetLotTile(Vector2Int tileCoordinate)
+    {
+        return lot.LotGrid.GetTile(tileCoordinate.x, tileCoordinate.y);
     }
     public LotGridTile GetLotTile(int x, int y)
     {
@@ -392,9 +397,26 @@ public class LotManager : ManagementCore
             {
                 LotGridTile tile = lot.LotGrid.GetTile(x, y);
 
-                Gizmos.color = tile.walkable
-                    ? Color.green
-                    : Color.red;
+                switch (tile.Walkwability)
+                {
+                    case ELGTWalkability.Default:
+                        Gizmos.color = Color.gray;
+                        break;
+                    case ELGTWalkability.Yes:
+                        Gizmos.color = Color.green;
+                        break;
+                    case ELGTWalkability.StepOver:
+                        Gizmos.color = Color.yellow;
+                        break;
+                    case ELGTWalkability.NoTemporary:
+                        Gizmos.color = Color.orange;
+                        break;
+                    case ELGTWalkability.No:
+                        Gizmos.color = Color.red;
+                        break;
+                    default:
+                        break;
+                }
 
 
                 Vector3 center = GetTileCenterInPosition(tile);

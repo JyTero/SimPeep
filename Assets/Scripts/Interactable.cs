@@ -26,7 +26,7 @@ public class Interactable : MonoBehaviour
     [SerializeField]
     protected List<InteractionSO> interactionSOs = new();
     public List<InteractionSO> InteractionSOs { get { return interactionSOs; } }
-  
+
     [SerializeField]
     protected Character_Slot interactionSlot;
     public Character_Slot InteractionSlot { get { return interactionSlot; } }
@@ -53,7 +53,9 @@ public class Interactable : MonoBehaviour
 
     public void ChangeCurrentTile(LotGridTile tile)
     {
+
         currentTile = tile;
+
     }
 
 

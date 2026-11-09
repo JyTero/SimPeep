@@ -220,13 +220,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 76a5f66927af64d4c9d21d5523dba07e, type: 2}
   CharacterPhysicalState: 0
   OccupiedSlot: {fileID: 0}
+  carrySlot: {fileID: 8530011011793490133}
+  IsIdle: 1
   needSOs:
   - {fileID: 11400000, guid: 5dd04847d149dcf45933780246370dfc, type: 2}
   - {fileID: 11400000, guid: 782d4b64f8cc28b49ad2e2c96547b9ac, type: 2}
   - {fileID: 11400000, guid: 74cbe71bfd86e744cb9a4acc40bc89dc, type: 2}
   - {fileID: 11400000, guid: 86719ccca67eb4b4aa133f93bc6bc073, type: 2}
   - {fileID: 11400000, guid: 2cb0186c691b2964881c5d3ca52ffc5b, type: 2}
-  carrySlot: {fileID: 8530011011793490133}
 --- !u!136 &7340365137497411295
 CapsuleCollider:
   m_ObjectHideFlags: 0

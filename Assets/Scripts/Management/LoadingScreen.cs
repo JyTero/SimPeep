@@ -68,7 +68,9 @@ public class LoadingScreen : MonoBehaviour
 
         }
 
-        chara.ChangeCurrentTile(lotManager.GetTileInteractableIsOn(chara));
+        LotGridTile lgt = lotManager.GetTileInteractableIsOn(chara);
+        chara.ChangeCurrentTile(lgt);
+        lgt.CharacterOnTile(chara);
         chara.transform.position = chara.CurrentTile.TilePos;
 
         //Relations

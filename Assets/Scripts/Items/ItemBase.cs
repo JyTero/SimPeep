@@ -26,7 +26,9 @@ public class ItemBase : Interactable
     private List<ItemCapability> capabilityComponents;
     public List<ItemCapability> CapabilityComponents { get { return capabilityComponents; } }
 
-   
+    [SerializeField]
+    private ELGTWalkability itemTileWalkability;
+    public ELGTWalkability ItemTileWalkability { get { return itemTileWalkability; } }
 
     private Item_Slot occupiedSlot;
     public Item_Slot OccupiedSlot { get { return occupiedSlot; } }

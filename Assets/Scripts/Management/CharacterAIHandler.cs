@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.Rendering.Universal;
@@ -29,6 +30,8 @@ public class CharacterAIHandler : ManagementCore
 
     private Debuglandia debuglandia;
 
+    [SerializeField]
+    private Item_InstructionSO findSpaceForSocialInstructionSO;
 
     protected override void Start()
     {
@@ -315,23 +318,57 @@ public class CharacterAIHandler : ManagementCore
         }
     }
 
+    private List<Character> waitedCharacters = new();
     public void SubscribeToKnowWhenItemAvailable(Character character)
     {
         waitedCharacters.Add(character);
     }
-    private List<Character> waitedCharacters = new();
 
-
-    public void ContinueSocialResponse(Character socialResponder)
+    public void CharacterRoutingResult(PathfindingResult result, Character character)
     {
-        //Pop two states to get to running state
-        CharacterAI responderAI = charactersAIsByCharacter[socialResponder];
-        ActiveInteraction responseInteraction = responderAI.CurrentInteraction;
+        switch (result.RoutingResult)
+        {
+            case ERoutingResult.Default:
+                break;
+            case ERoutingResult.Incomplete:
+                break;
+            case ERoutingResult.Success:
+                break;
+            case ERoutingResult.FailedNoPath:
+                Debug.LogWarning($"{character.ItemName} was unable to find path to their destination.");
+                characterPathfinding.CancelPathfinding(character);
+                interactionEngine.CancelInteraction(characterAIHandler.charactersAIsByCharacter[character]);
+                break;
+            case ERoutingResult.FailedDestinationUnWalkable:
+                characterPathfinding.CancelPathfinding(character);
+                //If Character target, push interaction "make space"
+                if (interactionEngine.ActiveInteractionsByCharacter[character].InteractionSource is Character)
+                {
+                    //Target finds space for social interaction (FindSpaceForSocialInteraction routine)
+                    Character targetCharacter = interactionEngine.ActiveInteractionsByCharacter[character].InteractionSource as Character;
+                    //QueueInteraction(new ActiveInteraction(targetCharacter, new StoredInteraction(findSpaceForSocialInstructionSO, targetCharacter)), InteractionQueuePriority.AINeedFixing);
+                    ////Initiator waits
+                    //RegisterToWait(character, EWaitReason.WaitForItemToBeAvailable, targetCharacter);
+                    //If target finds space
+                    itemManager.HandleItemInstructionData(interactionEngine.ItemInstructionSOToData(findSpaceForSocialInstructionSO), interactionEngine.ActiveInteractionsByCharacter[targetCharacter]);
+                    //Initiator stops waiting, routes to target
+                    //If space cant be found, fail
+                }
+                //If item target, cancel interaction due to routing failure
+                else if (interactionEngine.ActiveInteractionsByCharacter[character].InteractionSource is ItemBase)
+                {
+                    Debug.LogWarning($"{character.ItemName} was unable to find path to their destination, destination unwalkable");
+                    interactionEngine.CancelInteraction(characterAIHandler.charactersAIsByCharacter[character]);
 
-        responseInteraction.PopInteractionState();
-        responseInteraction.PopInteractionState();
-
+                }
+                else
+                    throw new Exception($"Unknown interactions source!");
+                break;
+            default:
+                break;
+        }
     }
+
 
     //MISC
     public void FindAvailableChairAtTable(Character character)
@@ -550,7 +587,7 @@ public class CharacterAIHandler : ManagementCore
         SocialSituation socialSituation = socialSituationsByInitiator[initiator];
         socialSituation.InitiatorIsReady();
 
-        if(socialSituation.BothReady())
+        if (socialSituation.BothReady())
         {
             //Pop to continue
             charactersAIsByCharacter[socialSituation.Responder].CurrentInteraction.PopInteractionState();

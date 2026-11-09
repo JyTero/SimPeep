@@ -9,9 +9,11 @@ using UnityEngine;
 
 public class InteractionEngine : ManagementCore
 {
+    //CREATE: Dictionary activeInteractionsByCharacter
     private List<ActiveInteraction> activeInteractions = new();
 
-    private Dictionary<Character, ActiveInteraction> waitingInteractionsByWaitee = new();
+    private Dictionary<Character, ActiveInteraction> activeInteractionsByCharacter = new();
+    public Dictionary<Character, ActiveInteraction> ActiveInteractionsByCharacter { get { return activeInteractionsByCharacter; } }
 
     protected override void Start()
     {
@@ -37,6 +39,7 @@ public class InteractionEngine : ManagementCore
             Debug.Log($"{interaction.ThisCharacter.ItemName} started interaction {interaction.InteractionName} (of {interaction.InteractionSource.ItemName})");
         interaction.PushInitialisationState(interaction, new Default_InteractionState(characterAIHandler, this));
         activeInteractions.Add(interaction);
+        activeInteractionsByCharacter.Add(interaction.ThisCharacter, interaction);
         PrepareInteractionInstructions(interaction);
         interaction.InitialiseState();
         return;
@@ -261,6 +264,7 @@ public class InteractionEngine : ManagementCore
     public void OnInteractionEnd(ActiveInteraction interaction)
     {
         activeInteractions.Remove(interaction);
+        activeInteractionsByCharacter.Remove(interaction.ThisCharacter);
         characterAIHandler.OnInteractionEnd(interaction.ThisCharacter, interaction);
         itemManager.OnInteractionEnd(interaction, interaction.InteractionSource as ItemBase);
         if (debugLog)

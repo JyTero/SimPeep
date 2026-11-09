@@ -50,16 +50,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
   itemName: Seat of Relief
   footprint: {x: 1, y: 1}
+  interactionSOs: []
+  interactionSlot: {fileID: 432267340047956026}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 1
-  interactionSOs: []
   itemData: {fileID: 11400000, guid: cb2e42bad1ca9194e929f34d0f7220e8, type: 2}
   itemDescription: 
   capabilites: 
   capabilityComponents: []
+  itemTileWalkability: 4
   itemSlotsOnItem: []
   characterSlotsOnItem: []
-  interactionSlot: {fileID: 432267340047956026}
+  AvailableForUse: 1
   itemInitialised: 0
 --- !u!33 &1191512325784902825
 MeshFilter:

@@ -150,20 +150,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
   itemName: 
   footprint: {x: 1, y: 1}
+  interactionSOs: []
+  interactionSlot: {fileID: 0}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 1
-  interactionSOs: []
   itemData: {fileID: 11400000, guid: 03889b5da27f32d4495879ed21da7fe6, type: 2}
   itemDescription: 
   capabilites: 00000000
   capabilityComponents:
   - {fileID: 4390893459346520286}
+  itemTileWalkability: 4
   itemSlotsOnItem:
   - {fileID: 8903222818066427492}
   - {fileID: 7030143903729548661}
   - {fileID: 149291511270889787}
   - {fileID: 1237114517314472189}
   characterSlotsOnItem: []
+  AvailableForUse: 1
   itemInitialised: 0
 --- !u!114 &4390893459346520286
 MonoBehaviour:

@@ -185,16 +185,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
   itemName: Sleep-i-nator
   footprint: {x: 1, y: 2}
+  interactionSOs: []
+  interactionSlot: {fileID: 5016140032492900885}
   DebugDrawFootprintGrid: 1
   debugDrawForwardLine: 1
-  interactionSOs: []
   itemData: {fileID: 11400000, guid: e9d074de3feed354daf1bc2ed71b8521, type: 2}
   itemDescription: 
   capabilites: 
   capabilityComponents: []
+  itemTileWalkability: 4
   itemSlotsOnItem: []
   characterSlotsOnItem: []
-  interactionSlot: {fileID: 5016140032492900885}
+  AvailableForUse: 1
   itemInitialised: 0
 --- !u!65 &8282961231785590437
 BoxCollider:

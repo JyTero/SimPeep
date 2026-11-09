@@ -24,10 +24,11 @@ public class LotGridTile
 
     public Item_Slot itemSlotOnTile;
     
-    private Interactable itemOnTile;
-    public Interactable ItemOnTile { get { return itemOnTile; } }
+    private Interactable interactableOnTile;
+    public Interactable InteractableOnTile { get { return interactableOnTile; } }
 
-    public bool walkable;
+    private ELGTWalkability walkability;
+    public ELGTWalkability Walkwability { get { return walkability; } }
     //public bool containsItem;
 
     public LotGridTile(WorldLot partOfLot, int tileX, int tileY)
@@ -35,7 +36,7 @@ public class LotGridTile
         this.partOfLot = partOfLot;
 
         tileCoordinates = new(tileX, tileY);
-        walkable = true;
+        walkability = ELGTWalkability.Yes;
 
 
     }
@@ -48,17 +49,29 @@ public class LotGridTile
 
     public void PlaceItemToTile(ItemBase item)
     {
-        walkable = false;
-        itemOnTile = item;
+        walkability = item.ItemTileWalkability;
+        interactableOnTile = item;
     }
     public void RemoveItemFromTile(ItemBase item)
     {
-        walkable = true;
-        itemOnTile = null;
+        walkability = ELGTWalkability.Yes;
+        interactableOnTile = null;
     }
 
     public void SlotOnTile(Item_Slot slot)
     {
         itemSlotOnTile = slot;
+    }
+
+    public void CharacterOnTile(Character character)
+    {
+        walkability = ELGTWalkability.NoTemporary;
+        interactableOnTile = character;
+    }
+
+    public void CharacterLeftTile()
+    {
+        walkability = ELGTWalkability.Yes;
+        interactableOnTile = null;
     }
 }

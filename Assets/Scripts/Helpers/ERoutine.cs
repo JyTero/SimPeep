@@ -4,5 +4,6 @@ public enum ERoutine
 {
     Default,
     UseTableWithSeating,
+    FindSpaceForSocialInteraction,
 
 }

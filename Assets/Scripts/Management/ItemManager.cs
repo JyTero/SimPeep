@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ItemManager : ManagementCore
@@ -188,14 +189,6 @@ public class ItemManager : ManagementCore
 
     }
 
-    public void HandleItemInstructions(List<Item_Instruction> itemInstructions, ActiveInteraction interaction)
-    {
-        foreach (Item_Instruction itemInstruction in itemInstructions)
-        {
-            HandleItemInstruction(itemInstruction, interaction);
-        }
-    }
-
     private void SpawnItem(Item_InstructionData instructionData, Character character, ItemBase item)
     {
         ItemBase ib = SpawnNewItem(instructionData.ItemToSpawn, character.ThisLot, item.transform.position);
@@ -354,7 +347,7 @@ public class ItemManager : ManagementCore
         else
         {
             LotGridTile itemTile = lotManager.GetTileInteractableIsOn(thisItem);
-            if (itemTile.ItemOnTile == thisItem)
+            if (itemTile.InteractableOnTile == thisItem)
             {
                 ItemBase newItem = SpawnNewItem(instructionData.NewItemPrefab, thisItem.ThisLot, NegSpawnPos);
 
@@ -375,7 +368,7 @@ public class ItemManager : ManagementCore
 
     private void RunRoutine(Item_InstructionData instructionData, ActiveInteraction interaction)
     {
-        interaction.PushInteractionState(interaction,new Routine_interactionState(characterAIHandler, interactionEngine));
+        interaction.PushInteractionState(interaction, new Routine_interactionState(characterAIHandler, interactionEngine));
 
         switch (instructionData.Routine)
         {
@@ -384,6 +377,9 @@ public class ItemManager : ManagementCore
                 break;
             case ERoutine.UseTableWithSeating:
                 RunUseTableWithSeatingRoutine(interaction);
+                break;
+            case ERoutine.FindSpaceForSocialInteraction:
+                FindSpaceForSocialInteraction(interaction);
                 break;
         }
     }
@@ -431,6 +427,65 @@ public class ItemManager : ManagementCore
         interactionEngine.ReceiveStateInstructions(interaction, itemInstructionDatas);
 
         //interaction.PopInteractionState();
+    }
+
+    private void FindSpaceForSocialInteraction(ActiveInteraction interaction)
+    {
+
+        LotGridTile responderTileInChecking;
+
+        List<LotGridTile> tilesToCheck = new();
+        List<LotGridTile> checkedTiles = new();
+        List<LotGridTile> tilesToPosition = new();
+        List<LotGridTile> positionTilesChecked = new();
+
+
+        responderTileInChecking = interaction.ThisCharacter.CurrentTile;
+        PathfindingResult responderPFR = characterPathfinding.TestIfCanRouteToTile(interaction.ThisCharacter, responderTileInChecking);
+
+
+        if (responderPFR.RoutingResult == ERoutingResult.Success)
+        {
+            tilesToCheck = lotManager.GetNeighboringTiles(responderTileInChecking);
+
+            foreach (LotGridTile lgt in tilesToCheck)
+            {
+                PathfindingResult initiatorPFR = characterPathfinding.TestIfCanRouteToTile(interaction.InteractionSource as Character, lgt);
+
+                if (initiatorPFR.RoutingResult == ERoutingResult.Success)
+                {
+                    Debug.Log($"Found Space: ({lgt.Coordinates})");
+                    characterControl.TurnTowardsTile(interaction.ThisCharacter, lgt);
+                    characterControl.RouteToTile(interaction.InteractionSource as Character, lgt);
+                    return;
+                }
+            }
+            Debug.Log("Initiator cant route to any tiles near responder, furthering search radius TBD");
+        }
+        else
+        {
+            //pick another tile for responder
+            Debug.Log("Could find no spaces near responder, furthering search radius TBD");
+        }
+
+
+        //FindSpace
+        //Check each neighbor tile
+        //if unwalkable
+        //Continue
+        //else
+        //Can initiator route there
+        //if no, continue
+        //if yes, ValidTileFound
+        //If all neighborin tiles are checked
+        //Check each neighboring tile
+    }
+
+    private void GetOutOfTheWay(ActiveInteraction interaction)
+    {
+        //Pick a random tile 5 tiles away
+
+        //Go there
     }
 
     //These two are to be replaced with proper interaction requirements system, which evaluates each interaction as needed instead of this syste

@@ -6,4 +6,6 @@ public enum EWaitReason
     WaitForSocialInteractionPartner,    //Target of social interaction waiting for partner to get in position
     WaitForItemToBeAvailable,           //Initiator waiting for item
     WaitForSocialResponder,             //Waiting for social responder be waiting
+    WaitForPathToUnblock,               //Path tile walkability == NoTemporary
+
 }
