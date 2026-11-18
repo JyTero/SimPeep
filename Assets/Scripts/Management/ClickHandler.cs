@@ -26,13 +26,13 @@ public class ClickHandler : ManagementCore
 
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                var intr = hit.collider.gameObject.GetComponent<Interactable>();
-                if (intr != null)
+                Interactable intreractable = hit.collider.gameObject.GetComponent<Interactable>();
+                if (intreractable != null)
                 {
                     if (debugLog)
                         Debug.Log("On Item");
 
-                    UIController.ShowListOfInteractions(intr.StoredInteractions);
+                    UIController.ShowListOfInteractions(intreractable);
                     return;
                 }
 

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.UIElements;
 
 public class CharacterControl : ManagementCore
 {
@@ -204,11 +206,45 @@ public class CharacterControl : ManagementCore
                 characterControl.RouteToTile(interaction.ThisCharacter, neighborTiles[0]);
                 break;
             case ECharacterInstructionDestination.ThisItemInteractionSlot:
-                characterControl.RouteToTile(interaction.ThisCharacter, lotManager.GetLotTile(interaction.InteractionSource.InteractionSlot.SlotTransform.position));
+                if (interaction.InteractionSource.InteractionSlot != null)
+                    characterControl.RouteToTile(interaction.ThisCharacter, lotManager.GetLotTile(interaction.InteractionSource.InteractionSlot.SlotTransform.position));
+                else if (interaction.InteractionSource.InteractionArea != null)
+                    RouteToTileOnItemInteractionArea(interaction);
+                else
+                    throw new Exception($"Invalid item interaction spot/area on {interaction.InteractionSource.ItemName}");
                 break;
             default:
                 break;
         }
+    }
+
+    private void RouteToTileOnItemInteractionArea(ActiveInteraction interaction)
+    {
+        Vector2Int forward = lotManager.GetItemForwardVector(interaction.InteractionSource);
+        Vector2Int right = new(forward.y, -forward.x);
+        LotGridTile tileInFront = lotManager.GetLotTile(interaction.InteractionSource.CurrentTile.Coordinates + forward);
+        LotGridTile rightTile = lotManager.GetLotTile(interaction.InteractionSource.CurrentTile.Coordinates + right);
+
+        Debug.Log($"TV tile {interaction.InteractionSource.CurrentTile.Coordinates}, Tile infront: {tileInFront.Coordinates}, Right Tile: {rightTile.Coordinates} forward vector: {forward}, Right vector: {right} Tiles: {interaction.InteractionSource.CurrentTile.Coordinates + forward} & {interaction.InteractionSource.CurrentTile.Coordinates + right}");
+
+
+        List<LotGridTile> tiles = new();
+        for (int depth = 1; depth <= interaction.InteractionSource.InteractionArea.x; depth++)
+        {
+            for (int width = -interaction.InteractionSource.InteractionArea.y; width <= interaction.InteractionSource.InteractionArea.y; width++)
+            {
+                LotGridTile tile = lotManager.GetLotTile(interaction.InteractionSource.CurrentTile.Coordinates + forward * depth + right * width);
+                if (tile.Walkwability != ELGTWalkability.Yes)
+                    continue;
+                if (characterPathfinding.CanRouteToTile(interaction.ThisCharacter, tile))
+                    tiles.Add(tile);
+
+            }
+        }
+        int random = UnityEngine.Random.Range(0, tiles.Count);
+        LotGridTile dTile = tiles[random];
+        RouteToTile(interaction.ThisCharacter, dTile);
+
     }
 
     private void SitCharacterToSlotFromInstruction(Character_Instruction charaInstruction, ActiveInteraction interaction)

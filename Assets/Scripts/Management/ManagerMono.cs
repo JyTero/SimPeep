@@ -14,6 +14,7 @@ public class ManagerMono : MonoBehaviour
     protected CapabilityHandler capabilityHandler;
     protected CharacterPathfinding characterPathfinding;
     protected InstructionEngine instructionEngine;
+    protected ItemSubclassHandler itemSubclassHandler;
 
     protected ItemSpecificInstructionHandler specificInstructionHandler;
    
@@ -41,6 +42,7 @@ public class ManagerMono : MonoBehaviour
         itemManager = FindAnyObjectByType<ItemManager>();
         capabilityHandler = FindAnyObjectByType<CapabilityHandler>();
         characterPathfinding = FindAnyObjectByType<CharacterPathfinding>();
+        itemSubclassHandler = FindAnyObjectByType<ItemSubclassHandler>();
 
         instructionEngine = FindAnyObjectByType<InstructionEngine>();
 

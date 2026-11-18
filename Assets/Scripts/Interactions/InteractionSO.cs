@@ -139,8 +139,8 @@ public class InteractionSO : ScriptableObject
     //public List<SubInteraction> SubInteractions { get { return subInteractions; } }
 
     [SerializeField, Tooltip("Capabilities the interaction utilises")]
-    private List<ItemCapabilites> requiredItemCapabilities = new();
-    public List<ItemCapabilites> RequiredItemCapabilities { get { return requiredItemCapabilities; } }
+    private List<EItemCapabilites> requiredItemCapabilities = new();
+    public List<EItemCapabilites> RequiredItemCapabilities { get { return requiredItemCapabilities; } }
 
 
 

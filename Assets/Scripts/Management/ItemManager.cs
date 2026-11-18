@@ -60,7 +60,7 @@ public class ItemManager : ManagementCore
         BuildStoredInteractions(item);
 
         capabilityHandler.InitialiseItemCapabilities(item);
-
+        itemSubclassHandler.InitialiseItem(item);
 
         //Slot
         foreach (Item_Slot slot in item.ItemSlotsOnItem)
@@ -71,6 +71,8 @@ public class ItemManager : ManagementCore
 
         item.itemInitialised = true;
     }
+
+
 
     public void OnInteractionBegin(ActiveInteraction interaction, ItemBase item)
     {
@@ -491,31 +493,31 @@ public class ItemManager : ManagementCore
     //These two are to be replaced with proper interaction requirements system, which evaluates each interaction as needed instead of this syste
     public void OnItemPickUp(ItemBase item, Character character)
     {
-        StoredInteraction si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Put Down To Lot"); //PutItemDown_InteractionSO
+        StoredInteraction si = item.StoredInteractions.FirstOrDefault(x => x.InteractionData.InteractionName == "Put Down To Lot"); //PutItemDown_InteractionSO
         if (si != null)
             si.InvalidInteraction = false;
 
-        si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Put Down To Any Slot");
+        si = item.StoredInteractions.FirstOrDefault(x => x.InteractionData.InteractionName == "Put Down To Any Slot");
         if (si != null)
             si.InvalidInteraction = false;
 
-        si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Pick Up");
+        si = item.StoredInteractions.FirstOrDefault(x => x.InteractionData.InteractionName == "Pick Up");
         if (si != null)
             si.InvalidInteraction = true;
 
     }
     public void OnItemPutDown(ItemBase item, Character character)
     {
-        StoredInteraction si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Put Down To Lot"); //PutItemDown_InteractionSO
+        StoredInteraction si = item.StoredInteractions.FirstOrDefault(x => x.InteractionData.InteractionName == "Put Down To Lot"); //PutItemDown_InteractionSO
         if (si != null)
             si.InvalidInteraction = true;
 
-        si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Put Down To Any Slot");
+        si = item.StoredInteractions.FirstOrDefault(x => x.InteractionData.InteractionName == "Put Down To Any Slot");
         if (si != null)
             si.InvalidInteraction = false;
 
 
-        si = item.StoredInteractions.Find(x => x.InteractionData.InteractionName == "Pick Up");
+        si = item.StoredInteractions.FirstOrDefault(x => x.InteractionData.InteractionName == "Pick Up");
         if (si != null)
             si.InvalidInteraction = false;
     }

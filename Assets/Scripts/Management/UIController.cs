@@ -56,8 +56,10 @@ public class UIController : ManagementCore
         relationshipsUIPanel.DisablePanel();
     }
 
-    public void ShowListOfInteractions(List<StoredInteraction> storedInteractions)
+    public void ShowListOfInteractions(Interactable interactable)
     {
+        List<StoredInteraction> storedInteractions = interactable.StoredInteractions.ToList();  //ToList() To make a copy instead of editing the original list
+
         for (int j = activeButtons.Count - 1; j >= 0; j--)
         {
             GameObject button = activeButtons[j];
@@ -66,6 +68,13 @@ public class UIController : ManagementCore
             buttonPool.Add(button);
             activeButtons.RemoveAt(j);
         }
+        //Gather Interactions
+        //CAPABILITY GATHERING DISABLED bc it might not be needed (replaced by item subclasses
+        //if (((ItemBase)interactable).CapabilityComponents.Count != 0)
+        //    storedInteractions.AddRange(capabilityHandler.GetCapabilityInteractions(((ItemBase)interactable).CapabilityComponents));
+        if (interactable is ItemBase)
+            storedInteractions.AddRange(itemSubclassHandler.GetItemInteractions(interactable as ItemBase));
+
         //Confirm pool
         if (buttonPool.Count < storedInteractions.Count)
             MakeButtonObjects(storedInteractions.Count - buttonPool.Count);
@@ -203,7 +212,7 @@ public class UIController : ManagementCore
         {
             if (character != selectedCharacter)
                 return;
-            List<string> queuedStates = new(){""};
+            List<string> queuedStates = new() { "" };
             interactionStates_UIPanel.RefreshQueueData(queuedStates);
             interactionStates_UIPanel.RefreshCurrentInteractionData("");
         }

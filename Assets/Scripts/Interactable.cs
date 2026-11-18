@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -21,15 +22,27 @@ public class Interactable : MonoBehaviour
 
 
     protected List<StoredInteraction> storedInteractions = new();
-    public List<StoredInteraction> StoredInteractions { get { return storedInteractions; } }
+    public IReadOnlyList<StoredInteraction> StoredInteractions => storedInteractions;
+    //public List<StoredInteraction> StoredInteractions { get { return storedInteractions; } }
 
     [SerializeField]
     protected List<InteractionSO> interactionSOs = new();
     public List<InteractionSO> InteractionSOs { get { return interactionSOs; } }
 
-    [SerializeField]
+    [SerializeField, HideIf("useInteractionArea")]
+    private bool useInteractionSlot;
+    [SerializeField, HideIf("useInteractionSlot")]
+    private bool useInteractionArea;
+
+    [SerializeField, ShowIf("useInteractionSlot")]
     protected Character_Slot interactionSlot;
     public Character_Slot InteractionSlot { get { return interactionSlot; } }
+
+    [SerializeField, ShowIf("useInteractionArea")]
+    private Vector2Int interactionArea;
+    public Vector2Int InteractionArea { get { return interactionArea; } }
+    
+
 
     protected virtual void Start()
     {

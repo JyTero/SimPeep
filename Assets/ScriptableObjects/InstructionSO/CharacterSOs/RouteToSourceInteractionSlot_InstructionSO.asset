@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63a5c5ac247ec3a42994f273a3cdb745, type: 3}
+  m_Script: {fileID: 11500000, guid: 6af47c612582b7742be323910c293861, type: 3}
   m_Name: RouteToSourceInteractionSlot_InstructionSO
   m_EditorClassIdentifier: Assembly-CSharp::Character_InstructionSO
-  Description: Route to Source Interaction Slot
+  Description: Route to Item Interaction Slot/Area
   instructionType: 1
   destinationType: 2

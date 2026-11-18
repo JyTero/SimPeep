@@ -16,6 +16,9 @@ MonoBehaviour:
   Description: Put held item down
   Reaction: 0
   IsSocial: 0
+  socialInteractionType: 0
+  isSocialResponse: 0
+  socialResponceInteractions: []
   hiddenInteraction: 0
   skipMovement: 1
   interactionDestinationDifferentFromSource: 0
@@ -25,14 +28,20 @@ MonoBehaviour:
   interactionLenght: 1
   targetNeedType: 0
   targetNeedValue: 0
+  waitForInteractionEnd: 0
+  need_InteractionInstructionsOnInteractionBegin: []
   need_InteractionInstructionsOnInteractionTick: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
   relationshipChangeInstructionsOnInteractionEnd: []
   itemChangeInstructionSOsOnInteractionBegin: []
   itemChangeInstructionSOsOnInteractionEnd:
   - {fileID: 11400000, guid: 0ee34e984dec571498c179c0c1216e6c, type: 2}
-  subInteractions: []
+  characterInstructionSOsOnInteractionBegin: []
+  characterInstructionSOsOnInteractionEnd: []
+  specificItemInstructionSOsOnInteractionBegin: []
+  specificItemInstructionSOsOnInteractionEnd: []
   requiredItemCapabilities: 
-  socialResponceInteractions: []
   scoringModifiers: []
   hasFollowup: 0
   followupInteractionSOs: []

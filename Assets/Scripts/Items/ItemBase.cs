@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ItemBase : Interactable
 {
-    [Header("ItemBase")]
+    [Header("ITEM BASE")]
     [SerializeField]
     private ItemSO itemData;
     public ItemSO ItemData {  get { return itemData; } }
@@ -19,8 +19,8 @@ public class ItemBase : Interactable
     public int ItemPrice { get { return itemPrice; } set { itemPrice = value; } }
 
     [SerializeField]
-    private List<ItemCapabilites> capabilites;
-    public List<ItemCapabilites> Capabilites { get { return capabilites; } }
+    private List<EItemCapabilites> capabilites;
+    public List<EItemCapabilites> Capabilites { get { return capabilites; } }
 
     [SerializeField]
     private List<ItemCapability> capabilityComponents;
@@ -47,8 +47,8 @@ public class ItemBase : Interactable
     private List<Character_Slot> characterSlotsOnItem = new();
     public List<Character_Slot> CharacterSlotsOnItem { get { return characterSlotsOnItem; }}
 
-    private Dictionary<ItemCapabilites, ItemCapability> capabilitiesByEnum = new();
-    public Dictionary<ItemCapabilites, ItemCapability> CapabilitiesByEnum { get { return capabilitiesByEnum; } }
+    private Dictionary<EItemCapabilites, ItemCapability> capabilitiesByEnum = new();
+    public Dictionary<EItemCapabilites, ItemCapability> CapabilitiesByEnum { get { return capabilitiesByEnum; } }
 
 
     //DEBUG implementation, in the future fancy system to handle items with multiple users (sofa)

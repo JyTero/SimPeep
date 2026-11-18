@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -32,6 +33,14 @@ public class CharacterPathfinding : ManagementCore
             charactersFindingPathByCharacter.Add(character, new CharacterFindingPath(character, destinationTile));
             return new PathfindingResult(ERoutingResult.Incomplete, ERoutingResultReason.PathfindingOngoing, character, destinationTile);
         }
+    }
+    public bool CanRouteToTile(Character character, LotGridTile destinationTile)
+    {
+        PathfindingResult pfr = TestIfCanRouteToTile(character, destinationTile);
+        if (pfr.RoutingResult == ERoutingResult.Success)
+            return true;
+        else
+            return false;
     }
     public PathfindingResult TestIfCanRouteToTile(Character character, LotGridTile destinationTile)
     {
@@ -206,10 +215,11 @@ public class CharacterPathfinding : ManagementCore
                     //HOW?
                 //if not, if blocker is character, wait and ask them to move
                 //if not character, error, shouldnt happen
-                if (tile.InteractableOnTile is Character)
+                if (tile.InteractableOnTile is Character && tile.InteractableOnTile != character.Character)
                 {
-                    characterAIHandler.RegisterToWait(character.Character, EWaitReason.WaitForPathToUnblock, character.Character);
-                    Character blockingCharacter = tile.InteractableOnTile as Character;
+                    Debug.LogError($"Character {tile.InteractableOnTile.ItemName} blocks {character.Character.ItemName}'s path. (Unhandeled)");
+                    //characterAIHandler.RegisterToWait(character.Character, EWaitReason.WaitForPathToUnblock, character.Character);
+                    //Character blockingCharacter = tile.InteractableOnTile as Character;
 
 
                 }

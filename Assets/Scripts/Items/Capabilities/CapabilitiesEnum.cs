@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum ItemCapabilites
+public enum EItemCapabilites
 {
     DiningTableCapability,
     TuckableChairCapability,

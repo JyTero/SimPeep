@@ -6,13 +6,16 @@ public class ItemCapability : MonoBehaviour
 {
 
     [SerializeField]
-    protected ItemCapabilites thisCapability;
-    public ItemCapabilites ThisCapability { get { return thisCapability; } }
+    protected EItemCapabilites thisCapability;
+    public EItemCapabilites ThisCapability { get { return thisCapability; } }
 
     [HideInInspector]
     public string CapabilityName;
 
     protected List<List<Instruction>> instructionLists= new();
+
+    protected ItemBase thisItme;
+    public ItemBase ThisItem  { get { return thisItme; } }
 
 
     ////Each instruction variant has its own list 

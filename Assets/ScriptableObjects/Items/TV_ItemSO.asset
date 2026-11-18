@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc25f5866b27ced42ac742f8a11b0679, type: 3}
   m_Name: TV_ItemSO
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  itemName: Television
+  itemName: Tellurian TV
   itemDescription: TV
   itemPrice: 499
   allInteractions: []

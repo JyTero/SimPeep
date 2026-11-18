@@ -12,9 +12,19 @@ public class CapabilityHandler : ManagementCore
 
     }
 
+    public ItemCapability GetItemCapability(EItemCapabilites eCapability, ItemBase item)
+    {
+        foreach(ItemCapability capability in item.CapabilityComponents)
+        {
+            if(capability.ThisCapability == eCapability)
+                return capability;
+        }
+        return null;
+    }
+
     public void InitialiseItemCapabilities(ItemBase item)
     {
-        foreach (ItemCapabilites capability in item.Capabilites)
+        foreach (EItemCapabilites capability in item.Capabilites)
         {
             foreach (ItemCapability ic in item.CapabilityComponents)
             {
@@ -48,7 +58,7 @@ public class CapabilityHandler : ManagementCore
                 InitialiseSpawnCapability(spawnItem, item);
                 break;
             case TV_Capability tv:
-                InitialiseTVCapability(tv, item);
+                //InitialiseTVCapability(tv, item);
                 break;
         }
     }
@@ -77,7 +87,7 @@ public class CapabilityHandler : ManagementCore
             lgt.SlotOnTile(iSlot);
         }
         int i = 0;
-        foreach(Item_Slot slot in dining.OnTableSlots)
+        foreach (Item_Slot slot in dining.OnTableSlots)
         {
             slot.InitialiseSlot(item);
             item.ItemSlotsOnItem.Add(slot);
@@ -86,17 +96,17 @@ public class CapabilityHandler : ManagementCore
             i++;
         }
     }
-    private void InitialiseTVCapability(TV_Capability tv, ItemBase item)
-    {
-        foreach (TVItem_InstructionSO changeChannelInstructionSO in tv.ChangeChannelInstructionSOs)
-        {
-            StoredInteraction cc = new StoredInteraction(tv.TVChangeChannelSO, item);
-            cc.InteractionData.SpecificItemInstructionSOsOnInteractionEnd.Add(changeChannelInstructionSO);
-            //TODO: Rename the interaction
+    //private void InitialiseTVCapability(TV_Capability tv, ItemBase item)
+    //{
+    //    foreach (TVItem_InstructionSO changeChannelInstructionSO in tv.ChangeChannelInstructionSOs)
+    //    {
+    //        StoredInteraction cc = new StoredInteraction(tv.TVChangeChannelSO, item);
+    //        cc.InteractionData.SpecificItemInstructionSOsOnInteractionEnd.Add(changeChannelInstructionSO);
+    //        //TODO: Rename the interaction
 
-            item.NewStoredInteraction(cc);
-        }
-    }
+    //        item.NewStoredInteraction(cc);
+    //    }
+    //}
 
     private void InitialiseTuckableChairCapability(TuckableChair_Capability tc, ItemBase item)
     {
@@ -121,56 +131,56 @@ public class CapabilityHandler : ManagementCore
         item.ItemSlotsOnItem.Add(spawnItem.SpawnSlot);
     }
 
-    public void HandleCapabilityBegin(ItemCapability capability, Character character)
-    {
-        switch (capability)
-        {
-            case StoveCapability stove:
-                HandleStoveCapabilityBegin(stove, character);
-                break;
-            case Sittable_Capability sittable:
-                HandleSittableCapabilityBegin(sittable, character);
-                break;
-            case DiningTable_Capability dining:
-                HandleDiningTableCapabilityBegin(dining, character);
-                break;
-            case TuckableChair_Capability tuck:
-                HandleTuckableChairCapabilityBegin(tuck, character);
-                break;
-            case SpawnItem_Capability spawnItem:
-                HandleSpawnCapabilityBegin(spawnItem, character);
-                break;
-        }
-    }
-    private void HandleStoveCapabilityBegin(StoveCapability stoveCapability, Character character)
-    {
-        itemManager.PlaceCarriedItemToSlot(character, stoveCapability.StoveCookSlot);
-    }
-    private void HandleSittableCapabilityBegin(Sittable_Capability sittable, Character character)
-    {
-        //TODO: Check if slot is free, us another if not, cancel interaction should all else fail
-        if (character.CharacterPhysicalState == CharacterPhysicalStateEnum.SittingOnObject)
-            characterControl.StandUpFromSlot(character, sittable.SitSlot);
-        else
-            characterControl.SitCharacterToSlot(character, sittable.SitSlot);
-    }
-    private void HandleDiningTableCapabilityBegin(DiningTable_Capability dining, Character character)
-    {
+    //public void HandleCapabilityBegin(ItemCapability capability, Character character)
+    //{
+    //    switch (capability)
+    //    {
+    //        case StoveCapability stove:
+    //            HandleStoveCapabilityBegin(stove, character);
+    //            break;
+    //        case Sittable_Capability sittable:
+    //            HandleSittableCapabilityBegin(sittable, character);
+    //            break;
+    //        case DiningTable_Capability dining:
+    //            HandleDiningTableCapabilityBegin(dining, character);
+    //            break;
+    //        case TuckableChair_Capability tuck:
+    //            HandleTuckableChairCapabilityBegin(tuck, character);
+    //            break;
+    //        case SpawnItem_Capability spawnItem:
+    //            HandleSpawnCapabilityBegin(spawnItem, character);
+    //            break;
+    //    }
+    //}
+    //private void HandleStoveCapabilityBegin(StoveCapability stoveCapability, Character character)
+    //{
+    //    itemManager.PlaceCarriedItemToSlot(character, stoveCapability.StoveCookSlot);
+    //}
+    //private void HandleSittableCapabilityBegin(Sittable_Capability sittable, Character character)
+    //{
+    //    //TODO: Check if slot is free, us another if not, cancel interaction should all else fail
+    //    if (character.CharacterPhysicalState == CharacterPhysicalStateEnum.SittingOnObject)
+    //        characterControl.StandUpFromSlot(character, sittable.SitSlot);
+    //    else
+    //        characterControl.SitCharacterToSlot(character, sittable.SitSlot);
+    //}
+    //private void HandleDiningTableCapabilityBegin(DiningTable_Capability dining, Character character)
+    //{
 
-    }
-    private void HandleTuckableChairCapabilityBegin(TuckableChair_Capability tc, Character character)
-    {
+    //}
+    //private void HandleTuckableChairCapabilityBegin(TuckableChair_Capability tc, Character character)
+    //{
 
-    }
-    private void HandleSpawnCapabilityBegin(SpawnItem_Capability spawnItem, Character character)
-    {
-        ItemBase spawnedItem = itemManager.GetItemCreatedByInteraction(character);
-        if(spawnedItem != null)
-        {
-            itemManager.PlaceItemToSlot(spawnedItem, spawnItem.SpawnSlot);
-            character.PickupItem(spawnedItem);
-        }
-    }
+    //}
+    //private void HandleSpawnCapabilityBegin(SpawnItem_Capability spawnItem, Character character)
+    //{
+    //    ItemBase spawnedItem = itemManager.GetItemCreatedByInteraction(character);
+    //    if (spawnedItem != null)
+    //    {
+    //        itemManager.PlaceItemToSlot(spawnedItem, spawnItem.SpawnSlot);
+    //        character.PickupItem(spawnedItem);
+    //    }
+    //}
 
     public void HandleCapabilityEnd(ItemCapability capability, Character character)
     {
@@ -188,4 +198,28 @@ public class CapabilityHandler : ManagementCore
                 break;
         }
     }
+
+    //CAPABILITY INTERACTIONS
+    public List<StoredInteraction> GetCapabilityInteractions(List<ItemCapability> capabilities)
+    {
+        List<StoredInteraction> capabilityInteractions = new();
+        foreach (ItemCapability capability in capabilities)
+        {
+            switch (capability.ThisCapability)
+            {
+                case EItemCapabilites.DiningTableCapability:
+                    return null;
+                case EItemCapabilites.TuckableChairCapability:
+                    return null;
+                case EItemCapabilites.TVCapability:
+                    //capabilityInteractions.AddRange(GetTVCapabilityInteractions(capability));
+                    break;
+                default:
+                    return null;
+            }
+        }
+        return capabilityInteractions;
+    }
+
+
 }

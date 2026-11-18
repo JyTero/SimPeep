@@ -124,8 +124,8 @@ public class InteractionData
 
 
     [SerializeField, Tooltip("Capabilities the interaction utilises")]
-    private List<ItemCapabilites> requiredItemCapabilities = new();
-    public List<ItemCapabilites> RequiredItemCapabilities { get { return requiredItemCapabilities; } }
+    private List<EItemCapabilites> requiredItemCapabilities = new();
+    public List<EItemCapabilites> RequiredItemCapabilities { get { return requiredItemCapabilities; } }
 
 
     [SerializeField, HideIf("Reaction")]
@@ -183,7 +183,7 @@ public class InteractionData
         specificItemInstructionSOsOnInteractionBegin = new List<ItemSpecific_InstructionSO>(interactionSO.SpecificItemInstructionSOsOnInteractionBegin);
         specificItemInstructionSOsOnInteractionEnd = new List<ItemSpecific_InstructionSO>(interactionSO.SpecificItemInstructionSOsOnInteractionEnd);
 
-        requiredItemCapabilities = new List<ItemCapabilites>(interactionSO.RequiredItemCapabilities);
+        requiredItemCapabilities = new List<EItemCapabilites>(interactionSO.RequiredItemCapabilities);
 
         socialResponceInteractions = interactionSO.SocialResponceInteractions;
 

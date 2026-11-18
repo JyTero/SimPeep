@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 
 public class LotManager : ManagementCore
@@ -301,6 +300,11 @@ public class LotManager : ManagementCore
     public void RemoveItemFromTile(ItemBase removedItem, LotGridTile tile)
     {
         tile.RemoveItemFromTile(removedItem);
+    }
+
+    public Vector2Int GetItemForwardVector(Interactable interactable)
+    {
+        return new(Mathf.RoundToInt(interactable.transform.forward.x), Mathf.RoundToInt(interactable.transform.forward.z));
     }
 
     public LotGridTile GetTileInFrontOfInteractable(Interactable interactable)

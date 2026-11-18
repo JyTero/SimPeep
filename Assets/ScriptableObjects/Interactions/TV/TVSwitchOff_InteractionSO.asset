@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
-  m_Name: TVChangeChannel_InteractionSO
+  m_Name: TVSwitchOff_InteractionSO
   m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
-  interactionName: 'Change Channel: '
-  Description: Change channel template (
-  Reaction: 1
+  interactionName: Switch TV off
+  Description: Switch TV off
+  Reaction: 0
   IsSocial: 0
+  socialInteractionType: 0
+  isSocialResponse: 0
+  socialResponceInteractions: []
   hiddenInteraction: 0
   skipMovement: 0
   interactionDestinationDifferentFromSource: 0
@@ -25,6 +28,7 @@ MonoBehaviour:
   interactionLenght: 1
   targetNeedType: 0
   targetNeedValue: 0
+  waitForInteractionEnd: 0
   need_InteractionInstructionsOnInteractionBegin: []
   need_InteractionInstructionsOnInteractionTick: []
   need_InteractionInstructionsOnInteractionEnd: []
@@ -32,12 +36,13 @@ MonoBehaviour:
   relationshipChangeInstructionsOnInteractionEnd: []
   itemChangeInstructionSOsOnInteractionBegin: []
   itemChangeInstructionSOsOnInteractionEnd: []
-  characterInstructionSOsOnInteractionBegin: []
+  characterInstructionSOsOnInteractionBegin:
+  - {fileID: 11400000, guid: 8355de600f736e34bae054c093942e0d, type: 2}
   characterInstructionSOsOnInteractionEnd: []
   specificItemInstructionSOsOnInteractionBegin: []
-  specificItemInstructionSOsOnInteractionEnd: []
+  specificItemInstructionSOsOnInteractionEnd:
+  - {fileID: 11400000, guid: 5220f629ec911124a80cc12c6e1cea07, type: 2}
   requiredItemCapabilities: 
-  socialResponceInteractions: []
   scoringModifiers: []
   hasFollowup: 0
   followupInteractionSOs: []

@@ -16,6 +16,9 @@ MonoBehaviour:
   Description: 
   Reaction: 0
   IsSocial: 0
+  socialInteractionType: 0
+  isSocialResponse: 0
+  socialResponceInteractions: []
   hiddenInteraction: 0
   skipMovement: 0
   interactionDestinationDifferentFromSource: 0
@@ -25,6 +28,7 @@ MonoBehaviour:
   interactionLenght: 4
   targetNeedType: 3
   targetNeedValue: 95
+  waitForInteractionEnd: 0
   need_InteractionInstructionsOnInteractionBegin: []
   need_InteractionInstructionsOnInteractionTick:
   - {fileID: 11400000, guid: db3790b297fd71744bece2948df9c369, type: 2}
@@ -34,12 +38,11 @@ MonoBehaviour:
   itemChangeInstructionSOsOnInteractionBegin: []
   itemChangeInstructionSOsOnInteractionEnd: []
   characterInstructionSOsOnInteractionBegin:
-  - {fileID: 11400000, guid: 7b6c3c07353a9874fa84ace647ebb95d, type: 2}
+  - {fileID: 11400000, guid: 8355de600f736e34bae054c093942e0d, type: 2}
   characterInstructionSOsOnInteractionEnd: []
   specificItemInstructionSOsOnInteractionBegin: []
   specificItemInstructionSOsOnInteractionEnd: []
   requiredItemCapabilities: 
-  socialResponceInteractions: []
   scoringModifiers: []
   hasFollowup: 1
   followupInteractionSOs:

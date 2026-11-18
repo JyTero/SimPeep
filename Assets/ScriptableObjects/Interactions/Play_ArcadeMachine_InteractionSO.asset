@@ -28,6 +28,7 @@ MonoBehaviour:
   interactionLenght: 8
   targetNeedType: 0
   targetNeedValue: 0
+  waitForInteractionEnd: 0
   need_InteractionInstructionsOnInteractionBegin: []
   need_InteractionInstructionsOnInteractionTick:
   - {fileID: 11400000, guid: d07fb72740cc32249a1443c40b6e6bd8, type: 2}
@@ -37,7 +38,7 @@ MonoBehaviour:
   itemChangeInstructionSOsOnInteractionBegin: []
   itemChangeInstructionSOsOnInteractionEnd: []
   characterInstructionSOsOnInteractionBegin:
-  - {fileID: 11400000, guid: 7b6c3c07353a9874fa84ace647ebb95d, type: 2}
+  - {fileID: 11400000, guid: 8355de600f736e34bae054c093942e0d, type: 2}
   characterInstructionSOsOnInteractionEnd: []
   specificItemInstructionSOsOnInteractionBegin: []
   specificItemInstructionSOsOnInteractionEnd: []

@@ -377,9 +377,9 @@ public class CharacterAIHandler : ManagementCore
 
         foreach (ItemBase item in character.ThisLot.ItemsOnLot)
         {
-            if (item.Capabilites.Contains(ItemCapabilites.TuckableChairCapability))
+            if (item.Capabilites.Contains(EItemCapabilites.TuckableChairCapability))
             {
-                TuckableChair_Capability tcc = item.CapabilitiesByEnum[ItemCapabilites.TuckableChairCapability] as TuckableChair_Capability;
+                TuckableChair_Capability tcc = item.CapabilitiesByEnum[EItemCapabilites.TuckableChairCapability] as TuckableChair_Capability;
                 if (tcc.Table == null)
                     continue;
                 else
