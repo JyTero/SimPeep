@@ -29,14 +29,19 @@ public class Interactable : MonoBehaviour
     protected List<InteractionSO> interactionSOs = new();
     public List<InteractionSO> InteractionSOs { get { return interactionSOs; } }
 
-    [SerializeField, HideIf("useInteractionArea")]
+    [SerializeField, HideIf(EConditionOperator.Or, "useInteractionArea", "useInteractFromNearby")]
     private bool useInteractionSlot;
-    [SerializeField, HideIf("useInteractionSlot")]
+    public bool UseInteractionSlot { get { return useInteractionSlot; } }
+    [SerializeField, HideIf(EConditionOperator.Or,"useInteractionSlot", "useInteractFromNearby")]
     private bool useInteractionArea;
+    public bool UseInteractionArea { get { return useInteractionArea; } }
+    [SerializeField, HideIf(EConditionOperator.Or, "useInteractionSlot", "useInteractionArea")]
+    private bool useInteractFromNearby;
+    public bool UseInteractFromNearby { get { return useInteractFromNearby; } }
 
     [SerializeField, ShowIf("useInteractionSlot")]
-    protected Character_Slot interactionSlot;
-    public Character_Slot InteractionSlot { get { return interactionSlot; } }
+    protected List<Character_Slot> interactionSlots;
+    public List<Character_Slot> InteractionSlots { get { return interactionSlots; } }
 
     [SerializeField, ShowIf("useInteractionArea")]
     private Vector2Int interactionArea;
@@ -54,6 +59,8 @@ public class Interactable : MonoBehaviour
     private bool DebugDrawFootprintGrid;
     [SerializeField]
     private bool debugDrawForwardLine;
+    [SerializeField]
+    private bool debugDrawInteractionArea;
 
     public void NewStoredInteraction(StoredInteraction sInteraction)
     {
@@ -88,6 +95,15 @@ public class Interactable : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if(this is TV_Item)
+        {
+            int i = 0;
+            i++;
+        }
+        if(ItemName == "Tellurian TV")
+        {
+            int o = 0;
+        }
         if (DebugDrawFootprintGrid)
         {
             for (int x = 0; x <= footprint.x; x++)
@@ -118,6 +134,32 @@ public class Interactable : MonoBehaviour
             Gizmos.DrawLine(
             transform.position + transform.up * 0.5f,
             transform.position + transform.forward * 0.8f + transform.up * 0.5f);
+        }
+        if (debugDrawInteractionArea)
+        {
+            if (interactionArea == null)
+                return;
+            //for (int x = 0; x <= interactionArea.x; x++)
+            //{
+            //    Vector3 start = transform.position +
+            //                    new Vector3(x * 1, 0, 0);
+
+            //    Vector3 end = transform.position +
+            //                  new Vector3(x * 1, 0, interactionArea.y * 1);
+
+            //    Gizmos.DrawLine(start, end);
+            //}
+
+            //for (int y = 0; y <= interactionArea.y; y++)
+            //{
+            //    Vector3 start = transform.position +
+            //                    new Vector3(0, 0, y * 1);
+
+            //    Vector3 end = transform.position +
+            //                  new Vector3(interactionArea.x * 1, 0, y * 1);
+
+            //    Gizmos.DrawLine(start, end);
+            //}
         }
 
     }

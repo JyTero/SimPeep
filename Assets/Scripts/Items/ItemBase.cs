@@ -8,7 +8,7 @@ public class ItemBase : Interactable
     [Header("ITEM BASE")]
     [SerializeField]
     private ItemSO itemData;
-    public ItemSO ItemData {  get { return itemData; } }
+    public ItemSO ItemData { get { return itemData; } }
 
 
     [SerializeField]
@@ -35,17 +35,21 @@ public class ItemBase : Interactable
 
     [SerializeField]
     private List<Item_Slot> itemSlotsOnItem = new();
-    public List<Item_Slot> ItemSlotsOnItem { get { return itemSlotsOnItem; }}
+    public List<Item_Slot> ItemSlotsOnItem { get { return itemSlotsOnItem; } }
 
-    private Dictionary<SlotTypeSO, List<Item_Slot>> itemSlotsByType= new();
-    public Dictionary<SlotTypeSO, List<Item_Slot>> ItemSlotsByType { get { return itemSlotsByType; }}
+    private Dictionary<SlotTypeSO, List<Item_Slot>> itemSlotsByType = new();
+    public Dictionary<SlotTypeSO, List<Item_Slot>> ItemSlotsByType { get { return itemSlotsByType; } }
 
     private Dictionary<ItemBase, List<Item_Slot>> itemSlotsByItem = new();
     public Dictionary<ItemBase, List<Item_Slot>> ItemSlotsByItem { get { return itemSlotsByItem; } }
 
     [SerializeField]
     private List<Character_Slot> characterSlotsOnItem = new();
-    public List<Character_Slot> CharacterSlotsOnItem { get { return characterSlotsOnItem; }}
+    public List<Character_Slot> CharacterSlotsOnItem { get { return characterSlotsOnItem; } }
+
+    [SerializeField]
+    private List<ItemCharacterSlotInteractionSlotPair> itemCharacterSlotInteractionSlotPairs = new();
+    public List<ItemCharacterSlotInteractionSlotPair> ItemCharacterSlotInteractionSlotPairs { get { return itemCharacterSlotInteractionSlotPairs; } }
 
     private Dictionary<EItemCapabilites, ItemCapability> capabilitiesByEnum = new();
     public Dictionary<EItemCapabilites, ItemCapability> CapabilitiesByEnum { get { return capabilitiesByEnum; } }
@@ -54,7 +58,7 @@ public class ItemBase : Interactable
     //DEBUG implementation, in the future fancy system to handle items with multiple users (sofa)
     public bool AvailableForUse = true;
 
-    
+
     [HideInInspector]
     public bool itemInitialised = false;
 
@@ -71,7 +75,7 @@ public class ItemBase : Interactable
     {
         base.Start();
 
-       
+
     }
 
     public void InitialiseSlot(Item_Slot slot)
@@ -127,5 +131,17 @@ public class ItemBase : Interactable
     {
         AvailableForUse = true;
     }
-    
+
+}
+[System.Serializable]
+public class ItemCharacterSlotInteractionSlotPair
+{
+    [SerializeField]
+    private Character_Slot characterSlot;
+    public Character_Slot CharacterSlot { get { return characterSlot; } }
+
+    [SerializeField]
+    private Character_Slot interactionSlot;
+    public Character_Slot InteractionSlot { get { return interactionSlot; } }
+
 }

@@ -51,7 +51,11 @@ MonoBehaviour:
   itemName: 'Book: Second-To-Last Science-Fiction XIV: Region Renewed'
   footprint: {x: 1, y: 1}
   interactionSOs: []
-  interactionSlot: {fileID: 862954612359479349}
+  useInteractionSlot: 1
+  useInteractionArea: 0
+  interactionSlots:
+  - {fileID: 862954612359479349}
+  interactionArea: {x: 0, y: 0}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 1
   itemData: {fileID: 11400000, guid: 6cc50175b61685e4ba1cb3c200b50679, type: 2}
@@ -61,6 +65,7 @@ MonoBehaviour:
   itemTileWalkability: 2
   itemSlotsOnItem: []
   characterSlotsOnItem: []
+  itemCharacterSlotInteractionSlotPairs: []
   AvailableForUse: 1
   itemInitialised: 0
 --- !u!33 &2590852899996563741

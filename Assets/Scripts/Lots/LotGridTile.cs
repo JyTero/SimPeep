@@ -49,6 +49,8 @@ public class LotGridTile
 
     public void PlaceItemToTile(ItemBase item)
     {
+        if (item.ItemName == "Book: Second-To-Last Science-Fiction XIV: Region Renewed")
+            Debug.Log("bok");
         walkability = item.ItemTileWalkability;
         interactableOnTile = item;
     }

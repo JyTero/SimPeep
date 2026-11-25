@@ -144,7 +144,11 @@ MonoBehaviour:
   itemName: Cold Closet
   footprint: {x: 1, y: 1}
   interactionSOs: []
-  interactionSlot: {fileID: 1944418886848129463}
+  useInteractionSlot: 1
+  useInteractionArea: 0
+  interactionSlots:
+  - {fileID: 1944418886848129463}
+  interactionArea: {x: 0, y: 0}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 1
   itemData: {fileID: 11400000, guid: edebb3c81cede8140adceeedd09e9ec1, type: 2}
@@ -155,6 +159,7 @@ MonoBehaviour:
   itemSlotsOnItem:
   - {fileID: 495399399499182052}
   characterSlotsOnItem: []
+  itemCharacterSlotInteractionSlotPairs: []
   AvailableForUse: 1
   itemInitialised: 0
 --- !u!33 &8659652938097495456

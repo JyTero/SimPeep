@@ -97,7 +97,11 @@ MonoBehaviour:
   itemName: Water Closet
   footprint: {x: 1, y: 1}
   interactionSOs: []
-  interactionSlot: {fileID: 5072334878194706505}
+  useInteractionSlot: 1
+  useInteractionArea: 0
+  interactionSlots:
+  - {fileID: 5072334878194706505}
+  interactionArea: {x: 0, y: 0}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 1
   itemData: {fileID: 11400000, guid: 89e14a508c174ef44ab849fb83a919ec, type: 2}
@@ -107,6 +111,7 @@ MonoBehaviour:
   itemTileWalkability: 4
   itemSlotsOnItem: []
   characterSlotsOnItem: []
+  itemCharacterSlotInteractionSlotPairs: []
   AvailableForUse: 1
   itemInitialised: 0
 --- !u!33 &5973632551999275730

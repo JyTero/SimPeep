@@ -151,6 +151,7 @@ public class Item_InstructionData
         HandleEItem_InstructionType(instructionType);
         this.instructionType = instructionType;
         interactionToRunStored = storedInteraction;
+        interactionToRunSO = storedInteraction.InteractionSO;
     }
 
     private void HandleEItem_InstructionType(EItem_InstructionType type)

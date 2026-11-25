@@ -44,7 +44,8 @@ public class CharacterAIHandler : ManagementCore
         CharacterAI cai = new CharacterAI(character);
         character.SetCharacterAI(cai);
 
-        idleCharacters.Add(cai);
+        //idleCharacters.Add(cai);
+        tasklessCharacters.Add(cai);
         charactersAIsByCharacter.Add(character, cai);
 
     }
@@ -63,12 +64,99 @@ public class CharacterAIHandler : ManagementCore
         if (TooEarlyForNextTick(updateInterval))
             return;
 
+        //RunDecisionMaking(deltaTime); //<-- This has logic to do with the waiting system, unsure if unused
 
-        RunDecisionMaking(deltaTime);
+
+        //SearchInteraction
+        for (int i = tasklessCharacters.Count - 1; i >= 0; i--)
+        {
+
+            CharacterAI character = tasklessCharacters[i];
+
+            ActiveInteraction queueInteraction = GetInteractionFromQueue(character);
+
+
+            if (queueInteraction == null)
+            {
+                //Waited Characters
+                if (waitedCharacters.Contains(character.chara))
+                {
+                    WaitedInteractableDeclaredAvailable(character.chara);
+                    waitedCharacters.Remove(character.chara);
+                }
+            }
+            else
+            {
+                StartInteraction(queueInteraction, character);
+                continue;
+            }
+
+
+            //DEBUG
+            continue;
+            List<ActiveInteraction> scoredInteractions = GatherAllInteractions(tasklessCharacters[i]);
+
+            QueueInteraction(scoredInteractions[0], InteractionQueuePriority.NormalAISelect);
+            tasklessCharacters.Remove(tasklessCharacters[i]);
+            idleCharacters.Add(tasklessCharacters[i]);
+        }
     }
 
 
     //INTERACTION SELECTION
+    public List<ActiveInteraction> GatherAllInteractions(CharacterAI characterAI)
+    {
+        List<StoredInteraction> storedInteractions = lotManager.GetAllStoredInteractionsOnLot(characterAI.chara.ThisLot);
+
+        //Convert
+        List<ActiveInteraction> interactions = new();
+        foreach (StoredInteraction storedInteraction in storedInteractions)
+        {
+            if (storedInteraction.InteractionData.HiddenInteraction)
+                continue;
+            if (storedInteraction.InteractionData.InvalidInteraction)
+                continue;
+
+            interactions.Add(NewActiveInteraction(characterAI.chara, storedInteraction));
+        }
+        //Validity
+        //Score
+        foreach (ActiveInteraction interaction in interactions)
+        {
+            float score = 0;
+            float needBonus = 0;
+            Character thisCharacter = interaction.ThisCharacter;
+            //NeedScoring
+            foreach (NeedType needTypeToWeight in interaction.NeedsToWeight)
+            {
+                float needPercentage = (float)thisCharacter.Needs[needTypeToWeight].NeedValue / 100f;
+                float needBasedMultiplier = thisCharacter.Needs[needTypeToWeight].NeedWeightOnInteractionScoring.Evaluate(needPercentage);
+                needBonus += interactionBaseScore * needBasedMultiplier;
+
+            }
+            score = needBonus;
+            //Trait scoring
+            float traitBonus = 0;
+            foreach (InteractionScoringModifier modifier in interaction.ScoringModifiers)
+            {
+                if (characterAI.chara.Traits.Contains(modifier.TraitSO))
+                {
+                    traitBonus += modifier.TraitBonus;
+                }
+            }
+            score += traitBonus;
+
+            interaction.InteractionScore = score;
+        }
+        if (debugLog)
+            PrintInteractionScoring(interactions);
+
+        //Pick best (/Random)
+        //interactions = SortScoredInteractions(interactions);
+        interactions.Sort((a, b) => b.InteractionScore.CompareTo(a.InteractionScore));
+        return interactions;
+    }
+
     private void RunDecisionMaking(float deltaTime)
     {
         //Idle
@@ -140,14 +228,14 @@ public class CharacterAIHandler : ManagementCore
                 }
                 score += traitBonus;
 
-                interaction.interactionScore = score;
+                interaction.InteractionScore = score;
             }
             if (debugLog)
                 PrintInteractionScoring(interactions);
 
             //Pick best (/Random)
             //interactions = SortScoredInteractions(interactions);
-            interactions.Sort((a, b) => b.interactionScore.CompareTo(a.interactionScore));
+            interactions.Sort((a, b) => b.InteractionScore.CompareTo(a.InteractionScore));
 
             QueueInteraction(interactions[i], InteractionQueuePriority.NormalAISelect);
             tasklessCharacters.Remove(characterAI);
@@ -211,6 +299,9 @@ public class CharacterAIHandler : ManagementCore
 
     private void StartInteraction(ActiveInteraction interaction, CharacterAI charaAI)
     {
+        tasklessCharacters.Remove(charactersAIsByCharacter[interaction.ThisCharacter]);
+        //idleCharacters.Add(characterAI);
+
         if (interaction.InteractionGroupSO)
         {
             List<GroupedInteraction> validInteractions = new();
@@ -270,7 +361,7 @@ public class CharacterAIHandler : ManagementCore
         string s = $"{interactions[0].ThisCharacter.ItemName}'s Scoring Result:\n";
         foreach (ActiveInteraction interaction in interactions)
         {
-            s += $"Interaction '{interaction.InteractionName}' (Item: {interaction.InteractionSource.ItemName} scored: {interaction.interactionScore})\n";
+            s += $"Interaction '{interaction.InteractionName}' (Item: {interaction.InteractionSource.ItemName} scored: {interaction.InteractionScore})\n";
         }
         Debug.Log(s);
     }
@@ -280,6 +371,7 @@ public class CharacterAIHandler : ManagementCore
         CharacterAI charaAI = activeCharacters[character];
         activeCharacters.Remove(character);
         idleCharacters.Add(charaAI);
+        tasklessCharacters.Add(charaAI);
 
         //Suggested FollowUp
         if (interaction.FollowupInteractionSOs.Count != 0)
@@ -310,12 +402,12 @@ public class CharacterAIHandler : ManagementCore
 
             }
         }
-        if (charactersAIsByCharacter[character].InteractionQueue.Count == 1)
-        {                                                                           //1, bc List<QueuedInteraction> interactionQueue doesn't 
-            UIController.RefreshCurrentInteractionData("", interaction);            //know when interaction has ended
-            charaAI.NewCurrentInteraction(null);
-            character.IsIdle = true;
-        }
+        //if (charactersAIsByCharacter[character].InteractionQueue.Count == 1)
+        //{                                                                           //1, bc List<QueuedInteraction> interactionQueue doesn't 
+        //    UIController.RefreshCurrentInteractionData("", interaction);            //know when interaction has ended
+        //    charaAI.NewCurrentInteraction(null);
+        //    character.IsIdle = true;
+        //}
     }
 
     private List<Character> waitedCharacters = new();
@@ -483,45 +575,45 @@ public class CharacterAIHandler : ManagementCore
         waitingCharactersByCharacter.Add(character, waitingCharacter);
     }
 
-    private void RegisterToWaitForItemToBeAvailable(Interactable target)
-    {
-        if (target is ItemBase) //Currently no checks, always subscibes the same method, unsubscibing is ??
-            itemManager.SubscribeToKnowWhenItemAvailable(target as ItemBase);
-        else if (target is Character)
-            SubscribeToKnowWhenItemAvailable(target as Character);
-    }
+    //private void RegisterToWaitForItemToBeAvailable(Interactable target)
+    //{
+    //    if (target is ItemBase) //Currently no checks, always subscibes the same method, unsubscibing is ??
+    //        itemManager.SubscribeToKnowWhenItemAvailable(target as ItemBase);
+    //    else if (target is Character)
+    //        SubscribeToKnowWhenItemAvailable(target as Character);
+    //}
 
-    private void HandleWaitCircle(WaitingCharacter waitingCharacter, WaitingCharacter targetWaitingCharacter)
-    {
-        //Two characters are waiting for eachother.
+    //private void HandleWaitCircle(WaitingCharacter waitingCharacter, WaitingCharacter targetWaitingCharacter)
+    //{
+    //    //Two characters are waiting for eachother.
 
-        if (waitingCharacter.WaitReason == EWaitReason.WaitForSocialInteractionPartner
-            && targetWaitingCharacter.WaitReason == EWaitReason.WaitForSocialInteractionPartner)
-        {
-            //Verify next to eachtoer
-            if (!lotManager.NeighboringTileContainsInteractable(waitingCharacter.Character.CurrentTile, targetWaitingCharacter.Character))
-            {
-                //IF not, move route waitingCharacter
-                //Stop waiting, all that stuff
-                QuitWaiting(waitingCharacter);
-                characterControl.RouteToTile(waitingCharacter.Character, lotManager.GetLotTile(targetWaitingCharacter.Character.InteractionSlot.SlotTransform.position));
-                return;
+    //    if (waitingCharacter.WaitReason == EWaitReason.WaitForSocialInteractionPartner
+    //        && targetWaitingCharacter.WaitReason == EWaitReason.WaitForSocialInteractionPartner)
+    //    {
+    //        //Verify next to eachtoer
+    //        if (!lotManager.NeighboringTileContainsInteractable(waitingCharacter.Character.CurrentTile, targetWaitingCharacter.Character))
+    //        {
+    //            //IF not, move route waitingCharacter
+    //            //Stop waiting, all that stuff
+    //            QuitWaiting(waitingCharacter);
+    //            characterControl.RouteToTile(waitingCharacter.Character, lotManager.GetLotTile(targetWaitingCharacter.Character.InteractionSlots[0].SlotTransform.position));
+    //            return;
 
-            }
-            else
-            {
-                //Begin social interaction
-                QuitWaiting(waitingCharacter);
-                QuitWaiting(targetWaitingCharacter);
-            }
-        }
-        Debug.LogError("Two character wait on eachother with different reasons! (Not implemented)");
-        //If one waits to get in pos, other waits for target to be free
-        // InteractionPrio, player chosen interaction wins
-        // Otherwise the one waiting target to get in pos wins (Furhter in the process).
+    //        }
+    //        else
+    //        {
+    //            //Begin social interaction
+    //            QuitWaiting(waitingCharacter);
+    //            QuitWaiting(targetWaitingCharacter);
+    //        }
+    //    }
+    //    Debug.LogError("Two character wait on eachother with different reasons! (Not implemented)");
+    //    //If one waits to get in pos, other waits for target to be free
+    //    // InteractionPrio, player chosen interaction wins
+    //    // Otherwise the one waiting target to get in pos wins (Furhter in the process).
 
-        //ProcedeWithInteraction(WinningWaitingCharacter);
-    }
+    //    //ProcedeWithInteraction(WinningWaitingCharacter);
+    //}
 
     public void WaitedInteractableDeclaredAvailable(Interactable availableInteractable)
     {

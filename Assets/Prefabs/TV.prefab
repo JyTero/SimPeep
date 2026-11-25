@@ -9,8 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3863927310087142705}
-  - component: {fileID: 6910921914828120255}
-  - component: {fileID: 7345437588451442731}
+  - component: {fileID: 3122244341373077623}
   - component: {fileID: 4086705458247967815}
   - component: {fileID: 2338930555069854415}
   - component: {fileID: 1630342969572363717}
@@ -36,7 +35,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6910921914828120255
+--- !u!114 &3122244341373077623
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,44 +44,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 8899366913282382628}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de3c0e49226a81341aebc33b33aeef0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 804bf1b6501ccae4dbc598106e185085, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemBase
-  itemName: 
+  m_EditorClassIdentifier: Assembly-CSharp::TV_Item
+  itemName: Tellurian TV
   footprint: {x: 1, y: 1}
   interactionSOs: []
-  interactionSlot: {fileID: 0}
+  useInteractionSlot: 0
+  useInteractionArea: 1
+  useInteractFromNearby: 0
+  interactionSlots: []
+  interactionArea: {x: 5, y: 3}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 1
+  debugDrawInteractionArea: 1
   itemData: {fileID: 11400000, guid: f5bf1829e12935d4c81b85755582896a, type: 2}
   itemDescription: 
-  capabilites: 02000000
-  capabilityComponents:
-  - {fileID: 7345437588451442731}
+  capabilites: 
+  capabilityComponents: []
   itemTileWalkability: 4
   itemSlotsOnItem: []
   characterSlotsOnItem: []
+  itemCharacterSlotInteractionSlotPairs: []
   AvailableForUse: 1
   itemInitialised: 0
---- !u!114 &7345437588451442731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8899366913282382628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af6a5fee777badd4c8b238c22aa701e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TV_Capability
-  thisCapability: 2
-  CapabilityName: 
   TVChangeChannelSO: {fileID: 11400000, guid: 967874a9c2d939b4fbbcfeea7105b5cd, type: 2}
+  TVTurnOnSO: {fileID: 11400000, guid: 1967b56b5abb4654e87d689a7399ae0e, type: 2}
+  TVTurnOffSO: {fileID: 11400000, guid: 245ca3dafafdf25468517eb9485abf79, type: 2}
+  WatchTVSO: {fileID: 11400000, guid: 09a251bfa0a8254419742c863f7360c2, type: 2}
   changeChannelInstructionSOs:
   - {fileID: 11400000, guid: ab760adc00e826f44904dfb0b544389b, type: 2}
   - {fileID: 11400000, guid: a8e931df6716c5946b811df12377b746, type: 2}
   - {fileID: 11400000, guid: e18ece60c6b0ec14cabb3497978324d2, type: 2}
+  tvState: 0
+  currentTVChannel: {fileID: 0}
+  sittingSlotsInArea: []
 --- !u!33 &4086705458247967815
 MeshFilter:
   m_ObjectHideFlags: 0

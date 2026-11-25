@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BathroomCharacter_NeedSO
   m_EditorClassIdentifier: Assembly-CSharp::NeedSO
   needType: 3
-  needValue: 39
+  needValue: 15
   needMaxValue: 100
   needDecay: 0.2
   needWeightOnInteractionScoring:

@@ -53,11 +53,13 @@ public class InteractionEngine : ManagementCore
      interaction.InteractionData.RelationshipChangeInstructionsOnInteractionEnd,
      interaction.InteractionData.ItemChangeInstructionSOsOnInteractionEnd,
      interaction.InteractionData.CharacterInstructionSOsOnInteractionEnd,
-     interaction.InteractionData.SpecificItemInstructionSOsOnInteractionEnd);
+     interaction.InteractionData.SpecificItemInstructionSOsOnInteractionEnd,
+     interaction.InteractionData.CustomLogicInstructionSOEnd);
 
         state = new Running_InteractionState(characterAIHandler, this);
         interaction.PushInitialisationState(interaction, state);
         state.stateNeedInstructionSOs = interaction.InteractionData.Need_InteractionInstructionsOnInteractionTick;
+        state.customLogicInstructionSOs = interaction.InteractionData.CustomLogicInstructionSOTick;
 
         state = new Starting_InteractionState(characterAIHandler, this);
         interaction.PushInitialisationState(interaction, state);
@@ -65,7 +67,8 @@ public class InteractionEngine : ManagementCore
     interaction.InteractionData.RelationshipChangeInstructionsOnInteractionBegin,
     interaction.InteractionData.ItemChangeInstructionSOsOnInteractionBegin,
     interaction.InteractionData.CharacterInstructionSOsOnInteractionBegin,
-    interaction.InteractionData.SpecificItemInstructionSOsOnInteractionBegin);
+    interaction.InteractionData.SpecificItemInstructionSOsOnInteractionBegin,
+    interaction.InteractionData.CustomLogicInstructionSOBegin);
     }
 
 
@@ -75,7 +78,7 @@ public class InteractionEngine : ManagementCore
     }
     private void SetStateInstructions(InteractionState state, List<Need_InstructionSO> needInstructionSOs,
     List<Relationship_InstructionSO> relationshipInstructionSOs, List<Item_InstructionSO> itemInstructionSOs,
-    List<Character_InstructionSO> characterInstructionSOs, List<ItemSpecific_InstructionSO> itemSpecificInstructionSOs)
+    List<Character_InstructionSO> characterInstructionSOs, List<ItemSpecific_InstructionSO> itemSpecificInstructionSOs, List<CustomLogic_InstructionSO> customLogicInstructionSOs)
     {
         //NeedInstructions
         state.stateNeedInstructionSOs = needInstructionSOs;
@@ -91,6 +94,9 @@ public class InteractionEngine : ManagementCore
 
         //ItemSpecific
         state.stateItemSpecificInstructionSOs = itemSpecificInstructionSOs;
+
+        //CustomLogic
+        state.customLogicInstructionSOs = customLogicInstructionSOs;
 
         state.ReceivedInstructions();
     }
@@ -167,6 +173,16 @@ public class InteractionEngine : ManagementCore
 
         }
 
+        //CustomLogic
+        if (interaction.State.customLogicInstructionIndex > interaction.State.customLogicInstructionSOs.Count - 1
+            || interaction.State.customLogicInstructionSOs.Count == 0)
+            interaction.State.customLogicInstructionsDone = true;
+        else
+        {
+            CustomLogic_InstructionSO customLogicInstructionSO = interaction.State.customLogicInstructionSOs[interaction.State.customLogicInstructionIndex];
+            interaction.State.customLogicInstructionIndex++;
+            itemSubclassHandler.RunCustomLogic(customLogicInstructionSO, interaction);
+        }
     }
 
     public void PrepareInstructionInteraction(ActiveInteraction interaction, InteractionData instructionInteractionData, Interactable instructionInteractionSource)
@@ -177,11 +193,13 @@ public class InteractionEngine : ManagementCore
      instructionInteractionData.RelationshipChangeInstructionsOnInteractionEnd,
      instructionInteractionData.ItemChangeInstructionSOsOnInteractionEnd,
      instructionInteractionData.CharacterInstructionSOsOnInteractionEnd,
-     instructionInteractionData.SpecificItemInstructionSOsOnInteractionEnd);
+     instructionInteractionData.SpecificItemInstructionSOsOnInteractionEnd,
+     instructionInteractionData.CustomLogicInstructionSOEnd);
 
         state = new Running_InteractionState(characterAIHandler, this);
         interaction.PushInteractionState(interaction, state);
         interaction.State.stateNeedInstructionSOs = instructionInteractionData.Need_InteractionInstructionsOnInteractionTick;
+        interaction.State.customLogicInstructionSOs = instructionInteractionData.CustomLogicInstructionSOTick;
 
         state = new Starting_InteractionState(characterAIHandler, this);
         interaction.PushInteractionState(interaction, state);
@@ -189,7 +207,8 @@ public class InteractionEngine : ManagementCore
     instructionInteractionData.RelationshipChangeInstructionsOnInteractionBegin,
     instructionInteractionData.ItemChangeInstructionSOsOnInteractionBegin,
     instructionInteractionData.CharacterInstructionSOsOnInteractionBegin,
-        instructionInteractionData.SpecificItemInstructionSOsOnInteractionBegin);
+        instructionInteractionData.SpecificItemInstructionSOsOnInteractionBegin,
+        instructionInteractionData.CustomLogicInstructionSOBegin);
 
     }
 
@@ -233,8 +252,9 @@ public class InteractionEngine : ManagementCore
             CancelInteraction(interaction);
 
     }
-
-    public bool InteractionShouldEnd(ActiveInteraction interaction)
+    [SerializeField]
+    private float timeBetweenUAISHSearches = 4;
+    public bool InteractionShouldEnd(ActiveInteraction interaction, float dt)
     {
         switch (interaction.InteractionEndingType)
         {
@@ -255,6 +275,33 @@ public class InteractionEngine : ManagementCore
                     return true;
                 else
                     return false;
+            case InteractionEndingType.UntillAnotherInteractionScoresHigher:
+                if (interaction.TimeSinceLastEndCheck >= timeBetweenUAISHSearches)
+                {
+                    List<ActiveInteraction> gatheredInteractions = characterAIHandler.GatherAllInteractions(characterAIHandler.CharactersAIsByCharacter[interaction.ThisCharacter]);
+                    Debug.Log($"Ran check to  see if {interaction.ThisCharacter.ItemName} should stop {interaction.InteractionName}(score: {interaction.InteractionScore}");
+                    if (gatheredInteractions[0].InteractionScore > interaction.InteractionScore)
+                    {
+                        characterAIHandler.QueueInteraction(gatheredInteractions[0], InteractionQueuePriority.NormalAISelect);
+                        Debug.Log($"{interaction.ThisCharacter.ItemName} chose to {gatheredInteractions[0].InteractionName} with score {gatheredInteractions[0].InteractionScore}");
+                        return true;
+                    }
+                    Debug.Log($"{interaction.ThisCharacter.ItemName} decided to continue current interaction. Their top3:\n" +
+                        $"1 {gatheredInteractions[0].InteractionName}, score: {gatheredInteractions[0].InteractionScore} |" +
+                        $" 2 {gatheredInteractions[1].InteractionName}, score: {gatheredInteractions[1].InteractionScore} |" +
+                        $" 3 {gatheredInteractions[2].InteractionName}, score: {gatheredInteractions[2].InteractionScore}");
+                    return false;
+                    //Search interaction
+                    //if "chosen" is score is higher than the score of current interaction
+                    //end current, start new
+                    //discard results, continue current
+                }
+                else
+                {
+                    interaction.TimeSinceLastEndCheck += dt;
+                    return false;
+                }
+
         }
         return true;
     }

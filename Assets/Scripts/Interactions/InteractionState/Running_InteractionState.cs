@@ -15,7 +15,7 @@ public class Running_InteractionState : InteractionState
         {
             if (interaction.InteractionData.IsSocialResponse)
             {
-                
+
             }
             else
             {
@@ -39,28 +39,28 @@ public class Running_InteractionState : InteractionState
         //}
         //else
         //{       //Should probs be reworked, currently sends instructsions once / second
-            if (interaction.TimeSinceLastInstructionsSent > interactionEngine.OneUnitOfTime)
+        if (interaction.TimeSinceLastInstructionsSent > interactionEngine.OneUnitOfTime)
+        {
+            bool tooMuchTime = true;
+            while (tooMuchTime)
             {
-                bool tooMuchTime = true;
-                while (tooMuchTime)
-                {
-                    interaction.TimeSinceLastInstructionsSent -= interactionEngine.OneUnitOfTime;
-                    interactionEngine.HandleInteractionStateInstructions(interaction);
+                interaction.TimeSinceLastInstructionsSent -= interactionEngine.OneUnitOfTime;
+                interactionEngine.HandleInteractionStateInstructions(interaction);
 
-                    //GUMMY (Refersh Instructions since on tick = send one set of instructions/tick for the duration of interaction)
-                    if (interaction.State.StateInstructionsDone())
-                        RefreshStateInstructions();
+                //GUMMY (Refersh Instructions since on tick = send one set of instructions/tick for the duration of interaction)
+                if (interaction.State.StateInstructionsDone())
+                    RefreshStateInstructions();
 
 
-                    if (interaction.TimeSinceLastInstructionsSent < interactionEngine.OneUnitOfTime)
-                        tooMuchTime = false;
-                }
+                if (interaction.TimeSinceLastInstructionsSent < interactionEngine.OneUnitOfTime)
+                    tooMuchTime = false;
             }
-            else
-                interaction.TimeSinceLastInstructionsSent += dt;
+        }
+        else
+            interaction.TimeSinceLastInstructionsSent += dt;
         //}
 
-        if (interactionEngine.InteractionShouldEnd(interaction))
+        if (interactionEngine.InteractionShouldEnd(interaction, dt))
         {
             interaction.PopInteractionState();
         }

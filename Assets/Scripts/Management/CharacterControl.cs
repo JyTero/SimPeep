@@ -31,7 +31,7 @@ public class CharacterControl : ManagementCore
         characterAIHandler.CharactersAIsByCharacter[character].CurrentInteraction.PushInteractionState(characterAIHandler.CharactersAIsByCharacter[character].CurrentInteraction, new Moving_InteractionState(characterAIHandler, interactionEngine));
 
         if (character.CharacterPhysicalState != CharacterPhysicalStateEnum.Standing)
-            StandUpFromSlot(character, character.OccupiedSlot);
+            StandUpFromSlot(character);
 
         PathfindingResult pathfindingResult = characterPathfinding.NewCharacterFindingPath(character, destinationTile);
         //Handle Result
@@ -74,16 +74,38 @@ public class CharacterControl : ManagementCore
 
         slot.PlaceCharacterToSlot(character);
     }
-    public void StandUpFromSlot(Character character, Character_Slot slot)
+    public void StandUpFromSlot(Character character)
     {
+        Character_Slot occupiedSlot = character.OccupiedSlot;
+        LotGridTile interactionSlotTile = null;
+
         character.CharacterPhysicalState = CharacterPhysicalStateEnum.Standing;
+        character.OccupiedSlot.ClearSlot(character);
         character.OccupiedSlot = null;
 
-        LotGridTile lgt = lotManager.GetNearbyFreeTile(lotManager.GetTileInteractableIsOn(character));
-        character.ChangeCurrentTile(lgt);
+
+        if (occupiedSlot.ParentItem.ItemCharacterSlotInteractionSlotPairs.Count == 0)
+        {
+            interactionSlotTile = lotManager.GetLotTile(occupiedSlot.ParentItem.InteractionSlots[0].SlotTransform.position);
+        }
+        else
+        {
+            foreach (ItemCharacterSlotInteractionSlotPair pair in occupiedSlot.ParentItem.ItemCharacterSlotInteractionSlotPairs)
+            {
+                if (pair.CharacterSlot == occupiedSlot)
+                    interactionSlotTile = lotManager.GetLotTile(pair.InteractionSlot.SlotTransform.position);
+
+
+            }
+        }
+
+
+        character.ChangeCurrentTile(interactionSlotTile);
         character.transform.position = character.CurrentTile.TilePos;
 
-        slot.ClearSlot(character);
+        //LotGridTile lgt = lotManager.GetNearbyFreeTile(lotManager.GetTileInteractableIsOn(character)); //Places onto random tile, causing interaction slot tile to be reserved
+        //character.ChangeCurrentTile(lgt);
+
     }
 
     public bool IsWithinInteractionRange(Character character, ItemBase target)
@@ -144,9 +166,17 @@ public class CharacterControl : ManagementCore
             else
             {
                 interaction.State.itemIndex--;
-                interaction.PushInteractionState(interaction, new Moving_InteractionState(characterAIHandler, interactionEngine));
+                //interaction.PushInteractionState(interaction, new Moving_InteractionState(characterAIHandler, interactionEngine));
                 List<LotGridTile> neighborTiles = lotManager.GetNeighboringTiles(lotManager.GetTileInteractableIsOn(interaction.InteractionSource));
-                RouteToTile(character, neighborTiles[0]);
+                foreach (LotGridTile ntile in neighborTiles)
+                {
+                    if (characterPathfinding.CanRouteToTile(character, ntile))
+                    {
+                        RouteToTile(character, ntile);
+                        break;
+                    }
+                }
+                // RouteToTile(character, neighborTiles[0]);
             }
         }
         else
@@ -206,10 +236,49 @@ public class CharacterControl : ManagementCore
                 characterControl.RouteToTile(interaction.ThisCharacter, neighborTiles[0]);
                 break;
             case ECharacterInstructionDestination.ThisItemInteractionSlot:
-                if (interaction.InteractionSource.InteractionSlot != null)
-                    characterControl.RouteToTile(interaction.ThisCharacter, lotManager.GetLotTile(interaction.InteractionSource.InteractionSlot.SlotTransform.position));
-                else if (interaction.InteractionSource.InteractionArea != null)
+                //if (interaction.InteractionSource.InteractionSlots.Count != 0) //Item Uses Interaction Slots
+                if (interaction.InteractionSource.UseInteractionSlot)
+                {
+                    LotGridTile destination = null;
+                    foreach (Character_Slot interactionSlot in interaction.InteractionSource.InteractionSlots)
+                    {
+                        if (interactionSlot != null && lotManager.GetLotTile(interactionSlot.SlotTransform.position).Walkwability == ELGTWalkability.Yes)
+                        {
+                            if (((ItemBase)interaction.InteractionSource).ItemCharacterSlotInteractionSlotPairs.Count > 0)
+                            {
+                                ItemCharacterSlotInteractionSlotPair slotPair = ((ItemBase)interaction.InteractionSource).ItemCharacterSlotInteractionSlotPairs.FirstOrDefault(p => p.InteractionSlot == interactionSlot);
+                                if (slotPair.CharacterSlot.CharacterInSlot == null)
+                                {
+                                    destination = lotManager.GetLotTile(interactionSlot.SlotTransform.position);
+                                    break;
+                                }
+
+                            }
+                            else
+                                destination = lotManager.GetLotTile(interactionSlot.SlotTransform.position);
+                        }
+
+                    }
+                    if (destination != null)
+                    {
+                        characterControl.RouteToTile(interaction.ThisCharacter, destination);
+
+                    }
+                    else
+                        throw new Exception($"No available interaction slots on {interaction.InteractionSource.ItemName} for {interaction.ThisCharacter.ItemName} trying to {interaction.InteractionName}");
+                }
+                //else if (interaction.InteractionSource.InteractionArea != null) //Item Uses Interaction Area
+                else if (interaction.InteractionSource.UseInteractionArea)
                     RouteToTileOnItemInteractionArea(interaction);
+                else if (interaction.InteractionSource.UseInteractFromNearby)
+                {
+                    neighborTiles = lotManager.GetNeighboringTiles(interaction.InteractionSource.CurrentTile);
+                    foreach (LotGridTile lgt in neighborTiles)
+                    {
+                        if (characterPathfinding.CanRouteToTile(interaction.ThisCharacter, lgt))
+                            characterControl.RouteToTile(interaction.ThisCharacter, lgt);
+                    }
+                }
                 else
                     throw new Exception($"Invalid item interaction spot/area on {interaction.InteractionSource.ItemName}");
                 break;
@@ -220,26 +289,45 @@ public class CharacterControl : ManagementCore
 
     private void RouteToTileOnItemInteractionArea(ActiveInteraction interaction)
     {
+
+        //Gummu/Temp solution. IF mulitple items see their stuff added here, TODO: Dedicated system
+        if (interaction.InteractionSO.PreferSeating)
+        {
+            if (interaction.InteractionSource is TV_Item)
+            {
+                TV_Item tv = interaction.InteractionSource as TV_Item;
+                foreach (Character_Slot sittingSlot in tv.SittingSlotsInArea)
+                {
+                    Character_Slot interactionSlot = tv.ItemCharacterSlotInteractionSlotPairs.FirstOrDefault(s => s.CharacterSlot == sittingSlot).InteractionSlot;
+                    LotGridTile interactionSlotTile = lotManager.GetLotTile(interactionSlot.SlotTransform.position);
+                    if (characterPathfinding.CanRouteToTile(interaction.ThisCharacter, interactionSlotTile))
+                    {
+                        RouteToTile(interaction.ThisCharacter, interactionSlotTile);
+                        return;
+                    }
+                }
+            }
+        }
+
         Vector2Int forward = lotManager.GetItemForwardVector(interaction.InteractionSource);
         Vector2Int right = new(forward.y, -forward.x);
         LotGridTile tileInFront = lotManager.GetLotTile(interaction.InteractionSource.CurrentTile.Coordinates + forward);
         LotGridTile rightTile = lotManager.GetLotTile(interaction.InteractionSource.CurrentTile.Coordinates + right);
 
-        Debug.Log($"TV tile {interaction.InteractionSource.CurrentTile.Coordinates}, Tile infront: {tileInFront.Coordinates}, Right Tile: {rightTile.Coordinates} forward vector: {forward}, Right vector: {right} Tiles: {interaction.InteractionSource.CurrentTile.Coordinates + forward} & {interaction.InteractionSource.CurrentTile.Coordinates + right}");
+        //Debug.Log($"TV tile {interaction.InteractionSource.CurrentTile.Coordinates}, Tile infront: {tileInFront.Coordinates}, Right Tile: {rightTile.Coordinates} forward vector: {forward}, Right vector: {right} Tiles: {interaction.InteractionSource.CurrentTile.Coordinates + forward} & {interaction.InteractionSource.CurrentTile.Coordinates + right}");
 
 
-        List<LotGridTile> tiles = new();
-        for (int depth = 1; depth <= interaction.InteractionSource.InteractionArea.x; depth++)
+        List<LotGridTile> tiles = lotManager.GetTilesInItemInteractionArea(interaction.InteractionSource as ItemBase);
+        for (int i = tiles.Count - 1; i >= 0; i--)
         {
-            for (int width = -interaction.InteractionSource.InteractionArea.y; width <= interaction.InteractionSource.InteractionArea.y; width++)
+            if (tiles[i].Walkwability != ELGTWalkability.Yes)
             {
-                LotGridTile tile = lotManager.GetLotTile(interaction.InteractionSource.CurrentTile.Coordinates + forward * depth + right * width);
-                if (tile.Walkwability != ELGTWalkability.Yes)
-                    continue;
-                if (characterPathfinding.CanRouteToTile(interaction.ThisCharacter, tile))
-                    tiles.Add(tile);
-
+                tiles.Remove(tiles[i]);
+                continue;
             }
+
+            if (!characterPathfinding.CanRouteToTile(interaction.ThisCharacter, tiles[i]))
+                tiles.Remove(tiles[i]);
         }
         int random = UnityEngine.Random.Range(0, tiles.Count);
         LotGridTile dTile = tiles[random];
@@ -255,7 +343,17 @@ public class CharacterControl : ManagementCore
         else
             sitItem = interaction.InteractionSource as ItemBase;
 
-        SitCharacterToSlot(interaction.ThisCharacter, sitItem.CharacterSlotsOnItem[0]);
+        Character_Slot sitSlot = sitItem.CharacterSlotsOnItem[0];
+        if (sitItem.ItemCharacterSlotInteractionSlotPairs != null)
+        {
+            foreach (ItemCharacterSlotInteractionSlotPair slotPair in sitItem.ItemCharacterSlotInteractionSlotPairs)
+            {
+                if (lotManager.GetTileInteractableIsOn(interaction.ThisCharacter) == lotManager.GetLotTile(slotPair.InteractionSlot.SlotTransform.position))
+                    sitSlot = slotPair.CharacterSlot;
+            }
+        }
+
+        SitCharacterToSlot(interaction.ThisCharacter, sitSlot);
     }
 }
 

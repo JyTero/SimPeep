@@ -186,7 +186,10 @@ MonoBehaviour:
   itemName: Sleep-i-nator
   footprint: {x: 1, y: 2}
   interactionSOs: []
-  interactionSlot: {fileID: 5016140032492900885}
+  useInteractionSlot: 1
+  useInteractionArea: 0
+  interactionSlots: []
+  interactionArea: {x: 0, y: 0}
   DebugDrawFootprintGrid: 1
   debugDrawForwardLine: 1
   itemData: {fileID: 11400000, guid: e9d074de3feed354daf1bc2ed71b8521, type: 2}
@@ -196,6 +199,7 @@ MonoBehaviour:
   itemTileWalkability: 4
   itemSlotsOnItem: []
   characterSlotsOnItem: []
+  itemCharacterSlotInteractionSlotPairs: []
   AvailableForUse: 1
   itemInitialised: 0
 --- !u!65 &8282961231785590437

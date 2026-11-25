@@ -12,8 +12,8 @@ public class Character_InstructionSO : InstructionSO
     private ECharacterInstructionDestination destinationType;
     public ECharacterInstructionDestination DestinationType { get { return destinationType; } }
     
-    private bool moveCharacter = false;
-    private bool sitCharacter = false;
+    private bool moveCharacter;
+    private bool sitCharacter;
 
     private void OnValidate()
     {

@@ -45,6 +45,7 @@ public class LotManager : ManagementCore
         InitialiseLots();
 
         List<ItemBase> allItems = lot.ItemsOnLot;
+        int dbg = 0;
         foreach (ItemBase item in allItems)
         {
             item.ChangeCurrentLot(lot);
@@ -65,13 +66,15 @@ public class LotManager : ManagementCore
                     tile.PlaceItemToTile(item);
                 }
             }
-            else
-
 
             if (debugLog)
-                Debug.Log($"Initialising: {item.ItemName}");
+                Debug.Log($"Initialising {dbg}: {item.ItemName}");
             itemManager.InitialiseItem(item);
+            dbg++;
         }
+        //Handcrafted secondary initialisation wave, TBD: Proper system for this
+        itemSubclassHandler.InitialiseItem(FindAnyObjectByType<TV_Item>());
+
         allStoredInteractions = GetAllInteractionsOnLot(lot);
 
     }
@@ -194,7 +197,29 @@ public class LotManager : ManagementCore
     {
         return lot.ItemsOnLot.FirstOrDefault(item => item.ItemData == itemSO);
     }
+    
+    public List<LotGridTile> GetTilesInItemInteractionArea(ItemBase item)
+    {
+        Vector2Int forward = lotManager.GetItemForwardVector(item);
+        Vector2Int right = new(forward.y, -forward.x);
+        LotGridTile tileInFront = lotManager.GetLotTile(item.CurrentTile.Coordinates + forward);
+        LotGridTile rightTile = lotManager.GetLotTile(item.CurrentTile.Coordinates + right);
 
+        //Debug.Log($"TV tile {interaction.InteractionSource.CurrentTile.Coordinates}, Tile infront: {tileInFront.Coordinates}, Right Tile: {rightTile.Coordinates} forward vector: {forward}, Right vector: {right} Tiles: {interaction.InteractionSource.CurrentTile.Coordinates + forward} & {interaction.InteractionSource.CurrentTile.Coordinates + right}");
+
+
+        List<LotGridTile> tiles = new();
+        for (int depth = 1; depth <= item.InteractionArea.x; depth++)
+        {
+            for (int width = -item.InteractionArea.y; width <= item.InteractionArea.y; width++)
+            {
+                LotGridTile tile = lotManager.GetLotTile(item.CurrentTile.Coordinates + forward * depth + right * width);
+
+                tiles.Add(tile);
+            }
+        }
+        return tiles;
+    }
 
 
     //LotGrid

@@ -144,7 +144,11 @@ MonoBehaviour:
   itemName: Matter Exciter
   footprint: {x: 1, y: 1}
   interactionSOs: []
-  interactionSlot: {fileID: 920536068749516908}
+  useInteractionSlot: 1
+  useInteractionArea: 0
+  interactionSlots:
+  - {fileID: 920536068749516908}
+  interactionArea: {x: 0, y: 0}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 1
   itemData: {fileID: 11400000, guid: ce094440d2b4b614f875069d790d8ca0, type: 2}
@@ -155,6 +159,7 @@ MonoBehaviour:
   itemSlotsOnItem:
   - {fileID: 113425654867969759}
   characterSlotsOnItem: []
+  itemCharacterSlotInteractionSlotPairs: []
   AvailableForUse: 1
   itemInitialised: 0
 --- !u!33 &4051895236254469951

@@ -19,6 +19,9 @@ public abstract class InteractionState
     public bool itemSpecificInstructionsDone = false;
     public List<ItemSpecific_InstructionSO> stateItemSpecificInstructionSOs = new();
 
+    public int customLogicInstructionIndex = 0;
+    public bool customLogicInstructionsDone = false;
+    public List<CustomLogic_InstructionSO> customLogicInstructionSOs = new();
 
     protected CharacterAIHandler characterAIHandler;
     protected InteractionEngine interactionEngine;
@@ -49,7 +52,10 @@ public abstract class InteractionState
                 if (itemInstructionsDone)
                     if (characterInstructionsDone)
                         if (itemSpecificInstructionsDone)
-                            return true;
+                            if (customLogicInstructionsDone)
+                                return true;
+                            else
+                                return false;
                         else
                             return false;
                     else
@@ -76,6 +82,8 @@ public abstract class InteractionState
             characterInstructionsDone = true;
         if (stateItemSpecificInstructionSOs.Count == 0)
             itemSpecificInstructionsDone = true;
+        if (customLogicInstructionSOs.Count == 0)
+            customLogicInstructionsDone = true;
 
     }
 }

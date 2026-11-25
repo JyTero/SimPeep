@@ -40,6 +40,10 @@ public class InteractionSO : ScriptableObject
     private bool hiddenInteraction;
     public bool HiddenInteraction { get { return hiddenInteraction; } }
 
+    [SerializeField, Tooltip("Wheter character should look for seating when routing or before Running state")]
+    private bool preferSeating;
+    public bool PreferSeating { get { return preferSeating; } }
+
     [SerializeField, HideIf("interactionDestinationDifferentFromSource"),
         Tooltip("Skip moving stage on interaction execution, runs interaction immediately instead")]
     private bool skipMovement;
@@ -66,6 +70,7 @@ public class InteractionSO : ScriptableObject
 
     private bool setTime = false;
     private bool untillNeedAtValue = false;
+    private bool untillAnotherInteractionScoresHigher = false;
 
     [SerializeField, ShowIf("setTime")]
     private float interactionLenght;
@@ -77,6 +82,8 @@ public class InteractionSO : ScriptableObject
     [SerializeField, ShowIf("untillNeedAtValue")]
     private int targetNeedValue;
     public int TargetNeedValue { get { return targetNeedValue; } }
+
+
 
     [SerializeField, Tooltip("Wheter a character looking to interact with either the character running the interaction or the interaction source should wait for the interaction to end or regard the character and the item as unavailable")]
     private bool waitForInteractionEnd;
@@ -127,7 +134,16 @@ public class InteractionSO : ScriptableObject
     private List<ItemSpecific_InstructionSO> specificItemInstructionSOsOnInteractionEnd = new();
     public List<ItemSpecific_InstructionSO> SpecificItemInstructionSOsOnInteractionEnd { get { return specificItemInstructionSOsOnInteractionEnd; } }
 
-
+    //CustomLogic
+    [SerializeField, Foldout("ON INTERACTION BEGIN")]
+    private List<CustomLogic_InstructionSO> customLogicInstructionSOBegin = new();
+    public List<CustomLogic_InstructionSO> CustomLogicInstructionSOBegin { get { return customLogicInstructionSOBegin; } }
+    [SerializeField, Foldout("ON INTERACTION TICK")]
+    private List<CustomLogic_InstructionSO> customLogicInstructionSOTick = new();
+    public List<CustomLogic_InstructionSO> CustomLogicInstructionSOTick { get { return customLogicInstructionSOTick; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<CustomLogic_InstructionSO> customLogicInstructionSOEnd = new();
+    public List<CustomLogic_InstructionSO> CustomLogicInstructionSOEnd { get { return customLogicInstructionSOEnd; } }
 
     //[SerializeField]
     //private List<InstructionData> itemInstructionDatas = new();
@@ -167,14 +183,22 @@ public class InteractionSO : ScriptableObject
             case InteractionEndingType.Default:
                 setTime = false;
                 untillNeedAtValue = false;
+                untillAnotherInteractionScoresHigher = false;
                 return;
             case InteractionEndingType.SetTime:
                 setTime = true;
                 untillNeedAtValue = false;
+                untillAnotherInteractionScoresHigher = false;
                 break;
             case InteractionEndingType.UntillNeedAtValue:
-                untillNeedAtValue = true;
                 setTime = false;
+                untillNeedAtValue = true;
+                untillAnotherInteractionScoresHigher = false;
+                break;
+            case InteractionEndingType.UntillAnotherInteractionScoresHigher:
+                setTime = false;
+                untillNeedAtValue = false;
+                untillAnotherInteractionScoresHigher = true;
                 break;
         }
         if (IsSocial && IsSocialResponse)

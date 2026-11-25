@@ -144,7 +144,11 @@ MonoBehaviour:
   itemName: Bodoir of Bathing
   footprint: {x: 1, y: 1}
   interactionSOs: []
-  interactionSlot: {fileID: 1564509008092327862}
+  useInteractionSlot: 1
+  useInteractionArea: 0
+  interactionSlots:
+  - {fileID: 1564509008092327862}
+  interactionArea: {x: 0, y: 0}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 1
   itemData: {fileID: 11400000, guid: 37d87efd7c0acc94c8bd2002b23597b1, type: 2}
@@ -155,6 +159,7 @@ MonoBehaviour:
   itemSlotsOnItem:
   - {fileID: 6373234067792888379}
   characterSlotsOnItem: []
+  itemCharacterSlotInteractionSlotPairs: []
   AvailableForUse: 1
   itemInitialised: 0
 --- !u!33 &811480212801791064

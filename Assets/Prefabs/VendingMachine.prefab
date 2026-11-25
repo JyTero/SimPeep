@@ -51,7 +51,11 @@ MonoBehaviour:
   itemName: Treat Generator
   footprint: {x: 1, y: 1}
   interactionSOs: []
-  interactionSlot: {fileID: 4991817363308745659}
+  useInteractionSlot: 1
+  useInteractionArea: 0
+  interactionSlots:
+  - {fileID: 4991817363308745659}
+  interactionArea: {x: 0, y: 0}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 1
   itemData: {fileID: 11400000, guid: fc0a97c430450814a888ec8b340cea33, type: 2}
@@ -61,6 +65,7 @@ MonoBehaviour:
   itemTileWalkability: 4
   itemSlotsOnItem: []
   characterSlotsOnItem: []
+  itemCharacterSlotInteractionSlotPairs: []
   AvailableForUse: 1
   itemInitialised: 0
 --- !u!33 &7301639187953209603

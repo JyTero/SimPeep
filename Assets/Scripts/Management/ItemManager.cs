@@ -44,10 +44,13 @@ public class ItemManager : ManagementCore
     public void InitialiseItem(ItemBase item) //Move to ItemManager
     {
         ItemSO itemData = item.ItemData;
-        if (item.ItemName == "")
+        //if (item.ItemName == "")
 
-            item.ItemName = itemData.ItemName;
+        //    item.ItemName = itemData.ItemName;
 
+        //DEBUG
+        if (item.ItemName == "Seat of Greater Comfort")
+            Debug.Log("INITALISING SOFA!");
         //if(itemDescription == "")
         //itemDescription  = itemData.ItemDescription;
 
@@ -60,7 +63,7 @@ public class ItemManager : ManagementCore
         BuildStoredInteractions(item);
 
         capabilityHandler.InitialiseItemCapabilities(item);
-        itemSubclassHandler.InitialiseItem(item);
+
 
         //Slot
         foreach (Item_Slot slot in item.ItemSlotsOnItem)
@@ -68,11 +71,24 @@ public class ItemManager : ManagementCore
             slot.InitialiseSlot(item);
             item.InitialiseSlot(slot);
         }
+        foreach (Character_Slot slot in item.CharacterSlotsOnItem)
+        {
+            slot.InitialiseSlot(item);
+            //item.InitialiseSlot(slot);
+        }
 
         item.itemInitialised = true;
     }
 
-
+    public Character_Slot GetFirstAvailableInteractionSlotOnItem(ItemBase item)
+    {
+        foreach (Character_Slot interactionSlot in item.InteractionSlots)
+        {
+            if (interactionSlot.CharacterInSlot == null)
+                return interactionSlot;
+        }
+        return null;
+    }
 
     public void OnInteractionBegin(ActiveInteraction interaction, ItemBase item)
     {

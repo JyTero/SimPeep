@@ -39,7 +39,7 @@ public class ManagementCore : ManagerMono
     protected ActiveInteraction NewActiveInteraction(Character chara, StoredInteraction storedInteraction)
     {
         ActiveInteraction ai = new ActiveInteraction(chara, storedInteraction);
-
+        
         //ai.PrepareSubInteractions(lotManager, chara.ThisLot);
 
         if(storedInteraction.GroupSO)

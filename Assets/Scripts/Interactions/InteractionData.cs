@@ -122,6 +122,16 @@ public class InteractionData
     private List<ItemSpecific_InstructionSO> specificItemInstructionSOsOnInteractionEnd = new();
     public List<ItemSpecific_InstructionSO> SpecificItemInstructionSOsOnInteractionEnd { get { return specificItemInstructionSOsOnInteractionEnd; } }
 
+    //CustomLogic
+    [SerializeField, Foldout("ON INTERACTION BEGIN")]
+    private List<CustomLogic_InstructionSO> customLogicInstructionSOBegin = new();
+    public List<CustomLogic_InstructionSO> CustomLogicInstructionSOBegin { get { return customLogicInstructionSOBegin; } }
+    [SerializeField, Foldout("ON INTERACTION TICK")]
+    private List<CustomLogic_InstructionSO> customLogicInstructionSOTick = new();
+    public List<CustomLogic_InstructionSO> CustomLogicInstructionSOTick { get { return customLogicInstructionSOTick; } }
+    [SerializeField, Foldout("ON INTERACTION END")]
+    private List<CustomLogic_InstructionSO> customLogicInstructionSOEnd = new();
+    public List<CustomLogic_InstructionSO> CustomLogicInstructionSOEnd { get { return customLogicInstructionSOEnd; } }
 
     [SerializeField, Tooltip("Capabilities the interaction utilises")]
     private List<EItemCapabilites> requiredItemCapabilities = new();
@@ -182,6 +192,10 @@ public class InteractionData
 
         specificItemInstructionSOsOnInteractionBegin = new List<ItemSpecific_InstructionSO>(interactionSO.SpecificItemInstructionSOsOnInteractionBegin);
         specificItemInstructionSOsOnInteractionEnd = new List<ItemSpecific_InstructionSO>(interactionSO.SpecificItemInstructionSOsOnInteractionEnd);
+
+        customLogicInstructionSOBegin = new List<CustomLogic_InstructionSO>(interactionSO.CustomLogicInstructionSOBegin);
+        customLogicInstructionSOTick = new List<CustomLogic_InstructionSO>(interactionSO.CustomLogicInstructionSOTick);
+        customLogicInstructionSOEnd = new List<CustomLogic_InstructionSO>(interactionSO.CustomLogicInstructionSOEnd);
 
         requiredItemCapabilities = new List<EItemCapabilites>(interactionSO.RequiredItemCapabilities);
 

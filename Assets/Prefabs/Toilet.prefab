@@ -51,7 +51,11 @@ MonoBehaviour:
   itemName: Seat of Relief
   footprint: {x: 1, y: 1}
   interactionSOs: []
-  interactionSlot: {fileID: 432267340047956026}
+  useInteractionSlot: 1
+  useInteractionArea: 0
+  interactionSlots:
+  - {fileID: 432267340047956026}
+  interactionArea: {x: 0, y: 0}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 1
   itemData: {fileID: 11400000, guid: cb2e42bad1ca9194e929f34d0f7220e8, type: 2}
@@ -61,6 +65,7 @@ MonoBehaviour:
   itemTileWalkability: 4
   itemSlotsOnItem: []
   characterSlotsOnItem: []
+  itemCharacterSlotInteractionSlotPairs: []
   AvailableForUse: 1
   itemInitialised: 0
 --- !u!33 &1191512325784902825

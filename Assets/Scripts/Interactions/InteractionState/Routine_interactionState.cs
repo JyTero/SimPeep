@@ -9,6 +9,10 @@ public class Routine_interactionState : InteractionState
     public override void OnStateEnter(ActiveInteraction interaction)
     {
         base.OnStateEnter(interaction);
+        if(interaction.InteractionSO.PreferSeating && interaction.ThisCharacter.CharacterPhysicalState != CharacterPhysicalStateEnum.SittingOnObject)
+        {
+            Debug.LogWarning($"Character {interaction.ThisCharacter.ItemName} should look for seating, but logic's not implemented (Interaction: {interaction.InteractionName}");
+        }
     }
 
     public override void OnStateUpdate(ActiveInteraction interaction, float dt)

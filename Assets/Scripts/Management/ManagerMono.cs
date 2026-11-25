@@ -17,6 +17,8 @@ public class ManagerMono : MonoBehaviour
     protected ItemSubclassHandler itemSubclassHandler;
 
     protected ItemSpecificInstructionHandler specificInstructionHandler;
+
+    protected ScriptableObjectReferences scriptableObjectReferences;
    
     private int oneUnitOfTime = 1;
     public int OneUnitOfTime { get { return oneUnitOfTime; } }
@@ -42,10 +44,11 @@ public class ManagerMono : MonoBehaviour
         itemManager = FindAnyObjectByType<ItemManager>();
         capabilityHandler = FindAnyObjectByType<CapabilityHandler>();
         characterPathfinding = FindAnyObjectByType<CharacterPathfinding>();
+        instructionEngine = FindAnyObjectByType<InstructionEngine>();
         itemSubclassHandler = FindAnyObjectByType<ItemSubclassHandler>();
 
-        instructionEngine = FindAnyObjectByType<InstructionEngine>();
-
         specificInstructionHandler = FindAnyObjectByType<ItemSpecificInstructionHandler>();
+
+        scriptableObjectReferences = FindAnyObjectByType<ScriptableObjectReferences>();
     }
 }

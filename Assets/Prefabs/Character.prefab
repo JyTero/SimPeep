@@ -212,7 +212,11 @@ MonoBehaviour:
   footprint: {x: 1, y: 1}
   interactionSOs:
   - {fileID: 11400000, guid: f933ca8994d7d88499eebc2d62a6f64d, type: 2}
-  interactionSlot: {fileID: 2312749195135689206}
+  useInteractionSlot: 1
+  useInteractionArea: 0
+  interactionSlots:
+  - {fileID: 2312749195135689206}
+  interactionArea: {x: 0, y: 0}
   DebugDrawFootprintGrid: 0
   debugDrawForwardLine: 0
   characterSpeed: 2

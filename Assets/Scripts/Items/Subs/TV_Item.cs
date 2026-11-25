@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TV_Item : ItemBase
@@ -7,10 +9,13 @@ public class TV_Item : ItemBase
     //PLAN: Movies and TV Channels are SOs, which contain the visuals and any need/skill changes the program gives.
     //TV has a list of the available options
     //For now: Generic Movie, Generic Channel
-    [Header("TV ITEM")]
+    
+    
+    [Header("TV ITEM")] //These should have private set public get
     public InteractionSO TVChangeChannelSO;
     public InteractionSO TVTurnOnSO;
     public InteractionSO TVTurnOffSO;
+    public InteractionSO WatchTVSO;
 
     //[SerializeField]
     //private List<TVChannelSO> tvChannels = new();
@@ -24,6 +29,8 @@ public class TV_Item : ItemBase
     private Dictionary<TVItem_InstructionSO, StoredInteraction> changeChannelInteractions = new();
     public IReadOnlyDictionary<TVItem_InstructionSO,StoredInteraction> ChangeChannelInteractions => changeChannelInteractions;
 
+    private Color defaultColor;
+    [Header("DEBUG")]
     [SerializeField, Tooltip("DEBUG, DO NOT ADJUST")]
     private ETVState tvState;
     public ETVState TvState { get { return tvState; } }
@@ -32,7 +39,11 @@ public class TV_Item : ItemBase
     private TVChannelSO currentTVChannel;
     public TVChannelSO CurrentTVChannel { get { return currentTVChannel; } }
 
-    private Color defaultColor;
+    [SerializeField, Tooltip("DEBUG, DO NOT ADJUST")]
+    private List<Character_Slot> sittingSlotsInArea = new();
+    public List<Character_Slot> SittingSlotsInArea { get  { return sittingSlotsInArea; } }
+
+
 
     public void RecordDefaultColor()
     {
@@ -42,7 +53,13 @@ public class TV_Item : ItemBase
     {
         changeChannelInteractions.Add(channelInstruction, changeChannelInteraction);
     }
-
+    public void NewSittingSlotsInArea(Character_Slot slot)
+    {
+        if (sittingSlotsInArea.Contains(slot))
+            throw new Exception($"Slot {slot.name} already exitst in {itemName}'s interaction area slots lits");
+        else
+            sittingSlotsInArea.Add(slot);
+    }
 
     public void ChangeTVChannel(TVChannelSO tvChannelSO)
     {

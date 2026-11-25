@@ -51,6 +51,11 @@ public class ActiveInteraction
     //InteractionGroup
     public InteractionGroupSO InteractionGroupSO;
 
+
+
+    public float TimeSinceLastEndCheck = 0;
+
+    
     //RuntimeData
     public List<SubInteraction> subInteractions = new();
     public bool isSubinteraction;
@@ -83,6 +88,16 @@ public class ActiveInteraction
     private UIController uiController;
 
     public bool InteractionCancelled = false;
+
+
+    public List<Item_Instruction> ItemChangeInstructionSOsOnInteractionBegin = new();
+
+    public bool allInstructionsDone = false;
+
+
+    public float TimeSinceLastInstructionsSent;
+    public float InteractionScore;
+
 
     public void PushInitialisationState(ActiveInteraction interaction, InteractionState newState)
     {
@@ -130,14 +145,6 @@ public class ActiveInteraction
     }
 
 
-    public List<Item_Instruction> ItemChangeInstructionSOsOnInteractionBegin = new();
-
-    public bool allInstructionsDone = false;
-
-
-    public float TimeSinceLastInstructionsSent;
-    public float interactionScore;
-
     public ActiveInteraction(Character chara, StoredInteraction storedInteraction)
     {
         interactionSO = storedInteraction.InteractionSO;
@@ -156,7 +163,7 @@ public class ActiveInteraction
         interactionName = interactionData.InteractionName;
         BuildInteractionEnding();
         interactionLenghtAccumulation = 0;
-        interactionScore = 0;
+        InteractionScore = 0;
         isReaction = interactionData.Reaction;
 
         scoringModifiers = interactionData.ScoringModifiers;

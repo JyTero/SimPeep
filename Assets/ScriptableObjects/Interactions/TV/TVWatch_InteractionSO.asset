@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff279f14cd18484295d7f7814374ef3, type: 3}
+  m_Name: TVWatch_InteractionSO
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionSO
+  interactionName: Watch TV
+  Description: Watch TV
+  Reaction: 0
+  IsSocial: 0
+  socialInteractionType: 0
+  isSocialResponse: 0
+  socialResponceInteractions: []
+  hiddenInteraction: 0
+  preferSeating: 0
+  skipMovement: 0
+  interactionDestinationDifferentFromSource: 0
+  destinationItem: {fileID: 0}
+  invalidInteraction: 0
+  interactionEndingType: 3
+  interactionLenght: 0
+  targetNeedType: 0
+  targetNeedValue: 0
+  waitForInteractionEnd: 0
+  need_InteractionInstructionsOnInteractionBegin: []
+  need_InteractionInstructionsOnInteractionTick: []
+  need_InteractionInstructionsOnInteractionEnd: []
+  relationshipChangeInstructionsOnInteractionBegin: []
+  relationshipChangeInstructionsOnInteractionEnd: []
+  itemChangeInstructionSOsOnInteractionBegin: []
+  itemChangeInstructionSOsOnInteractionEnd: []
+  characterInstructionSOsOnInteractionBegin:
+  - {fileID: 11400000, guid: 8355de600f736e34bae054c093942e0d, type: 2}
+  characterInstructionSOsOnInteractionEnd: []
+  specificItemInstructionSOsOnInteractionBegin: []
+  specificItemInstructionSOsOnInteractionEnd: []
+  customLogicInstructionSOBegin:
+  - {fileID: 11400000, guid: c30ddaff3840aee4891040119d678924, type: 2}
+  - {fileID: 11400000, guid: a798dc740afef3740ac5689b8652ca0a, type: 2}
+  customLogicInstructionSOTick: []
+  customLogicInstructionSOEnd: []
+  requiredItemCapabilities: 
+  scoringModifiers: []
+  hasFollowup: 0
+  followupInteractionSOs: []

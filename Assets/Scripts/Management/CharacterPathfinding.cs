@@ -36,6 +36,8 @@ public class CharacterPathfinding : ManagementCore
     }
     public bool CanRouteToTile(Character character, LotGridTile destinationTile)
     {
+        if (destinationTile.Walkwability == ELGTWalkability.StepOver)
+            return false;
         PathfindingResult pfr = TestIfCanRouteToTile(character, destinationTile);
         if (pfr.RoutingResult == ERoutingResult.Success)
             return true;
